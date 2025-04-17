@@ -1,0 +1,14 @@
+# *
+User-agent: *
+Disallow: /panel
+Disallow: /api
+Disallow: /cart
+Disallow: /quick-cart
+Disallow: /classroom
+Disallow: /checkout-result
+
+# Host
+Host: https://igraphical.ir
+
+# Sitemaps
+Sitemap: https://igraphical.ir/sitemap.xml
