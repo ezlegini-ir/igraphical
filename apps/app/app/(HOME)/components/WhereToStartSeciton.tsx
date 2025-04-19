@@ -2,6 +2,7 @@ import { Button } from "@igraph/ui/components/ui/button";
 import { igraphLogoLayDown, userTall } from "@/public";
 import { BadgeCheck, PartyPopper, Search } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const WhereToStartSeciton = () => {
   return (
@@ -66,7 +67,9 @@ const WhereToStartSeciton = () => {
           <a href="#courses">
             <Button>مشاهده دوره‌ها</Button>
           </a>
-          <Button variant={"secondary"}>مشاوره رایگان</Button>
+          <Link href={"/contact"}>
+            <Button variant={"secondary"}>مشاوره رایگان</Button>
+          </Link>
         </div>
       </div>
     </div>

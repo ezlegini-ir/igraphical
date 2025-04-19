@@ -1,6 +1,7 @@
 {
   "name": "@igraph/utils",
   "version": "0.0.0",
+  "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
@@ -8,6 +9,7 @@
     "@react-email/render": "^1.0.6",
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.0",
     "kavenegar": "^1.1.4",
     "lucide-react": "^0.488.0",
     "moment-jalaali": "^0.10.4",

@@ -63,6 +63,7 @@ const UserProfileForm = ({ user }: Props) => {
       lastName: user?.lastName,
       email: user.email,
       phone: user.phone,
+      nationalId: user.nationalId,
     },
   });
 
@@ -113,7 +114,7 @@ const UserProfileForm = ({ user }: Props) => {
   };
 
   return (
-    <CardBox title="مشخصات فردی" className="max-w-md mx-auto">
+    <CardBox title="مشخصات فردی" className="max-w-sm mx-auto">
       <Dialog open={openOtpForm} onOpenChange={setOpenOtpForm}>
         <DialogContent className="sm:max-w-sm">
           <DialogTitle />
@@ -215,10 +216,26 @@ const UserProfileForm = ({ user }: Props) => {
             )}
           />
 
-          <div className="space-y-1">
-            <FormLabel>کد ملی</FormLabel>
-            <Input disabled dir="ltr" defaultValue={user.nationalId} />
-          </div>
+          <FormField
+            control={form.control}
+            name="nationalId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>کد ملی</FormLabel>
+
+                <FormControl>
+                  <Input
+                    placeholder="فقط یک بار می توانید کد ملی ذخیره کنید. دقت کنید."
+                    maxLength={10}
+                    disabled={!!user.nationalId}
+                    dir="ltr"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button
             disabled={

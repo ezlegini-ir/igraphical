@@ -215,7 +215,7 @@ export const verifyPayment = async (
         data: {
           status: "SUCCESS",
           paidAt: new Date(),
-          transactionId: res.data.ref_id,
+          transactionId: res.data.ref_id.toString(),
 
           enrollment: {
             create: deletedCart.cartItem.map((cartItem) => ({

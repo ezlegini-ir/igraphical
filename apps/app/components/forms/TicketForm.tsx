@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@igraph/ui/components/ui/select";
+import { allowedFomatsForUplaod } from "@/data/utils";
 
 const TicketForm = () => {
   // HOOKS
@@ -53,22 +54,18 @@ const TicketForm = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      const allowedFormats = [
-        "image/jpeg",
-        "image/png",
-        "image/gif",
-        "image/webp",
-        "application/zip",
-      ];
+      const allowedFormats = allowedFomatsForUplaod;
       const maxSize = 5 * 1024 * 1024;
 
       if (!allowedFormats.includes(file.type)) {
         toast.error("این فرمت مجاز نمی‌باشد!");
+        e.target.value = "";
         return;
       }
 
       if (file.size > maxSize) {
         toast.error("حداکثر حجم فایل 5 مگابایت می‌باشد!");
+        e.target.value = "";
         return;
       }
 
@@ -210,7 +207,7 @@ const TicketForm = () => {
                 )}
                 <FormControl>
                   <Input
-                    accept=".jpg,.jpeg,.png,.gif,.webp,.zip"
+                    accept=".jpg,.jpeg,.png,.webp,.zip"
                     type="file"
                     className="hidden"
                     onChange={(e) => handleFileChange(e, field)}

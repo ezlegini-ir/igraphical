@@ -1,5 +1,5 @@
 import { LucideProps } from "lucide-react";
-import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
 interface Props {
   courseIncludes: {
     label: string;

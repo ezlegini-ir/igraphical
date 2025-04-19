@@ -21,7 +21,7 @@ const Cart = ({ cart, wallet }: Props) => {
 
   useEffect(() => {
     setPrices(initialPrices);
-  }, [cart.cartItem, initialPrices]);
+  }, [cart.cartItem]);
 
   const courses = cart.cartItem.map((item) => item.course);
 

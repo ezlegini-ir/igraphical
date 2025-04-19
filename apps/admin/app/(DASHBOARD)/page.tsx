@@ -66,6 +66,7 @@ const page = async () => {
     orderBy: { paidAt: "asc" },
     where: {
       paidAt: dateCriteria,
+      status: "SUCCESS",
     },
   });
   const revenue = aggregateByDay(

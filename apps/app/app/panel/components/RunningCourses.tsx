@@ -22,11 +22,17 @@ interface CourseType extends Course {
 
 interface Props {
   runningCourses: CourseType[];
+  showBtn?: boolean;
 }
 
-const RunningCourses = ({ runningCourses }: Props) => {
+const RunningCourses = ({ runningCourses, showBtn }: Props) => {
   return (
-    <CardBox title="دوره های در جریان">
+    <CardBox
+      title="دوره های در جریان"
+      btn={
+        showBtn ? { href: "/panel/courses", title: "مشاهده همه" } : undefined
+      }
+    >
       {runningCourses.length === 0 ? (
         <div className="py-20 text-gray-500 flex justify-center text-sm">
           شما دوره در جریانی ندارید.

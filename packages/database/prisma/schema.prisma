@@ -16,7 +16,7 @@ model User {
   fullName      String
   phone         String   @unique
   email         String   @unique
-  nationalId    String   @unique
+  nationalId    String
   joinedAt      DateTime @default(now())
   phoneVerified Boolean  @default(false)
   emailVerified Boolean  @default(false)
@@ -171,7 +171,7 @@ enum ResourceType {
 model Post {
   id         Int            @id @default(autoincrement())
   title      String
-  url        String         @unique
+  url        String         @unique @db.VarChar(512)
   content    String         @db.Text
   categories PostCategory[]
   status     PostStatus     @default(DRAFT)
@@ -453,12 +453,12 @@ model Payment {
   discountAmount     Float?
   discountCode       String?
   discountCodeAmount Int?
-  transactionId      Int?          @unique
+  transactionId      String?
   status             PaymentStatus
   paidAt             DateTime?
   createdAt          DateTime      @default(now())
   paymentMethod      PaymentMethod
-  walletUsed         Boolean?
+  walletUsed         Boolean       @default(false)
   walletUsedAmount   Float?
 
   enrollment        Enrollment[]

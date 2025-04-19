@@ -1,6 +1,6 @@
 "use server";
 
-import { getAdminById } from "@/data/admin";
+import { getUserById } from "@/data/user";
 import { studentFormSchema, StudentFormType } from "@/lib/validationSchema";
 import { database } from "@igraph/database";
 import { deleteCloudFile, uploadCloudFile } from "@igraph/utils";
@@ -84,7 +84,7 @@ export const updateUser = async (data: StudentFormType, id: number) => {
   const { email, firstName, lastName, phone, nationalId, image } = data;
 
   try {
-    const existingStudent = await getAdminById(id);
+    const existingStudent = await getUserById(id);
     if (!existingStudent) return { error: "No Admin Found" };
 
     if (id !== existingStudent.id) {
@@ -158,7 +158,7 @@ export const updateUser = async (data: StudentFormType, id: number) => {
 
 export const deleteUser = async (id: number) => {
   try {
-    const existingAdmin = await getAdminById(id);
+    const existingAdmin = await getUserById(id);
     if (!existingAdmin) return { error: "No Admin Found" };
 
     const deletedUser = await database.user.delete({

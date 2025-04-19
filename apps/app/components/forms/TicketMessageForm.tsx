@@ -26,6 +26,7 @@ import Loader from "@igraph/ui/components/Loader";
 import { Textarea } from "@igraph/ui/components/ui/textarea";
 import { toast } from "sonner";
 import { getSessionUser } from "@/data/user";
+import { allowedFomatsForUplaod } from "@/data/utils";
 
 const TicketMessageForm = ({ ticketId }: { ticketId: number }) => {
   // HOOKS
@@ -48,22 +49,18 @@ const TicketMessageForm = ({ ticketId }: { ticketId: number }) => {
     const file = e.target.files?.[0];
 
     if (file) {
-      const allowedFormats = [
-        "image/jpeg",
-        "image/png",
-        "image/gif",
-        "image/webp",
-        "application/zip",
-      ];
+      const allowedFormats = allowedFomatsForUplaod;
       const maxSize = 5 * 1024 * 1024;
 
       if (!allowedFormats.includes(file.type)) {
         toast.error("این فرمت مجاز نمی‌باشد!");
+        e.target.value = "";
         return;
       }
 
       if (file.size > maxSize) {
         toast.error("حداکثر حجم فایل 5 مگابایت می‌باشد!");
+        e.target.value = "";
         return;
       }
 

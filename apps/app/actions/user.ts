@@ -67,7 +67,7 @@ export async function registerUser(
 //* UPDATE --------------------------------------------------------
 
 export const updateUserProfile = async (data: ProfileFormType, id: number) => {
-  const { firstName, lastName, image } = data;
+  const { firstName, lastName, image, nationalId } = data;
 
   try {
     // USER LOOP UP
@@ -75,11 +75,19 @@ export const updateUserProfile = async (data: ProfileFormType, id: number) => {
     if (!existingUser) return { error: "user not found" };
 
     await database.$transaction(async (tx) => {
+      const existingUserByNationalCode = await tx.user.findFirst({
+        where: { nationalId },
+      });
+
+      if (existingUserByNationalCode)
+        throw new Error("با این کد ملی کاربری دیگر ثبت نام کرده است.");
+
       const updatedUser = await tx.user.update({
         where: { id },
         data: {
           firstName,
           lastName,
+          nationalId,
           fullName: `${firstName} ${lastName}`,
         },
         include: { image: true },

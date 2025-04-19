@@ -28,9 +28,7 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+export const matcher = ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"];
 
 export const loginPageRoute = "/login";
 

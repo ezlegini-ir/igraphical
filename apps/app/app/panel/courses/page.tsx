@@ -17,6 +17,7 @@ const page = async () => {
       course: {
         include: {
           enrollment: {
+            where: { userId },
             include: {
               classroom: true,
             },
@@ -37,16 +38,13 @@ const page = async () => {
     },
   });
 
-  const runningCourses = runningEnrollment.map((item) => item.course);
-  return (
-    <div className="grid gap-3 grid-rows-2">
-      <div>
-        <RunningCourses runningCourses={runningCourses} />
-      </div>
+  const runningCourses = runningEnrollment.map((e) => e.course);
 
-      <div>
-        <CompletedCourses />
-      </div>
+  return (
+    <div className="space-y-3">
+      <RunningCourses runningCourses={runningCourses} />
+
+      <CompletedCourses />
     </div>
   );
 };

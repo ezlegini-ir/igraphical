@@ -16,7 +16,7 @@ const CardBox = ({
   className?: string;
 }) => {
   return (
-    <div className={`card p-0 ${className}`}>
+    <div className={`card space-y-0 p-0 ${className}`}>
       <div className="p-3 py-2 flex justify-between items-center h-11">
         <Title title={title} />
 
@@ -35,7 +35,7 @@ const CardBox = ({
 
       <Separator />
 
-      <div className="p-3 space-y-3 h-full">{children}</div>
+      <div className="p-4 space-y-3 h-full">{children}</div>
     </div>
   );
 };

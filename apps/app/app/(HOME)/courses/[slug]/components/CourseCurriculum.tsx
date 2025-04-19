@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from "@igraph/ui/components/ui/dialog";
 import { Curriculum, Lesson } from "@igraph/database";
-import { Download, File, Video } from "lucide-react";
+import { Download, File, Lock, Video } from "lucide-react";
 
 interface CurriculumType extends Curriculum {
   lessons: Lesson[];
@@ -40,7 +40,7 @@ const CourseCurriculum = ({ curriculums }: CurriculumsProps) => {
             className="border p-1 px-5 rounded-lg"
           >
             <AccordionTrigger className="font-semibold flex items-center justify-between">
-              {curriculum.sectionTitle}
+              <span className="text-base">{curriculum.sectionTitle}</span>
               <div className="flex gap-4 mr-auto ml-4">
                 <span className="text-xs font-normal text-slate-500">
                   {curriculum.lessons.length} درس
@@ -68,7 +68,7 @@ const CourseCurriculum = ({ curriculums }: CurriculumsProps) => {
                       )}
                       {lesson.title}
                     </span>
-                    {lesson.isFree && (
+                    {lesson.isFree ? (
                       <Dialog>
                         <DialogTrigger asChild>
                           <Badge variant={"blue"} className="cursor-pointer">
@@ -80,6 +80,8 @@ const CourseCurriculum = ({ curriculums }: CurriculumsProps) => {
                           <CurriculumPlay url={lesson.url} />
                         </DialogContent>
                       </Dialog>
+                    ) : (
+                      <Lock className="text-slate-400" size={18} />
                     )}
                   </li>
                 ))}

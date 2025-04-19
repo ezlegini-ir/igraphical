@@ -9,6 +9,7 @@ import { formatDuration } from "@igraph/utils";
 import {
   Headset,
   LockKeyholeOpen,
+  LucideProps,
   Send,
   SquareMenu,
   Star,
@@ -20,6 +21,7 @@ import CourseIncludes from "./CourseIncludes";
 import CourseRegisterButton from "./CourseRegisterButton";
 import { database } from "@igraph/database";
 import { getEnrollmentByUserIdAndCourseId } from "@/data/enrollment";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 interface Props {
   course: CourseType;
@@ -69,7 +71,16 @@ const CourseSidebar = async ({ course }: Props) => {
           )}
 
           <div className="px-4 space-y-5">
-            <CourseIncludes courseIncludes={courseIncludes} />
+            <CourseIncludes
+              courseIncludes={
+                courseIncludes as {
+                  label: string;
+                  icon: ForwardRefExoticComponent<
+                    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+                  >;
+                }[]
+              }
+            />
 
             <Separator />
 

@@ -91,6 +91,7 @@ export const profileFormSchema = z.object({
     .string()
     .min(1, { message: required })
     .email({ message: "ایمیل نامعتبر است" }),
+  nationalId: z.string().min(1, { message: required }).max(10),
 });
 export type ProfileFormType = z.infer<typeof profileFormSchema>;
 

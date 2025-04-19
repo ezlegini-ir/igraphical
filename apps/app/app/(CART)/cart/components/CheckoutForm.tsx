@@ -419,7 +419,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
                     <FormControl>
                       <Input
                         disabled={!!coupon}
-                        className="border-slate-300 relative pl-20 font-medium tracking-wide bg-white"
+                        className="border-slate-300 relative pl-20 font-medium tracking-wide bg-white en-digits text-right"
                         placeholder="کد تخفیف"
                         {...field}
                         autoComplete="off"

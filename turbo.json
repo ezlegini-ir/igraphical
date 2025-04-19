@@ -6,9 +6,15 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "start": {
+      "cache": false
+    },
     "db:migrate:dev": {
       "cache": false,
       "persistent": true
+    },
+    "db:studio": {
+      "cache": false
     },
     "db:migrate:deploy": {
       "cache": false

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   studentProfile1,
   studentProfile2,
@@ -13,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@igraph/ui/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import { Quote, Star } from "lucide-react";
 import Image from "next/image";
 
@@ -28,6 +31,11 @@ const StudentReviews = () => {
       </div>
 
       <Carousel
+        plugins={[
+          Autoplay({
+            delay: 1500,
+          }),
+        ]}
         opts={{
           align: "start",
           loop: true,
@@ -45,23 +53,6 @@ const StudentReviews = () => {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-
-      {/* <div className="hidden md:block bg-red-300">
-        <Carousel dir="ltr">
-          <CarouselContent>
-            {reviews.map((item, index) => (
-              <CarouselItem
-                key={index}
-                className="grow lg:basis-1/3 select-none"
-              >
-                <StudentReviewCard review={item} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </div> */}
     </div>
   );
 };

@@ -20,7 +20,7 @@ export async function InitiatePurchase(
       amount: amount * 10, //convert to RIAL
       callback_url: `${
         process.env.NODE_ENV === "production"
-          ? "https://igraphical.ir"
+          ? process.env.NEXT_PUBLIC_BASE_URL
           : "http://localhost:3000"
       }/checkout-result${query}`,
       description: `Payment For User ${user.id} | Payment Id: ${paymentId}`,

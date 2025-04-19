@@ -20,11 +20,11 @@ const Table = ({ columns, data, renderRows, noDataMessage }: Props) => {
     <>
       <MyTable>
         <TableHeader>
-          <TableRow className="text-gray-500 text-sm text-left">
+          <TableRow className="text-gray-500 text-sm text-left bg-slate-50">
             {columns.map((column, index) => (
               <TableHead
                 key={index}
-                className={`text-left ${column.className}`}
+                className={`text-left ${column.className} h-10`}
               >
                 {column.label}
               </TableHead>

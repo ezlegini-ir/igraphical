@@ -30,11 +30,13 @@ const QueryCard: React.FC<QueryCardProps> = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <span className="text-base">{title}</span>
+        </CardTitle>
       </CardHeader>
 
       <CardContent>
-        <ul className="space-y-5 text-sm text-slate-500 mr-5">
+        <ul className="space-y-3 text-sm text-slate-500 mr-5">
           {options.map((option) => {
             const isActive = option.value === currentQuery;
             const params = new URLSearchParams(

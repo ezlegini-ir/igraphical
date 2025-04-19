@@ -9,6 +9,7 @@ const BlogSection = async () => {
   const posts = await database.post.findMany({
     where: { status: "PUBLISHED" },
     include: { image: true, categories: true },
+    orderBy: { createdAt: "desc" },
     take: 4,
   });
 

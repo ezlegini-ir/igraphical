@@ -91,7 +91,7 @@ const OtpForm = ({ setLoginStep, identifier }: Props) => {
     };
 
     autoSubmit();
-  }, [otpValue, onVerifyOtp]);
+  }, [otpValue]);
 
   return (
     <>

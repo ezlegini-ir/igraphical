@@ -21,6 +21,7 @@ const page = async () => {
       course: {
         include: {
           enrollment: {
+            where: { userId },
             include: {
               classroom: true,
             },
@@ -39,6 +40,7 @@ const page = async () => {
         },
       },
     },
+    take: 3,
   });
 
   const runningCourses = runningEnrollment.map((item) => item.course);
@@ -87,7 +89,7 @@ const page = async () => {
 
       <div className="grid gap-3 grid-cols-1 xl:grid-cols-8">
         <div className="xl:col-span-6">
-          <RunningCourses runningCourses={runningCourses} />
+          <RunningCourses runningCourses={runningCourses} showBtn />
         </div>
         <div className="xl:col-span-2">
           <LastTicketsList tickets={tickets} />
