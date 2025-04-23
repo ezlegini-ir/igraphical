@@ -29,6 +29,7 @@
   ENV DATABASE_URL="mysql://root@database:3306/igraphical"
   ENV AUTH_APP="app"
   ENV NEXT_PUBLIC_BASE_URL="https://igraphical.ir"
+  ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY="6Le9kg0rAAAAAOta9iSjq0LS-96mcHHsNwOTphjG"
   RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
   RUN npm run build --workspace=app
   
