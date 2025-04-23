@@ -12,6 +12,7 @@ jobs:
       admin_changed: ${{ steps.filter.outputs.admin }}
       app_changed: ${{ steps.filter.outputs.app }}
       tutor_changed: ${{ steps.filter.outputs.tutor }}
+      shared_changed: ${{ steps.filter.outputs.shared }}
 
     steps:
       - name: Checkout code
@@ -28,14 +29,12 @@ jobs:
               - 'apps/app/**'
             tutor:
               - 'apps/tutor/**'
+            shared:
+              - 'packages/**'
 
   deploy:
     needs: detect-changes
     runs-on: ubuntu-latest
-    if: |
-      needs.detect-changes.outputs.admin_changed == 'true' ||
-      needs.detect-changes.outputs.app_changed == 'true' ||
-      needs.detect-changes.outputs.tutor_changed == 'true'
 
     steps:
       - name: Setup SSH
@@ -45,9 +44,11 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H 45.138.135.200 >> ~/.ssh/known_hosts
 
-      - name: Deploy changed services only
+      - name: Always pull latest code, conditionally rebuild services
         run: |
           SERVICES=""
+
+          # اپ‌ها
           if [[ "${{ needs.detect-changes.outputs.admin_changed }}" == "true" ]]; then
             SERVICES="$SERVICES admin"
           fi
@@ -58,5 +59,19 @@ jobs:
             SERVICES="$SERVICES tutor"
           fi
 
+          # اگر shared تغییر کرده، همه رو rebuild کن
+          if [[ "${{ needs.detect-changes.outputs.shared_changed }}" == "true" ]]; then
+            SERVICES="admin app tutor"
+          fi
+
+          echo "🔄 Pulling latest code..."
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@45.138.135.200 "\
-            cd /projects/igraphical && git pull && docker-compose up --build -d $SERVICES"
+            cd /projects/igraphical && git pull"
+
+          if [[ -n "$SERVICES" ]]; then
+            echo "🚀 Building and restarting services: $SERVICES"
+            ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@45.138.135.200 "\
+              cd /projects/igraphical && docker-compose up --build -d $SERVICES"
+          else
+            echo "✅ No rebuild needed. Code pulled only."
+          fi
