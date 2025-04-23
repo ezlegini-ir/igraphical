@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const { nextUrl, cookies } = req;
-  const token = cookies.get("authjs.session-token")?.value;
+  const token = cookies.get(
+    process.env.NODE_ENV === "development"
+      ? "authjs.session-token"
+      : "__Secure-authjs.session-token"
+  )?.value;
   const isLoggedIn = !!token;
 
   const isPrivateRoute = privateRoutes.some((route) =>
