@@ -13,6 +13,7 @@ jobs:
       app_changed: ${{ steps.filter.outputs.app }}
       tutor_changed: ${{ steps.filter.outputs.tutor }}
       shared_changed: ${{ steps.filter.outputs.shared }}
+      root_changed: ${{ steps.filter.outputs.root }}
 
     steps:
       - name: Checkout code
@@ -31,6 +32,9 @@ jobs:
               - 'apps/tutor/**'
             shared:
               - 'packages/**'
+            root:
+              - '*'
+              - '.*'
 
   deploy:
     needs: detect-changes
@@ -48,7 +52,6 @@ jobs:
         run: |
           SERVICES=""
 
-          # اپ‌ها
           if [[ "${{ needs.detect-changes.outputs.admin_changed }}" == "true" ]]; then
             SERVICES="$SERVICES admin"
           fi
@@ -59,8 +62,7 @@ jobs:
             SERVICES="$SERVICES tutor"
           fi
 
-          # اگر shared تغییر کرده، همه رو rebuild کن
-          if [[ "${{ needs.detect-changes.outputs.shared_changed }}" == "true" ]]; then
+          if [[ "${{ needs.detect-changes.outputs.shared_changed }}" == "true" || "${{ needs.detect-changes.outputs.root_changed }}" == "true" ]]; then
             SERVICES="admin app tutor"
           fi
 
