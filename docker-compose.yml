@@ -92,6 +92,8 @@ services:
   app:
     build:
       context: .
+      args:
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: "6Le9kg0rAAAAAOta9iSjq0LS-96mcHHsNwOTphjG" # no problem with this key, it's just a public key. no problem with exposing it.
       dockerfile: ./apps/app/Dockerfile
     container_name: app
     restart: always
