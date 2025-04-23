@@ -6,20 +6,57 @@ on:
       - main
 
 jobs:
-  deploy:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      admin_changed: ${{ steps.filter.outputs.admin }}
+      app_changed: ${{ steps.filter.outputs.app }}
+      tutor_changed: ${{ steps.filter.outputs.tutor }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Detect changed folders
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            admin:
+              - 'apps/admin/**'
+            app:
+              - 'apps/app/**'
+            tutor:
+              - 'apps/tutor/**'
+
+  deploy:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: |
+      needs.detect-changes.outputs.admin_changed == 'true' ||
+      needs.detect-changes.outputs.app_changed == 'true' ||
+      needs.detect-changes.outputs.tutor_changed == 'true'
+
+    steps:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H YOUR.SERVER.IP >> ~/.ssh/known_hosts
+          ssh-keyscan -H 45.138.135.200 >> ~/.ssh/known_hosts
 
-      - name: Deploy via SSH
+      - name: Deploy changed services only
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@45.138.135.200 "cd /projects/igraphical && git pull && docker-compose up -d --build"
+          SERVICES=""
+          if [[ "${{ needs.detect-changes.outputs.admin_changed }}" == "true" ]]; then
+            SERVICES="$SERVICES admin"
+          fi
+          if [[ "${{ needs.detect-changes.outputs.app_changed }}" == "true" ]]; then
+            SERVICES="$SERVICES app"
+          fi
+          if [[ "${{ needs.detect-changes.outputs.tutor_changed }}" == "true" ]]; then
+            SERVICES="$SERVICES tutor"
+          fi
+
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@45.138.135.200 "\
+            cd /projects/igraphical && git pull && docker-compose up --build -d $SERVICES"

@@ -17,7 +17,9 @@ const LoginForm = () => {
   return (
     <>
       {loginStep === "INPUT" && (
-        <RecaptchaWrapper>
+        <RecaptchaWrapper
+          recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+        >
           <InputForm
             setIsNewUser={setIsNewUser}
             setLoginStep={setLoginStep}
@@ -26,7 +28,9 @@ const LoginForm = () => {
         </RecaptchaWrapper>
       )}
       {loginStep === "OTP" && (
-        <RecaptchaWrapper>
+        <RecaptchaWrapper
+          recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+        >
           <OtpForm
             setLoginStep={setLoginStep}
             inputFormValue={inputFormValue}

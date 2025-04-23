@@ -48,7 +48,9 @@ const page = () => {
         <div className="w-full lg:w-3/5 space-y-3">
           <h2 className="text-center md:text-right">فرم تماس</h2>
 
-          <RecaptchaWrapper>
+          <RecaptchaWrapper
+            recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+          >
             <ContactForm />
           </RecaptchaWrapper>
         </div>

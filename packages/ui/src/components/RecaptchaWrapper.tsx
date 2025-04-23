@@ -3,11 +3,15 @@
 import { ReactNode } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
-const RecaptchaWrapper = ({ children }: { children: ReactNode }) => {
+const RecaptchaWrapper = ({
+  children,
+  recaptchaKey,
+}: {
+  children: ReactNode;
+  recaptchaKey: string;
+}) => {
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-    >
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
       {children}
     </GoogleReCaptchaProvider>
   );

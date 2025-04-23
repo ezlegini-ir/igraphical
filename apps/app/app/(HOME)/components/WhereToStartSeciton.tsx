@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const WhereToStartSeciton = () => {
   return (
-    <div className="card w-full flex flex-wrap md:flex-nowrap justify-center md:gap-20 overflow-visible relative sm:px-10">
+    <div className="card p-0 w-full flex flex-wrap md:flex-nowrap justify-center md:gap-20 overflow-visible relative sm:px-10">
       <Image
         alt=""
         src={igraphLogoLayDown}

@@ -41,7 +41,7 @@ const StudentReviews = () => {
           loop: true,
         }}
         orientation="vertical"
-        className="w-full max-w-md select-none"
+        className="w-full max-w-sm select-none"
       >
         <CarouselContent className="-mt-2 h-[350px] md:h-[610px]">
           {reviews.map((item, index) => (

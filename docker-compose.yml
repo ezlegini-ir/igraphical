@@ -98,6 +98,7 @@ services:
     env_file:
       - ./envs/app/.env.local
     environment:
+      VIRTUAL_PORT: 3000
       VIRTUAL_HOST: igrph.ir
       LETSENCRYPT_HOST: igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir

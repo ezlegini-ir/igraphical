@@ -12,7 +12,9 @@ const page = () => {
         description={"در این صفحه می توانید مدرک آی‌گرافیکال را استعلام کنید."}
       />
 
-      <RecaptchaWrapper>
+      <RecaptchaWrapper
+        recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+      >
         <CertificateVerifyForm />
       </RecaptchaWrapper>
     </div>

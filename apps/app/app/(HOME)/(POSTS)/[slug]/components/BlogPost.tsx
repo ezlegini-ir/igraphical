@@ -179,7 +179,9 @@ const BlogPost = ({ post, relatedPosts }: Props) => {
           <div className="space-y-5">
             <div className="space-y-3">
               <h3>دیدگاه شما</h3>
-              <RecaptchaWrapper>
+              <RecaptchaWrapper
+                recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+              >
                 <CommentForm postId={post.id} />
               </RecaptchaWrapper>
             </div>
