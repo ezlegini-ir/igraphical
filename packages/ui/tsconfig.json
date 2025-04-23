@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@igraph/ui/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "../../apps/admin/components/SearchCourses.tsx"],
+  "exclude": ["node_modules"]
+}

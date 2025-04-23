@@ -1,0 +1,778 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/client"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//! User Management  ---------------------------------------------------------
+model User {
+  id            Int      @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  fullName      String
+  phone         String   @unique
+  email         String   @unique
+  nationalId    String
+  joinedAt      DateTime @default(now())
+  phoneVerified Boolean  @default(false)
+  emailVerified Boolean  @default(false)
+
+  image          Image?
+  comments       Comment[]
+  review         Review[]
+  LessonProgress LessonProgress[]
+  enrollment     Enrollment[]
+  payment        Payment[]
+  ticket         Ticket[]
+  TicketMessage  TicketMessage[]
+  askTutor       AskTutor[]
+  classroom      ClassRoom[]
+  quickCart      QuickCart[]
+  otp            Otp[]
+  cart           Cart?
+  wallet         Wallet?
+
+  @@map("user")
+}
+
+model Admin {
+  id              Int               @id @default(autoincrement())
+  name            String
+  displayName     String
+  password        String
+  phone           String            @unique
+  email           String            @unique
+  role            AdminRole
+  joinedAt        DateTime          @default(now())
+  image           Image?
+  post            Post[]
+  ContactResponse ContactResponse[]
+
+  @@map("admin")
+}
+
+model Tutor {
+  id          Int          @id @default(autoincrement())
+  name        String
+  displayName String
+  slug        String       @unique
+  password    String
+  bio         String       @db.Text
+  titles      String
+  phone       String       @unique
+  email       String       @unique
+  joinedAt    DateTime     @default(now())
+  profit      Float        @default(0)
+  image       Image?
+  courses     Course[]
+  askTutor    AskTutor[]
+  Settlement  Settlement[]
+
+  @@map("tutor")
+}
+
+enum AdminRole {
+  ADMIN
+  AUTHOR
+}
+
+//! Login ---------------------------------------------------------
+model Otp {
+  id         String   @id @default(cuid())
+  identifier String   @unique
+  otpCode    String
+  type       OtpType
+  expires    DateTime
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     Int?
+
+  @@unique([identifier, otpCode])
+  @@map("otp")
+}
+
+enum OtpType {
+  SMS
+  EMAIL
+}
+
+//! Files ---------------------------------------------------------
+model Image {
+  id        Int       @id @default(autoincrement())
+  public_id String    @unique
+  url       String    @unique
+  format    String
+  type      ImageType
+  size      Int
+  createdAt DateTime  @default(now())
+
+  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int?         @unique
+  admin     Admin?       @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId   Int?         @unique
+  tutor     Tutor?       @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  tutorId   Int?         @unique
+  post      Post?        @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int?         @unique
+  course    Course?      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  Int?         @unique
+  gallery   GalleryItem? @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  galleryId Int?
+  slider    Slider?      @relation(fields: [sliderId], references: [id], onDelete: Cascade)
+  sliderId  Int?         @unique
+
+  @@map("image")
+}
+
+enum ImageType {
+  POST
+  COURSE
+  ANNOUNCEMENT
+  USER
+  SLIDER
+
+  COURSE_ASSET
+  POST_ASSET
+  TICKET_ASSET
+
+  OTHER
+}
+
+model File {
+  id                Int               @id @default(autoincrement())
+  public_id         String            @unique
+  url               String            @unique
+  format            String
+  resource_type     ResourceType
+  fileName          String
+  type              FileType
+  size              Int
+  createdAt         DateTime          @default(now())
+  ticketMessage     TicketMessage?    @relation(fields: [ticketMessageId], references: [id], onDelete: Cascade)
+  ticketMessageId   Int?              @unique
+  askTutorMessage   AskTutorMessages? @relation(fields: [askTutorMessageId], references: [id], onDelete: Cascade)
+  askTutorMessageId Int?              @unique
+  certificate       Certificate?      @relation(fields: [certificateId], references: [id])
+  certificateId     Int?              @unique
+
+  @@map("file")
+}
+
+enum FileType {
+  TICKET_ASSET
+  QA_ASSET
+  CERTIFICATE
+  OTHER
+}
+
+enum ResourceType {
+  image
+  raw
+  auto
+  video
+}
+
+//! Posts ---------------------------------------------------------
+model Post {
+  id         Int                  @id @default(autoincrement())
+  title      String
+  url        String               @unique @db.VarChar(512)
+  content    String               @db.Text
+  categories PostToPostCategory[]
+  status     PostStatus           @default(DRAFT)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  comments   Comment[]
+  image      Image?
+  imageId    Int?
+  author     Admin?               @relation(fields: [authorId], references: [id])
+  authorId   Int?
+
+  @@map("post")
+}
+
+model PostCategory {
+  id    Int                  @id @default(autoincrement())
+  name  String
+  url   String               @unique
+  posts PostToPostCategory[]
+
+  @@map("postcategory")
+}
+
+model PostToPostCategory {
+  post       Post         @relation(fields: [postId], references: [id])
+  postId     Int
+  category   PostCategory @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@id([postId, categoryId])
+  @@map("posttopostcategory")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  fullName  String   @default("hi")
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int?
+
+  @@map("comment")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+//! Course ---------------------------------------------------------
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String
+  url         String   @unique
+  summary     String   @db.VarChar(1024)
+  description String   @db.Text
+  tizerUrl    String
+  jobMarket   String   @db.VarChar(1024)
+  audience    String   @db.VarChar(1024)
+  needs       String   @db.VarChar(1024)
+  duration    Int
+  basePrice   Float
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // RELATIONS
+  category          CourseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId        Int?
+  tutor             Tutor?          @relation(fields: [tutorId], references: [id], onDelete: SetNull)
+  tutorId           Int?
+  image             Image?
+  status            Status
+  learn             Learn[]
+  prerequisite      Prerequisite[]
+  discount          Discount?
+  curriculum        Curriculum[]
+  gallery           GalleryItem?
+  review            Review[]
+  enrollment        Enrollment[]
+  includedInCoupons Coupon[]        @relation("includescoupons")
+  excludedInCoupons Coupon[]        @relation("excludescoupons")
+  askTutor          AskTutor[]
+  quickCart         QuickCart[]
+
+  CartItem CartItem?
+
+  @@map("course")
+}
+
+model CourseCategory {
+  id      Int      @id @default(autoincrement())
+  name    String
+  url     String   @unique
+  courses Course[]
+
+  @@map("coursecategory")
+}
+
+model Learn {
+  id       Int    @id @default(autoincrement())
+  value    String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int
+
+  @@map("learn")
+}
+
+model Prerequisite {
+  id       Int    @id @default(autoincrement())
+  value    String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int
+
+  @@map("prerequisite")
+}
+
+model Discount {
+  id       Int          @id @default(autoincrement())
+  amount   Float
+  type     DiscountType
+  from     DateTime?
+  to       DateTime?
+  course   Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int          @unique
+
+  @@map("discount")
+}
+
+enum DiscountType {
+  FIXED
+  PERCENT
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+}
+
+model Curriculum {
+  id           Int      @id @default(autoincrement())
+  sectionTitle String
+  lessons      Lesson[]
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId     Int
+
+  @@map("curriculum")
+}
+
+model Lesson {
+  id             Int              @id @default(autoincrement())
+  title          String
+  duration       Int?
+  url            String
+  isFree         Boolean
+  type           LessonType
+  section        Curriculum       @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId      Int
+  lessonProgress LessonProgress[]
+
+  @@map("lesson")
+}
+
+enum LessonType {
+  VIDEO
+  FILE
+  ASSET
+}
+
+model LessonProgress {
+  id          Int       @id @default(autoincrement())
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId     Int
+  Enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollmentId Int
+
+  @@unique([userId, lessonId])
+  @@map("lessonprogress")
+}
+
+model GalleryItem {
+  id       Int     @id @default(autoincrement())
+  image    Image[]
+  course   Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int     @unique
+
+  @@map("galleryitem")
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  rate      Int
+  createdAt DateTime @default(now())
+  updatedAT DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  Int
+
+  @@map("review")
+}
+
+model Slider {
+  id     Int        @id @default(autoincrement())
+  link   String?
+  active Boolean
+  type   SliderType
+  image  Image?
+
+  @@map("slider")
+}
+
+enum SliderType {
+  MAIN
+  PANEL
+}
+
+model Notifbar {
+  id        Int     @id @default(autoincrement())
+  content   String
+  link      String?
+  bgColor   String
+  textColor String
+  active    Boolean
+
+  @@map("notifbar")
+}
+
+model Enrollment {
+  id                  Int              @id @default(autoincrement())
+  enrolledAt          DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  progress            Float            @default(0)
+  completedAt         DateTime?
+  status              EnrollmentStatus @default(PENDING)
+  price               Float
+  courseOriginalPrice Float
+
+  lessonProgress LessonProgress[]
+  payment        Payment?         @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  paymentId      Int?
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  course         Course           @relation(fields: [courseId], references: [id])
+  courseId       Int
+  certificate    Certificate?
+  classroom      ClassRoom?
+
+  @@map("enrollment")
+}
+
+model Certificate {
+  id       Int      @id @default(autoincrement())
+  issuedAt DateTime @default(now())
+  url      String   @unique
+  serial   String   @unique
+
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollmentId Int        @unique
+
+  file File[]
+
+  @@map("certificate")
+}
+
+enum EnrollmentStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  balance   Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  used      Int      @default(0)
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @unique
+
+  transactions WalletTransaction[]
+
+  @@map("wallet")
+}
+
+model WalletTransaction {
+  id          String          @id @default(uuid())
+  amount      Float
+  type        TransactionType
+  description String?
+  createdAt   DateTime        @default(now())
+
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  walletId  String
+  payment   Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  paymentId Int?
+
+  @@map("wallettransaction")
+}
+
+enum TransactionType {
+  INCREMENT
+  DECREMENT
+}
+
+model Payment {
+  id                 Int           @id @default(autoincrement())
+  total              Float
+  itemsTotal         Float
+  discountAmount     Float?
+  discountCode       String?
+  discountCodeAmount Int?
+  transactionId      String?
+  status             PaymentStatus
+  paidAt             DateTime?
+  createdAt          DateTime      @default(now())
+  paymentMethod      PaymentMethod
+  walletUsed         Boolean       @default(false)
+  walletUsedAmount   Float?
+
+  enrollment        Enrollment[]
+  coupon            Coupon?             @relation(fields: [couponId], references: [id])
+  couponId          Int?
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            Int
+  QuickCart         QuickCart[]
+  Cart              Cart[]
+  WalletTransaction WalletTransaction[]
+
+  @@map("payment")
+}
+
+enum PaymentMethod {
+  ZARRIN_PAL
+  MELLI
+  ADMIN
+  NO_METHOD
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELED
+}
+
+model Settlement {
+  id               Int              @id @default(autoincrement())
+  totalSell        Float
+  totalEnrollments Int
+  profit           Int
+  amount           Float
+  from             DateTime
+  to               DateTime
+  paidAt           DateTime?        @default(now())
+  status           SettlementStatus
+  tutor            Tutor            @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  tutorId          Int
+
+  @@map("settlement")
+}
+
+enum SettlementStatus {
+  PENDING
+  PAID
+}
+
+model Coupon {
+  id            Int        @id @default(autoincrement())
+  code          String     @unique
+  amount        Float
+  type          CouponType
+  from          DateTime?
+  to            DateTime?
+  used          Int        @default(0)
+  summery       String?
+  limit         Int?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  payment       Payment[]
+  courseInclude Course[]   @relation("includescoupons")
+  courseExclude Course[]   @relation("excludescoupons")
+
+  @@map("coupon")
+}
+
+enum CouponType {
+  PERCENT
+  FIXED_ON_CART
+  FIXED_ON_COURSE
+}
+
+model OverallOff {
+  id     Int            @id @default(autoincrement())
+  amount Float
+  active Boolean
+  type   OverallOffType
+  from   DateTime?
+  to     DateTime?
+
+  @@map("overalloff")
+}
+
+enum OverallOffType {
+  FIXED_ON_CART
+  FIXED_ON_COURSE
+  PERCENT
+}
+
+model Ticket {
+  id         Int              @id @default(autoincrement())
+  subject    String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  status     TicketStatus
+  department TicketDepartment
+  messages   TicketMessage[]
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+
+  @@map("ticket")
+}
+
+model TicketMessage {
+  id        Int      @id @default(autoincrement())
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  senderType SenderType
+  ticket     Ticket     @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId   Int
+  user       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int?
+  attachment File?
+
+  @@map("ticketmessage")
+}
+
+enum SenderType {
+  USER
+  ADMIN
+}
+
+enum TicketStatus {
+  PENDING
+  REPLIED
+  CLOSED
+}
+
+enum TicketDepartment {
+  COURSE
+  FINANCE
+  TECHNICAL
+  SUGGEST
+}
+
+model Contact {
+  id              Int              @id @default(autoincrement())
+  fullName        String
+  phone           String
+  email           String
+  subject         String
+  status          ContactStatus    @default(PENDING)
+  message         String           @db.Text
+  createdAt       DateTime         @default(now())
+  ContactResponse ContactResponse?
+
+  @@map("contact")
+}
+
+enum ContactStatus {
+  REPLIED
+  PENDING
+}
+
+model ContactResponse {
+  id           Int      @id @default(autoincrement())
+  message      String   @db.Text
+  respondent   Admin?   @relation(fields: [respondentId], references: [id])
+  respondentId Int?
+  createdAt    DateTime @default(now())
+  contact      Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId    Int?     @unique
+
+  @@map("contactresponse")
+}
+
+model AskTutor {
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  status    AskTutorStatus
+
+  messages  AskTutorMessages[]
+  course    Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  Int
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  tutor     Tutor              @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  tutorId   Int
+  classRoom ClassRoom?
+
+  @@map("asktutor")
+}
+
+enum AskTutorStatus {
+  PENDING
+  REPLIED
+}
+
+model AskTutorMessages {
+  id        Int      @id @default(autoincrement())
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  senderType AskTutorSenderType
+  attachment File?
+  askTutor   AskTutor?          @relation(fields: [askTutorId], references: [id], onDelete: Cascade)
+  askTutorId Int?
+
+  @@map("asktutormessages")
+}
+
+enum AskTutorSenderType {
+  USER
+  TUTOR
+}
+
+model ClassRoom {
+  id String @id @default(uuid())
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollmentId Int        @unique
+  askTutor     AskTutor?  @relation(fields: [askTutorId], references: [id], onDelete: Cascade)
+  askTutorId   Int?       @unique
+
+  @@unique([userId, enrollmentId, askTutorId])
+  @@map("classroom")
+}
+
+model QuickCart {
+  id        String   @id @default(uuid())
+  amount    Float
+  authority String   @unique
+  createdAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  Int
+  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  paymentId Int
+
+  @@map("quickcart")
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  amount    Float?
+  authority String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int        @unique
+  payment   Payment?   @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  paymentId Int?
+  cartItem  CartItem[]
+
+  @@map("cart")
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  paidPrice Float?
+
+  cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId   Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId Int    @unique
+
+  @@map("cartitem")
+}

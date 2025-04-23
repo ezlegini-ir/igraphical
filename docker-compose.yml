@@ -1,0 +1,122 @@
+version: "3.8"
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs:rw
+      - vhost.d:/etc/nginx/vhost.d:rw
+      - html:/usr/share/nginx/html:rw
+    networks:
+      - app_network
+
+  nginx-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-letsencrypt
+    restart: always
+    environment:
+      NGINX_PROXY_CONTAINER: nginx-proxy
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs:rw
+      - vhost.d:/etc/nginx/vhost.d:rw
+      - html:/usr/share/nginx/html:rw
+    networks:
+      - app_network
+
+  database:
+    image: mysql:8.0.32
+    container_name: database
+    platform: linux/amd64
+    restart: always
+    environment:
+      MYSQL_DATABASE: igraphical
+      MYSQL_ALLOW_EMPTY_PASSWORD: "1"
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+    networks:
+      - app_network
+
+  tutor:
+    build:
+      context: .
+      dockerfile: ./apps/tutor/Dockerfile
+    container_name: tutor
+    restart: always
+    env_file:
+      - ./apps/tutor/.env.local
+    environment:
+      VIRTUAL_HOST: tutor.igrph.ir
+      LETSENCRYPT_HOST: tutor.igrph.ir
+      LETSENCRYPT_EMAIL: admin@igraphical.ir
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - db_backups:/app/backups
+
+  admin:
+    build:
+      context: .
+      dockerfile: ./apps/admin/Dockerfile
+    container_name: admin
+    restart: always
+    env_file:
+      - ./apps/admin/.env.local
+    environment:
+      VIRTUAL_HOST: admin.igrph.ir
+      LETSENCRYPT_HOST: admin.igrph.ir
+      LETSENCRYPT_EMAIL: admin@igraphical.ir
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - db_backups:/app/backups
+
+  app:
+    build:
+      context: .
+      dockerfile: ./apps/app/Dockerfile
+    container_name: app
+    restart: always
+    env_file:
+      - ./apps/app/.env.local
+    environment:
+      VIRTUAL_HOST: igrph.ir
+      LETSENCRYPT_HOST: igrph.ir
+      LETSENCRYPT_EMAIL: admin@igraphical.ir
+      DATABASE_URL: "mysql://root@database:3306/igraphical"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - db_backups:/app/backups
+
+volumes:
+  database:
+  certs:
+  vhost.d:
+  html:
+  db_backups:
+
+networks:
+  app_network:
+    external: true
