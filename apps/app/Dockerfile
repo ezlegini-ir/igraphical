@@ -29,6 +29,7 @@
   ENV DATABASE_URL="mysql://root@database:3306/igraphical"
   ENV AUTH_APP="app"
   ENV NEXT_PUBLIC_BASE_URL="https://igraphical.ir"
+  # don't remove this line, it's used as a public key in the app. so it must be in the image and there is no problem to have it in the image, expose it to the public:
   ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY="6Le9kg0rAAAAAOta9iSjq0LS-96mcHHsNwOTphjG"
   RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
   RUN npm run build --workspace=app
