@@ -56,7 +56,7 @@ services:
     container_name: tutor
     restart: always
     env_file:
-      - ./apps/tutor/.env.local
+      - ./envs/tutor/.env.local
     environment:
       VIRTUAL_HOST: tutor.igrph.ir
       LETSENCRYPT_HOST: tutor.igrph.ir
@@ -76,7 +76,7 @@ services:
     container_name: admin
     restart: always
     env_file:
-      - ./apps/admin/.env.local
+      - ./envs/admin/.env.local
     environment:
       VIRTUAL_HOST: admin.igrph.ir
       LETSENCRYPT_HOST: admin.igrph.ir
@@ -96,7 +96,7 @@ services:
     container_name: app
     restart: always
     env_file:
-      - ./apps/app/.env.local
+      - ./envs/app/.env.local
     environment:
       VIRTUAL_HOST: igrph.ir
       LETSENCRYPT_HOST: igrph.ir
