@@ -96,7 +96,7 @@ const InputForm = ({
                 <FormItem>
                   <FormLabel>شماره تماس یا ایمیل</FormLabel>
                   <FormControl>
-                    <Input dir="ltr" {...field} />
+                    <Input dir="ltr" className="en-digits" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

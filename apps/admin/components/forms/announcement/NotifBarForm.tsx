@@ -32,7 +32,7 @@ const NotifBarForm = ({ notifBar }: Props) => {
     mode: "onSubmit",
     defaultValues: {
       content: notifBar?.content || "Write Here...",
-      link: notifBar?.link || "",
+      link: notifBar?.link || undefined,
       active: notifBar?.active || false,
       bgColor: notifBar?.bgColor || "#3b82f6",
       textColor: notifBar?.textColor || "#ffffff",

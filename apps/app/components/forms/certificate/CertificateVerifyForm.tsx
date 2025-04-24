@@ -87,6 +87,14 @@ const CertificateVerifyForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-3 w-full max-w-sm"
       >
+        <span className="mb-10">
+          تنها مدارکی که از تاریخ 5 اردیبهشت 1404 | 2025/04/24 به بعد صادر شده
+          باشند قابلیت استعلام دارند.
+          <br />
+          برای تاریخ های ماقبل، استعلام مدرک از طریق ایمیل info@igraphical.ir
+          مقدور می باشد.
+        </span>
+
         {result === "VALID" ? (
           <div className="flex flex-col  justify-center items-center gap-3">
             <CheckCircle size={75} className="text-green-500" />

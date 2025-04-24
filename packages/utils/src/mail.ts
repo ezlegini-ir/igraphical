@@ -28,9 +28,9 @@ export const sendEmail = async ({
       from: `"آی‌گرافیکال" <test@igraphical.ir>`,
       // text,
       // replyTo: "support@igraphical.ir",
-      // headers: {
-      //   "List-Unsubscribe": `<mailto:unsubscribe@igraphical.ir?subject=unsubscribe>, <https://igraphical.ir/unsubscribe?email=${to}>`,
-      // },
+      headers: {
+        "List-Unsubscribe:": `<mailto:unsubscribe@igraphical.ir>, <https://igraphical.ir/unsubscribe>`,
+      },
     });
 
     return { success: true, messageId: info.messageId };

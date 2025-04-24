@@ -26,13 +26,15 @@ const NotifBar = async () => {
         >
           <p>{notifBar?.content}</p>
 
-          <Button
-            className="h-6 text-orange-950 border-white border"
-            variant={"gold"}
-            size={"sm"}
-          >
-            کلیک کنید
-          </Button>
+          {notifBar.link && (
+            <Button
+              className="h-6 text-orange-950 border-white border"
+              variant={"gold"}
+              size={"sm"}
+            >
+              کلیک کنید
+            </Button>
+          )}
         </Link>
       ) : (
         <div

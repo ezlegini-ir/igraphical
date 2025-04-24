@@ -6,7 +6,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="flex items-center flex-col">
+    <div className="flex items-center flex-col gap-3">
       <PageTitle
         title={"استعلام مدرک"}
         description={"در این صفحه می توانید مدرک آی‌گرافیکال را استعلام کنید."}
