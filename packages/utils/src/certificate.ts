@@ -3,7 +3,7 @@
 import { User } from "@igraph/database";
 import path from "path";
 import PDFDocument from "pdfkit";
-import { formatDuration } from "@igraph/utils";
+import { formatDurationToWords } from "@igraph/utils";
 import moment from "moment-jalaali";
 
 function convertToPersianNumbers(text: string): string {
@@ -94,7 +94,7 @@ export async function generateCertificate(
         });
 
       const courseInfoText = reverseNumbersInText(
-        `این دوره شامل ${formatDuration(
+        `این دوره شامل بیش از ${formatDurationToWords(
           courseDuration
         )} آموزش تخصصی بوده و در تاریخ ${persianFormattedDate} به پایان رسیده است.`
       );

@@ -41,7 +41,7 @@ const ClassroomVideo = ({
     const res = await createLessonProgress(currentLesson.id, classroomId);
 
     if (res.error) {
-      toast.error(res.error);
+      toast.error("خطا! لطفا مجدد تلاش کنید.");
       setLoading(false);
       return;
     }

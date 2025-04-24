@@ -6,7 +6,7 @@ services:
     container_name: nginx-proxy
     restart: always
     environment:
-      - CLIENT_MAX_BODY_SIZE=10m
+      - CLIENT_MAX_BODY_SIZE: 5m
     ports:
       - "80:80"
       - "443:443"

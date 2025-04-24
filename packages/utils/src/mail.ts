@@ -6,34 +6,34 @@ import {
   renderOtpEmail,
   renderSuccessPaymentEmail,
 } from "./email-templates";
-import { mailer } from "./config/mailer";
 import { generateEmailOtp } from "./otp";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async ({
   to,
   subject,
   html,
-  text,
 }: {
   to: string;
   subject: string;
   html: string;
-  text: string;
 }) => {
   try {
-    const info = await mailer.sendMail({
+    const { data, error } = await resend.emails.send({
+      from: "آی‌گرافیکال <noreply@igrph.ir>",
       to,
       subject,
       html,
-      from: `"آی‌گرافیکال" <test@igraphical.ir>`,
-      // text,
-      // replyTo: "support@igraphical.ir",
-      headers: {
-        "List-Unsubscribe:": `<mailto:unsubscribe@igraphical.ir>, <https://igraphical.ir/unsubscribe>`,
-      },
     });
 
-    return { success: true, messageId: info.messageId };
+    if (error) {
+      console.error(error);
+      return { success: false, error };
+    }
+
+    return { success: true, messageId: data?.id };
   } catch (error) {
     console.error(error);
     return { success: false, error };
@@ -51,7 +51,6 @@ export const sendOtpEmail = async (email: string, userId?: number) => {
       subject: `🔒 کد تایید: ${plainOtp}`,
       to: email,
       html: emailHtml,
-      text: "کد احراز هویت",
     });
 
     return { success: true };
@@ -73,7 +72,6 @@ export const sendSuccessPaymentEmail = async (
     to: email,
     subject: `✅ ثبت نام موفق!`,
     html: emailHtml,
-    text: "ثبت نام شما موفق بود!",
   });
 };
 
@@ -90,6 +88,5 @@ export const sendFinishCourseEmail = async (
     to: email,
     subject: `🎉 تبریک اتمام دوره!`,
     html: emailHtml,
-    text: "تبریک اتمام دوره",
   });
 };

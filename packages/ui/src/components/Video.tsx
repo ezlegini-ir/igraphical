@@ -28,6 +28,7 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
         controls: true,
         autoplay: false,
         preload: "auto",
+        playsinline: true,
         poster,
         playbackRates: [0.5, 1, 1.5, 2],
         controlBar: {
@@ -68,7 +69,7 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
               className="video-js w-full h-full"
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}
-              playsInline
+              autoPlay
             />
           </div>
         )}
