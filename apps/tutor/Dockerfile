@@ -28,6 +28,7 @@
     COPY --from=builder /repo/out/full/ ./
     ENV DATABASE_URL="mysql://root@database:3306/igraphical"
     ENV AUTH_APP="tutor"
+    ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY="6Le9kg0rAAAAAOta9iSjq0LS-96mcHHsNwOTphjG"
     RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
     RUN npm run build --workspace=tutor
     

@@ -68,6 +68,7 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
               className="video-js w-full h-full"
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}
+              playsInline
             />
           </div>
         )}
