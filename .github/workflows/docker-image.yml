@@ -68,12 +68,12 @@ jobs:
 
           echo "🔄 Pulling latest code..."
           ssh -i ~/.ssh/igraphical_deploy_key -o StrictHostKeyChecking=no root@45.138.135.200 "\
-            cd /projects/igraphical && git pull"
+            cd /root/projects/igraphical && git pull"
 
           if [[ -n "$SERVICES" ]]; then
             echo "🚀 Building and restarting services: $SERVICES"
             ssh -i ~/.ssh/igraphical_deploy_key -o StrictHostKeyChecking=no root@45.138.135.200 "\
-              cd /projects/igraphical && docker-compose up --build -d $SERVICES"
+              cd /root/projects/igraphical && docker-compose up --build -d $SERVICES"
           else
             echo "✅ No rebuild needed. Code pulled only."
           fi
