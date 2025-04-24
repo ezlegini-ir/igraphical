@@ -1,8 +1,7 @@
-import { Copyright } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import SocialsIcon from "@igraph/ui/components/SocialsIcon";
 import IgraphLogoSquare from "@igraph/ui/components/IgraphLogoSquare";
+import SocialsIcon from "@igraph/ui/components/SocialsIcon";
+import { Copyright } from "lucide-react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -26,14 +25,20 @@ const Footer = () => {
           <SocialsIcon />
         </div>
 
-        <Image
-          src={"/eNamad.png"}
-          alt="enamad"
-          width={90}
-          height={90}
-          draggable={false}
-          className="rounded-lg cursor-pointer"
-        />
+        <a
+          className="w-[90px] h-[120px] rounded-sm overflow-hidden bg-slate-50"
+          referrerPolicy="origin"
+          target="_blank"
+          href="https://trustseal.enamad.ir/?id=214895&Code=1Wgxc21JlxfhD1Coppnv"
+        >
+          <img
+            referrerPolicy="origin"
+            data-code="1Wgxc21JlxfhD1Coppnv"
+            src="https://trustseal.enamad.ir/logo.aspx?id=214895&Code=1Wgxc21JlxfhD1Coppnv"
+            alt="e-namad"
+            className="cursor-pointer"
+          />
+        </a>
       </div>
 
       <div className="text-xs md:text-sm md:flex-row flex-col items-center gap-1 text-gray-500 pt-3  flex justify-between">

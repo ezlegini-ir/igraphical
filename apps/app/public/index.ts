@@ -15,7 +15,6 @@ export const tutorPlaceholder = "/tutor-placeholder.png";
 export const bgPattern = "/bg-pattern.png";
 
 // PHOTOS
-export const eNamad = "/eNamad.png";
 export const student = "/student.png";
 export const studentProfile1 = "/students/student-profile-1.webp";
 export const studentProfile2 = "/students/student-profile-2.webp";

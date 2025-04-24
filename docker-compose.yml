@@ -58,9 +58,11 @@ services:
     env_file:
       - ./envs/tutor/.env.local
     environment:
+      VIRTUAL_PORT: 3000
       VIRTUAL_HOST: tutor.igrph.ir
       LETSENCRYPT_HOST: tutor.igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
+      DATABASE_URL: "mysql://root@database:3306/igraphical"
     depends_on:
       database:
         condition: service_healthy
@@ -78,9 +80,11 @@ services:
     env_file:
       - ./envs/admin/.env.local
     environment:
+      VIRTUAL_PORT: 3000
       VIRTUAL_HOST: admin.igrph.ir
       LETSENCRYPT_HOST: admin.igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
+      DATABASE_URL: "mysql://root@database:3306/igraphical"
     depends_on:
       database:
         condition: service_healthy
@@ -103,6 +107,7 @@ services:
       LETSENCRYPT_HOST: igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
       DATABASE_URL: "mysql://root@database:3306/igraphical"
+      NEXTAUTH_URL: https://igrph.ir
     depends_on:
       database:
         condition: service_healthy

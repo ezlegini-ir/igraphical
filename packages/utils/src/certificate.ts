@@ -12,9 +12,9 @@ function convertToPersianNumbers(text: string): string {
 }
 
 function reverseNumbersInText(text: string): string {
-  return text.replace(/\d+/g, (match) => {
-    const reversedNumber = match.split("").reverse().join("");
-    return convertToPersianNumbers(reversedNumber);
+  return text.replace(/\d+(\.\d+)?/g, (match) => {
+    const persianNumber = convertToPersianNumbers(match);
+    return persianNumber;
   });
 }
 
