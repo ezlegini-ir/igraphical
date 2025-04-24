@@ -21,8 +21,9 @@ const FaqBanner = () => {
           </p>
 
           <p className="font-semibold">
-            (برای <span className="text-primary">ارتباط با مدرس</span> به کلاس
-            درس مراجعه کنید.)
+            (<span className="text-destructive">توجه:</span> برای{" "}
+            <span className="text-primary">ارتباط با مدرس</span> به کلاس درس
+            مراجعه کنید.)
           </p>
         </div>
 

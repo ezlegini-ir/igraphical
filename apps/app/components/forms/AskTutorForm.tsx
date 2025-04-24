@@ -136,7 +136,10 @@ const AskTutorForm = ({
         <div className="flex items-center gap-3">
           <Button
             disabled={!askTutorId}
-            onClick={() => router.refresh()}
+            onClick={() => {
+              router.refresh();
+              toast.success("پیام ها به روز شدند.");
+            }}
             variant="link"
             size="icon"
             className="w-8 h-8 text-gray-500 hover:text-primary"
