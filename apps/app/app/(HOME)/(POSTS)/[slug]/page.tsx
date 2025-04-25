@@ -36,7 +36,6 @@ const getPost = cache(async (slug: string) => {
 const page = async ({ params }: Props) => {
   const { slug } = await params;
   const post = await getPost(slug);
-  console.log("post", post);
 
   if (!post) return notFound();
 
