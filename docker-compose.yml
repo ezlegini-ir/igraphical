@@ -65,11 +65,11 @@ services:
       - /root/secrets/envs/tutor/.env.local
     environment:
       VIRTUAL_PORT: 3000
-      VIRTUAL_HOST: tutor.igrph.ir
-      LETSENCRYPT_HOST: tutor.igrph.ir
+      VIRTUAL_HOST: tutor.igraphical.ir
+      LETSENCRYPT_HOST: tutor.igraphical.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
       DATABASE_URL: "mysql://root@database:3306/igraphical"
-      NEXTAUTH_URL: https://tutor.igrph.ir
+      NEXTAUTH_URL: https://tutor.igraphical.ir
       CLIENT_MAX_BODY_SIZE: 10m
     depends_on:
       database:
@@ -93,10 +93,10 @@ services:
       - /root/secrets/envs/admin/.env.local
     environment:
       VIRTUAL_PORT: 3000
-      VIRTUAL_HOST: admin.igrph.ir
-      LETSENCRYPT_HOST: admin.igrph.ir
+      VIRTUAL_HOST: admin.igraphical.ir
+      LETSENCRYPT_HOST: admin.igraphical.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
-      NEXTAUTH_URL: https://admin.igrph.ir
+      NEXTAUTH_URL: https://admin.igraphical.ir
       CLIENT_MAX_BODY_SIZE: 10m
     depends_on:
       database:
@@ -120,10 +120,10 @@ services:
       - /root/secrets/envs/app/.env.local
     environment:
       VIRTUAL_PORT: 3000
-      VIRTUAL_HOST: igrph.ir
-      LETSENCRYPT_HOST: igrph.ir
+      VIRTUAL_HOST: igraphical.ir
+      LETSENCRYPT_HOST: igraphical.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
-      NEXTAUTH_URL: https://igrph.ir
+      NEXTAUTH_URL: https://igraphical.ir
       CLIENT_MAX_BODY_SIZE: 10m
     depends_on:
       database:

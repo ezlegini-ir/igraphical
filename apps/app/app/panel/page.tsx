@@ -67,7 +67,7 @@ const page = async () => {
       <div className="grid grid-cols-2 lg:grid-cols-4  gap-3 justify-between">
         <StatusCardsGrid />
 
-        <div className="card  px-4 flex  items-center justify-between">
+        <div className="card px-4 flex flex-col lg:flex-row gap-3 items-center justify-between">
           <div className="flex flex-col gap-1">
             <span className="text-primary font-medium text-sm">
               موجودی کیف پول

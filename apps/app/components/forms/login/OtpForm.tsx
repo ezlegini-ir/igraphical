@@ -138,8 +138,10 @@ const OtpForm = ({
 
         <CardDescription>
           لطفا کد ارسال شده به{" "}
-          <span className="font-semibold">{identifier?.toLowerCase()}</span> را
-          وارد کنید.
+          <span className="font-semibold en-digits">
+            {identifier?.toLowerCase()}
+          </span>{" "}
+          را وارد کنید.
         </CardDescription>
       </CardHeader>
 
