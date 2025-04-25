@@ -55,6 +55,19 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /*! ------------- VIDEO PLAYER ------------- */
+    --plyr-range-fill-background: #526eff;
+    --plyr-range-track-background: #e5e7eb;
+    --plyr-color-main: #526eff;
+    --plyr-audio-controls-background: #fff;
+    --plyr-audio-control-color: #000;
+    --plyr-video-control-color: #fff;
+    --plyr-control-hover-background: rgba(0, 0, 0, 0.1);
+    --plyr-range-fill-background: #526eff;
+    --plyr-range-track-background: #ccc;
+    --plyr-tooltip-background: #111;
+    --plyr-tooltip-color: #fff;
   }
 
   /*! ------------- GENERAL ------------- */
@@ -166,52 +179,6 @@ pre {
 html > body[data-scroll-locked] {
   overflow: visible !important;
   margin-right: 0 !important;
-}
-
-/*! ------------- VIDEO JS ------------- */
-.video-js .vjs-control-bar {
-  height: 50px !important;
-  padding: 9px 5px !important;
-  background: linear-gradient(to top, #000, transparent) !important;
-}
-
-.video-js .vjs-playback-rate {
-  border-radius: 5px;
-  padding: 5px 5px;
-}
-
-.video-js .vjs-playback-rate .vjs-menu {
-  border-radius: 5px;
-  padding: 10px 0;
-}
-
-.video-js .vjs-playback-rate .vjs-menu .vjs-menu-item {
-  padding: 8px 20px;
-}
-
-.video-js .vjs-playback-rate .vjs-menu .vjs-menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.video-js .vjs-slider {
-  height: 5px !important;
-}
-
-.video-js .vjs-progress-control .vjs-play-progress {
-  background-color: #526eff;
-}
-
-.vjs-time-tooltip {
-  font-size: 11px !important;
-}
-
-.vjs-remaining-time-display {
-  font-size: 12px !important;
-}
-
-.vjs-play-progress::before {
-  padding-top: 1px;
-  /* scale: 1.25; */
 }
 
 /*! ------------- SCROLLBAR ------------- */

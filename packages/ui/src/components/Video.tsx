@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import videojs from "video.js";
-import Player from "video.js/dist/types/player";
-import "video.js/dist/video-js.css";
+import React, { useEffect, useState } from "react";
+import Plyr, { PlyrOptions, PlyrSource } from "plyr-react";
+import "plyr-react/plyr.css";
 import { Skeleton } from "@igraph/ui/components/ui/skeleton";
 
 interface VideoProps {
@@ -12,65 +11,61 @@ interface VideoProps {
 }
 
 const Video: React.FC<VideoProps> = ({ src, poster }) => {
-  const videoNode = useRef<HTMLVideoElement | null>(null);
-  const player = useRef<Player | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Wait for client-side mount
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (isMounted && videoNode.current) {
-      player.current = videojs(videoNode.current, {
-        controls: true,
-        autoplay: false,
-        preload: "auto",
-        playsinline: true,
-        poster,
-        playbackRates: [0.5, 1, 1.5, 2],
-        controlBar: {
-          fullscreenToggle: true,
-          pictureInPictureToggle: false,
+  const plyrProps: {
+    source: PlyrSource;
+    options: PlyrOptions;
+  } = {
+    source: {
+      type: "video",
+      poster,
+      sources: [
+        {
+          src,
+          type: "video/mp4",
         },
-        sources: [{ src }],
-        width: 640,
-        height: 360,
-      });
-
-      player.current.on("canplay", () => {
-        setIsLoading(false);
-      });
-    }
-
-    return () => {
-      if (player.current) {
-        player.current.dispose();
-        player.current = null;
-      }
-    };
-  }, [isMounted, src, poster]);
+      ],
+    },
+    options: {
+      speed: {
+        selected: 1,
+        options: [0.75, 1, 1.5, 2],
+      },
+      controls: [
+        "play-large",
+        "play",
+        "progress",
+        "current-time",
+        "mute",
+        "volume",
+        "settings",
+        "fullscreen",
+      ],
+      settings: ["quality", "speed"],
+      autoplay: false,
+    },
+  };
 
   return (
-    <div className="max-w-4xl mx-auto rounded-sm overflow-hidden">
-      <div className="relative aspect-video">
+    <div className="max-w-4xl mx-auto rounded-md overflow-hidden">
+      <div className="relative aspect-video bg-black">
         {isLoading && (
           <div className="absolute inset-0 z-10">
             <Skeleton />
           </div>
         )}
-
         {isMounted && (
-          <div data-vjs-player className="absolute inset-0">
-            <video
-              ref={videoNode}
-              className="video-js w-full h-full"
-              onContextMenu={(e) => e.preventDefault()}
-              draggable={false}
-              autoPlay
-            />
+          <div
+            className="absolute inset-0"
+            onLoadedData={() => setIsLoading(false)}
+          >
+            <Plyr {...plyrProps} />
           </div>
         )}
       </div>
