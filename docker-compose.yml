@@ -59,7 +59,7 @@ services:
     container_name: tutor
     restart: always
     env_file:
-      - /root/secrects/envs/tutor/.env.local
+      - /root/secrets/envs/tutor/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: tutor.igrph.ir
@@ -82,7 +82,7 @@ services:
     container_name: admin
     restart: always
     env_file:
-      - /root/secrects/envs/admin/.env.local
+      - /root/secrets/envs/admin/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: admin.igrph.ir
@@ -105,7 +105,7 @@ services:
     container_name: app
     restart: always
     env_file:
-      - /root/secrects/envs/app/.env.local
+      - /root/secrets/envs/app/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: igrph.ir
