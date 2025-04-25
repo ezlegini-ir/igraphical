@@ -75,5 +75,5 @@ jobs:
             ssh -i ~/.ssh/igraphical_deploy_key -o StrictHostKeyChecking=no root@45.138.135.200 "\
               cd /root/projects/igraphical && docker-compose up --build -d $SERVICES"
           else
-            echo "✅ No rebuild needed. Code pulled only."
+            echo "✅ No rebuild needed. Code pulled only. If you want to rebuild, try do it manually."
           fi

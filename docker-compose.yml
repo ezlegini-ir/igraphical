@@ -58,8 +58,6 @@ services:
       args:
         DATABASE_URL: ${DATABASE_URL}
         NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
-        AUTH_APP: ${AUTH_APP}
         RESEND_API_KEY: ${RESEND_API_KEY}
     container_name: tutor
     restart: always
@@ -87,8 +85,6 @@ services:
       args:
         DATABASE_URL: ${DATABASE_URL}
         NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
-        AUTH_APP: ${AUTH_APP}
         RESEND_API_KEY: ${RESEND_API_KEY}
     container_name: admin
     restart: always
@@ -115,8 +111,6 @@ services:
       args:
         DATABASE_URL: ${DATABASE_URL}
         NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
-        AUTH_APP: ${AUTH_APP}
         RESEND_API_KEY: ${RESEND_API_KEY}
     container_name: app
     restart: always
