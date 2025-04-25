@@ -52,13 +52,14 @@ services:
       - app_network
 
   tutor:
+    image: tutor-image
     build:
       context: .
       dockerfile: ./apps/tutor/Dockerfile
     container_name: tutor
     restart: always
     env_file:
-      - ./envs/tutor/.env.local
+      - /root/secrects/envs/tutor/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: tutor.igrph.ir
@@ -74,13 +75,14 @@ services:
       - db_backups:/app/backups
 
   admin:
+    image: admin-image
     build:
       context: .
       dockerfile: ./apps/admin/Dockerfile
     container_name: admin
     restart: always
     env_file:
-      - ./envs/admin/.env.local
+      - /root/secrects/envs/admin/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: admin.igrph.ir
@@ -96,13 +98,14 @@ services:
       - db_backups:/app/backups
 
   app:
+    image: app-image
     build:
       context: .
       dockerfile: ./apps/app/Dockerfile
     container_name: app
     restart: always
     env_file:
-      - ./envs/app/.env.local
+      - /root/secrects/envs/app/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: igrph.ir
