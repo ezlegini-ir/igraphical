@@ -22,7 +22,7 @@ export const sendEmail = async ({
 }) => {
   try {
     const { data, error } = await resend.emails.send({
-      from: "آی‌گرافیکال <noreply@igrph.ir>",
+      from: "آی‌گرافیکال <noreply@igraphical.ir>",
       to,
       subject,
       html,
