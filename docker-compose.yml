@@ -6,7 +6,7 @@ services:
     container_name: nginx-proxy
     restart: always
     environment:
-      CLIENT_MAX_BODY_SIZE: 5m
+      CLIENT_MAX_BODY_SIZE: 10m
     ports:
       - "80:80"
       - "443:443"
@@ -70,6 +70,7 @@ services:
       LETSENCRYPT_EMAIL: admin@igraphical.ir
       DATABASE_URL: "mysql://root@database:3306/igraphical"
       NEXTAUTH_URL: https://tutor.igrph.ir
+      CLIENT_MAX_BODY_SIZE: 10m
     depends_on:
       database:
         condition: service_healthy
@@ -96,6 +97,7 @@ services:
       LETSENCRYPT_HOST: admin.igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
       NEXTAUTH_URL: https://admin.igrph.ir
+      CLIENT_MAX_BODY_SIZE: 10m
     depends_on:
       database:
         condition: service_healthy
@@ -122,6 +124,7 @@ services:
       LETSENCRYPT_HOST: igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
       NEXTAUTH_URL: https://igrph.ir
+      CLIENT_MAX_BODY_SIZE: 10m
     depends_on:
       database:
         condition: service_healthy
