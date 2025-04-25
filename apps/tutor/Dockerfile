@@ -26,9 +26,16 @@
     # !Builder again: copy full source + generate + build tutor
     # -----------------------------
     COPY --from=builder /repo/out/full/ ./
-    ENV DATABASE_URL="mysql://root@database:3306/igraphical"
+
+    # Arguments needed for build
+    ARG RESEND_API_KEY
+    ENV RESEND_API_KEY=${RESEND_API_KEY}
+    ARG DATABASE_URL
+    ENV DATABASE_URL=${DATABASE_URL}
+    ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
     ENV AUTH_APP="tutor"
-    ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY="6Le9kg0rAAAAAOta9iSjq0LS-96mcHHsNwOTphjG"
+
     RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
     RUN npm run build --workspace=tutor
     
@@ -39,9 +46,6 @@
     WORKDIR /app
     RUN apk update && apk add --no-cache nano
     RUN apk add --no-cache mysql mysql-client
-
-    ENV DATABASE_URL="mysql://root@database:3306/igraphical"
-    ENV AUTH_APP="tutor"
     
     # Create user and set permissions
     RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs

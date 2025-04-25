@@ -52,10 +52,15 @@ services:
       - app_network
 
   tutor:
-    image: tutor-image
     build:
       context: .
       dockerfile: ./apps/tutor/Dockerfile
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+        AUTH_APP: ${AUTH_APP}
+        RESEND_API_KEY: ${RESEND_API_KEY}
     container_name: tutor
     restart: always
     env_file:
@@ -66,6 +71,7 @@ services:
       LETSENCRYPT_HOST: tutor.igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
       DATABASE_URL: "mysql://root@database:3306/igraphical"
+      NEXTAUTH_URL: https://tutor.igrph.ir
     depends_on:
       database:
         condition: service_healthy
@@ -75,10 +81,15 @@ services:
       - db_backups:/app/backups
 
   admin:
-    image: admin-image
     build:
       context: .
       dockerfile: ./apps/admin/Dockerfile
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+        AUTH_APP: ${AUTH_APP}
+        RESEND_API_KEY: ${RESEND_API_KEY}
     container_name: admin
     restart: always
     env_file:
@@ -88,7 +99,7 @@ services:
       VIRTUAL_HOST: admin.igrph.ir
       LETSENCRYPT_HOST: admin.igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
-      DATABASE_URL: "mysql://root@database:3306/igraphical"
+      NEXTAUTH_URL: https://admin.igrph.ir
     depends_on:
       database:
         condition: service_healthy
@@ -98,10 +109,15 @@ services:
       - db_backups:/app/backups
 
   app:
-    image: app-image
     build:
       context: .
       dockerfile: ./apps/app/Dockerfile
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+        AUTH_APP: ${AUTH_APP}
+        RESEND_API_KEY: ${RESEND_API_KEY}
     container_name: app
     restart: always
     env_file:
@@ -111,7 +127,6 @@ services:
       VIRTUAL_HOST: igrph.ir
       LETSENCRYPT_HOST: igrph.ir
       LETSENCRYPT_EMAIL: admin@igraphical.ir
-      DATABASE_URL: "mysql://root@database:3306/igraphical"
       NEXTAUTH_URL: https://igrph.ir
     depends_on:
       database:

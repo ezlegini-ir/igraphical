@@ -26,9 +26,16 @@
   # !Builder again: copy full source + generate + build admin
   # -----------------------------
   COPY --from=builder /repo/out/full/ ./
-  ENV DATABASE_URL="mysql://root@database:3306/igraphical"
-  ENV AUTH_APP="admin"
-  ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY="6Le9kg0rAAAAAOta9iSjq0LS-96mcHHsNwOTphjG"
+
+    # Arguments needed for build
+    ARG RESEND_API_KEY
+    ENV RESEND_API_KEY=${RESEND_API_KEY}
+    ARG DATABASE_URL
+    ENV DATABASE_URL=${DATABASE_URL}
+    ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+    ENV AUTH_APP="admin"
+    
   RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
   RUN npm run build --workspace=admin
   
