@@ -17,6 +17,7 @@
     "@igraph/editor": "*",
     "@igraph/ui": "*",
     "@igraph/utils": "*",
+    "@next/third-parties": "^15.3.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.6.0",

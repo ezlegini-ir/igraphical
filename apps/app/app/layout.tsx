@@ -2,6 +2,7 @@ import "@igraph/ui/globals.css";
 import { Toaster } from "sonner";
 import "./fonts.css";
 import { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default function RootLayout({
   children,
@@ -15,6 +16,7 @@ export default function RootLayout({
       dir="rtl"
       className="antialiased custom-scrollbar"
     >
+      <GoogleAnalytics gaId={process.env.GA_MEASUREMENT_ID!} />
       <body>
         {children}
         <Toaster
