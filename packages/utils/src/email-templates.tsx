@@ -86,7 +86,7 @@ const OtpEmail = ({ otp }: OtpEmailProps) => {
 
         <Container style={containerStyles}>
           <Text style={{ fontSize: "18px", color: "#333", direction: "rtl" }}>
-            🔒 کد تایید شما:
+            کاربر عزیز، برای ورود یا تأیید هویت، لطفاً از کد زیر استفاده کنید:
           </Text>
           <Text
             style={{
@@ -102,6 +102,10 @@ const OtpEmail = ({ otp }: OtpEmailProps) => {
             </span>
           </Text>
 
+          <Button href="https://igraphical.ir/login" style={buttonStyles}>
+            ورود به حساب کاربری
+          </Button>
+
           <Hr className="my-[16px] border-t-2 border-gray-300" />
 
           <Text style={{ color: "#6b7280", direction: "rtl" }}>
@@ -114,6 +118,10 @@ const OtpEmail = ({ otp }: OtpEmailProps) => {
           </Text>
 
           <Hr className="my-[16px] border-t-2 border-gray-300" />
+
+          <Text style={{ fontSize: "12px", color: "#888", direction: "rtl" }}>
+            اگر سوالی دارید، با ما از طریق support@igraphical.ir در تماس باشید.
+          </Text>
 
           <Link href={process.env.NEXT_PUBLIC_BASE_URL} style={linkStyles}>
             iGraphical.ir

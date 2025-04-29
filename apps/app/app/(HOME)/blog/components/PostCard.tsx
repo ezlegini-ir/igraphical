@@ -12,6 +12,7 @@ import { PostType } from "./PostGrid";
 import { extractSummaryFromLexical } from "@igraph/utils";
 
 const PostCard = ({ post }: { post: PostType }) => {
+  console.log(post);
   const categories = post.categories.map((item, index) => (
     <div key={index} className="text-left ">
       <Button variant={"secondary"} size={"sm"} className="h-6 text-gray-500">
@@ -24,9 +25,9 @@ const PostCard = ({ post }: { post: PostType }) => {
   return (
     <div className="overflow-hidden group card hover:shadow-md p-0 pl-3">
       <Link href={`/${post.url}`}>
-        <CardContent className="pl-3 flex gap-3 p-0 w-full">
+        <CardContent className="pl-3 flex flex-col items-center md:flex-row gap-3 text-center md:text-right p-3 md:p-0 w-full">
           <Image
-            alt=""
+            alt={post.title}
             src={post.image?.url || placeHolder}
             width={250}
             height={250}
