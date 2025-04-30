@@ -56,9 +56,13 @@ const CourseSidebar = async ({ course }: Props) => {
     { label: "دسترسی همیشگی، بدون محدودیت", icon: LockKeyholeOpen },
   ];
 
-  const isInCart = await database.cartItem.findFirst({
-    where: { courseId: course.id },
-  });
+  const isInCart = !userId
+    ? false
+    : Boolean(
+        await database.cartItem.findUnique({
+          where: { courseId: course.id, cart: { userId } },
+        })
+      );
 
   return (
     <div className="order-first md:order-last md:sticky top-16 self-start">
@@ -116,7 +120,7 @@ const CourseSidebar = async ({ course }: Props) => {
               price={course.price}
               courseId={course.id}
               isFree={course.price === 0}
-              isInCart={!!isInCart}
+              isInCart={isInCart}
             />
           </div>
         </CardContent>
