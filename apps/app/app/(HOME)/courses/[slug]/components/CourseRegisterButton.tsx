@@ -63,13 +63,25 @@ const CourseRegisterButton = ({
           {!isUserEnrolled ? (
             <div className="flex justify-between items-center">
               <div className="flex gap-3">
-                {!isInCart && (
+                {!isInCart ? (
                   <Link href={`/quick-cart/${courseId}`}>
                     <Button>
                       <UserRoundPlus size={20} />
                       ثبت نام سریع
                     </Button>
                   </Link>
+                ) : (
+                  <div>
+                    <Link href={"/cart"}>
+                      <Badge
+                        variant={"green"}
+                        className="w-full p-2.5 justify-center"
+                      >
+                        <Check size={18} />
+                        در سبد خرید (ادامه)
+                      </Badge>
+                    </Link>
+                  </div>
                 )}
               </div>
 
