@@ -12,7 +12,6 @@ import { PostType } from "./PostGrid";
 import { extractSummaryFromLexical } from "@igraph/utils";
 
 const PostCard = ({ post }: { post: PostType }) => {
-  console.log(post);
   const categories = post.categories.map((item, index) => (
     <div key={index} className="text-left ">
       <Button variant={"secondary"} size={"sm"} className="h-6 text-gray-500">

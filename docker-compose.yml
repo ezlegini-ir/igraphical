@@ -105,6 +105,7 @@ services:
       - app_network
     volumes:
       - db_backups:/app/backups
+      - /root/secrets/envs/admin/ga.json:/app/ga.json:ro
 
   app:
     build:
