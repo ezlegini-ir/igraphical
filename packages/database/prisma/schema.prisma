@@ -267,8 +267,7 @@ model Course {
   excludedInCoupons Coupon[]        @relation("excludescoupons")
   askTutor          AskTutor[]
   quickCart         QuickCart[]
-
-  CartItem CartItem?
+  CartItem          CartItem[]
 
   @@map("course")
 }
@@ -772,7 +771,7 @@ model CartItem {
   cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId   Int
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId Int    @unique
+  courseId Int
 
   @@unique([courseId, cartId])
   @@map("cartitem")

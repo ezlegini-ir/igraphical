@@ -59,7 +59,7 @@ const CourseSidebar = async ({ course }: Props) => {
   const isInCart = !userId
     ? false
     : Boolean(
-        await database.cartItem.findUnique({
+        await database.cartItem.findFirst({
           where: { courseId: course.id, cart: { userId } },
         })
       );
