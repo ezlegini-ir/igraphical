@@ -111,19 +111,22 @@ export const createPayment = async (data: PaymentDataType) => {
       );
 
       if (res?.success && res.data.authority && res.data.paymentUrl) {
-        await database.cart.update({
+        const updatedCart = await database.cart.update({
           where: { userId: user.id },
           data: {
             amount: amount * 10,
             authority: res?.data?.authority,
             paymentId: newPayment.id,
           },
+          include: { cartItem: true },
         });
 
-        for (let i = 0; i < coursesIds.length; i++) {
+        const cartItemsIds = updatedCart.cartItem.map((c) => c.id);
+
+        for (let i = 0; i < cartItemsIds.length; i++) {
           await database.cartItem.update({
             where: {
-              courseId: coursesIds[i],
+              id: cartItemsIds[i],
             },
             data: {
               paidPrice: prices[i]?.price,
@@ -133,7 +136,6 @@ export const createPayment = async (data: PaymentDataType) => {
       } else {
         return { error: "مشکلی در پرداخت رخ داد. دقایقی بعد مجددا تلاش کنید" };
       }
-
       return {
         success: "به صفحه پرداخت هدایت می شوید...",
         paymentUrl: res?.data?.paymentUrl,

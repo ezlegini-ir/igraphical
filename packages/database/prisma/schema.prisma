@@ -774,5 +774,6 @@ model CartItem {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId Int    @unique
 
+  @@unique([courseId, cartId])
   @@map("cartitem")
 }
