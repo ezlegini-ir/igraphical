@@ -23,6 +23,8 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 const getClassroom = cache(async (id: string) => {
+  const userId = (await getSessionUser())?.id;
+
   return await database.classRoom.findUnique({
     where: { id },
     include: {
@@ -44,7 +46,11 @@ const getClassroom = cache(async (id: string) => {
       },
       enrollment: {
         include: {
-          lessonProgress: true,
+          lessonProgress: {
+            where: {
+              userId,
+            },
+          },
           course: {
             include: {
               curriculum: {
