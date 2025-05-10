@@ -3,6 +3,12 @@
 import { authenticator } from "@/actions/login/authenticator";
 import { registerUser } from "@/actions/user";
 import { LoginFormsProps } from "@/app/login/page";
+import {
+  RegisterUserFormType,
+  registerUserFormSchema,
+} from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
   CardContent,
@@ -24,20 +30,12 @@ import {
   HoverCardTrigger,
 } from "@igraph/ui/components/ui/hover-card";
 import { Input } from "@igraph/ui/components/ui/input";
-import Loader from "@igraph/ui/components/Loader";
-import { useLoading } from "@igraph/utils";
-import { detectInputType } from "@igraph/utils";
-import {
-  RegisterUserFormType,
-  registerUserFormSchema,
-} from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { detectInputType, useLoading } from "@igraph/utils";
 import { Handshake, Info } from "lucide-react";
 import Link from "next/link";
+import { redirect, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { redirect, useSearchParams } from "next/navigation";
 
 const RegisterForm = ({
   setLoginStep,
@@ -57,6 +55,7 @@ const RegisterForm = ({
   }
 
   const form = useForm<RegisterUserFormType>({
+    mode: "onChange",
     resolver: zodResolver(registerUserFormSchema),
     defaultValues: {
       email: email || "",
@@ -171,7 +170,6 @@ const RegisterForm = ({
                         placeholder="مثال: 09121234567"
                         type="text"
                         style={{ direction: "ltr" }}
-                        pattern={REGEXP_ONLY_DIGITS}
                         maxLength={11}
                         {...field}
                       />

@@ -39,35 +39,45 @@ export type OtpType = z.infer<typeof otpSchema>;
 
 // --------------
 
+const toEnglishDigits = (value: string) =>
+  value.replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)));
+
 export const registerUserFormSchema = z.object({
   firstName: z
     .string()
     .min(3, { message: "حداقل 3 حرف" })
     .regex(/^[\u0600-\u06FF\s]+$/, "فقط حروف فارسی مجاز است")
     .trim(),
+
   lastName: z
     .string()
     .min(3, { message: "حداقل 3 حرف" })
     .regex(/^[\u0600-\u06FF\s]+$/, "فقط حروف فارسی مجاز است")
     .trim(),
+
   phone: z
     .string()
-    .min(1, { message: required })
-    .min(11, "شماره تماس باید  11 رقم باشد و با صفر شروع شود")
-    .regex(/^0[0-9]{10,14}$/, "شماره باید با 0 شروع شود و فقط عدد باشد")
-    .trim(),
+    .transform(toEnglishDigits)
+    .refine((val) => /^0\d{10}$/.test(val), {
+      message: "شماره باید با 0 شروع شود و 11 رقم باشد",
+    }),
+
   email: z
     .string()
-    .min(1, { message: required })
+    .min(1, { message: "ایمیل ضروری است" })
     .email({ message: "ایمیل نامعتبر است" }),
+
   nationalId: z
     .string()
-    .min(10, { message: "کد ملی باید 10 رقم باشد" })
-    .max(10, { message: "کد ملی باید دقیقا 10 رقم باشد" })
-    .regex(/^\d+$/, { message: "کد ملی فقط باید شامل اعداد باشد" })
-    .trim(),
+    .transform(toEnglishDigits)
+    .refine((val) => /^\d{10}$/.test(val), {
+      message: "کد ملی باید دقیقا 10 رقم باشد",
+    }),
 });
+
 export type RegisterUserFormType = z.infer<typeof registerUserFormSchema>;
+
+// --------------
 
 export const profileFormSchema = z.object({
   image: z.instanceof(File).optional(),
