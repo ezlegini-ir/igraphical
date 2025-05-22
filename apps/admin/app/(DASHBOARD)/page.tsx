@@ -1,8 +1,5 @@
 import { getGAViewsAndSessions, getTopPages } from "@/data/ga";
-import { aggregateByDay } from "@igraph/utils";
 import { database } from "@igraph/database";
-import { User } from "@igraph/database";
-import { addDays, format, startOfMonth, startOfYear, subDays } from "date-fns";
 import GraduateVsEnrolled from "@igraph/ui/components/GraduateVsEnrolled";
 import RecentComments from "@igraph/ui/components/RecentComments";
 import RecentReviews from "@igraph/ui/components/RecentReviews";
@@ -10,48 +7,30 @@ import StatCards from "@igraph/ui/components/StatCards";
 import TopViewedPages from "@igraph/ui/components/TopViewedPages";
 import DashboardViewsChart from "@igraph/ui/components/ViewsChart";
 import ViewsTable from "@igraph/ui/components/ViewTable";
+import { format, startOfMonth, startOfYear, subDays } from "date-fns";
 
 const page = async () => {
-  const dateCriteria = { gte: subDays(new Date(), 28) };
+  const dateCriteria = { gte: startOfMonth(new Date()) };
 
   //! STUDENTS ---------------------------------------
+
   const students = await database.user.findMany({
     where: { joinedAt: dateCriteria },
     orderBy: { joinedAt: "asc" },
   });
 
-  function getUserCountByDay(
-    students: User[]
-  ): { date: string; value: number }[] {
-    const endDate = new Date();
-    const startDate = subDays(endDate, 13);
+  const groupedByDate: Record<string, number> = {};
 
-    const aggregationMap: Record<string, number> = students.reduce(
-      (acc, user) => {
-        const day = user.joinedAt.toISOString().split("T")[0];
-        acc[day] = (acc[day] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+  students.forEach((student) => {
+    const date = format(student.joinedAt, "yyyy-MM-dd");
+    groupedByDate[date] = (groupedByDate[date] || 0) + 1;
+  });
 
-    const result: { date: string; value: number }[] = [];
-    for (
-      let currentDate = startDate;
-      currentDate <= endDate;
-      currentDate = addDays(currentDate, 1)
-    ) {
-      const dayStr = currentDate.toISOString().split("T")[0];
-      result.push({
-        date: dayStr,
-        value: aggregationMap[dayStr] || 0,
-      });
-    }
+  const studentsData = Object.entries(groupedByDate).map(([date, value]) => ({
+    date,
+    value,
+  }));
 
-    return result;
-  }
-
-  const studentsData = getUserCountByDay(students);
   const thisPeroidStudents = studentsData.reduce(
     (acc, curr) => acc + curr.value,
     0
@@ -59,9 +38,12 @@ const page = async () => {
   const lastPeroidStudents = students.length - thisPeroidStudents;
 
   const studentComparison =
-    ((thisPeroidStudents - lastPeroidStudents) / lastPeroidStudents) * 100;
+    lastPeroidStudents === 0
+      ? 100
+      : ((thisPeroidStudents - lastPeroidStudents) / lastPeroidStudents) * 100;
 
   //! REVENUE ---------------------------------------
+
   const payments = await database.payment.findMany({
     orderBy: { paidAt: "asc" },
     where: {
@@ -69,22 +51,32 @@ const page = async () => {
       status: "SUCCESS",
     },
   });
-  const revenue = aggregateByDay(
-    payments,
-    (payment) => payment.paidAt?.toISOString().split("T")[0] || "",
-    (payment) => payment.total
-  );
+
+  const groupedPayments: Record<string, number> = {};
+
+  payments.forEach((payment) => {
+    const date = format(payment.paidAt!, "yyyy-MM-dd");
+    groupedPayments[date] = (groupedPayments[date] || 0) + payment.total;
+  });
+
+  const revenue = Object.entries(groupedPayments).map(([date, value]) => ({
+    date,
+    value,
+  }));
 
   const thisPeroidRevenueSum = revenue.reduce(
     (acc, curr) => acc + curr.value,
     0
   );
+
   const lastPeroidRevenueSum =
     payments.reduce((acc, curr) => acc + curr.total, 0) - thisPeroidRevenueSum;
 
   const revenueComparison =
-    ((thisPeroidRevenueSum - lastPeroidRevenueSum) / lastPeroidRevenueSum) *
-    100;
+    lastPeroidRevenueSum === 0
+      ? 100
+      : ((thisPeroidRevenueSum - lastPeroidRevenueSum) / lastPeroidRevenueSum) *
+        100;
 
   //! SOLVED TICKETS ---------------------------------------
 
@@ -96,31 +88,39 @@ const page = async () => {
     orderBy: { updatedAt: "asc" },
   });
 
-  const solvedTicketsData = aggregateByDay(
-    solvedTickets,
-    (ticket) => ticket.updatedAt.toISOString().split("T")[0],
-    () => 1
+  const groupedSolvedTickets: Record<string, number> = {};
+
+  solvedTickets.forEach((ticket) => {
+    const date = format(ticket.updatedAt, "yyyy-MM-dd");
+    groupedSolvedTickets[date] = (groupedSolvedTickets[date] || 0) + 1;
+  });
+
+  const solvedTicketsData = Object.entries(groupedSolvedTickets).map(
+    ([date, value]) => ({ date, value })
   );
 
   const thisPeroidSolvedTickets = solvedTicketsData.reduce(
     (acc, curr) => acc + curr.value,
     0
   );
+
   const lastPeroidSolvedTickets =
     solvedTickets.length - thisPeroidSolvedTickets;
 
   const solvedTicketsComparison =
-    ((thisPeroidSolvedTickets - lastPeroidSolvedTickets) /
-      lastPeroidSolvedTickets) *
-    100;
+    lastPeroidSolvedTickets === 0
+      ? 100
+      : ((thisPeroidSolvedTickets - lastPeroidSolvedTickets) /
+          lastPeroidSolvedTickets) *
+        100;
 
   //! Graduate Vs Enrolled ---------------------------------------
 
   const completed = await database.enrollment.count({
-    where: { completedAt: { gte: subDays(new Date(), 90) } },
+    where: { completedAt: { gte: startOfYear(new Date()) } },
   });
   const enrolled = await database.enrollment.count({
-    where: { enrolledAt: { gte: subDays(new Date(), 90) } },
+    where: { enrolledAt: { gte: startOfYear(new Date()) } },
   });
 
   const GraduateVsEnrolledChartData = [{ left: completed, right: enrolled }];

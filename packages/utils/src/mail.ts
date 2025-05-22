@@ -5,6 +5,7 @@ import {
   renderFinishCourseEmail,
   renderOtpEmail,
   renderSuccessPaymentEmail,
+  renderSuccessPaymentEmailToAdmin,
 } from "./email-templates";
 import { generateEmailOtp } from "./otp";
 import { Resend } from "resend";
@@ -67,6 +68,22 @@ export const sendSuccessPaymentEmail = async (
   payment: PaymentType
 ) => {
   const emailHtml = await renderSuccessPaymentEmail(fullName, payment);
+
+  await sendEmail({
+    to: email,
+    subject: `✅ ثبت نام موفق!`,
+    html: emailHtml,
+  });
+};
+
+//! -------------------------------------------------------------------
+
+export const sendSuccessPaymentEmailToAdmin = async (
+  email: string,
+  fullName: string,
+  payment: PaymentType
+) => {
+  const emailHtml = await renderSuccessPaymentEmailToAdmin(fullName, payment);
 
   await sendEmail({
     to: email,

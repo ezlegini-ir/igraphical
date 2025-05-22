@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const { nextUrl, cookies } = req;
+
+  if (nextUrl.pathname.startsWith("/api/cron")) {
+    return NextResponse.next();
+  }
+
   const token = cookies.get(
     process.env.NODE_ENV === "development"
       ? "authjs.session-token"
@@ -23,10 +28,8 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.svg|.*\\.png|.*\\.jpg|fonts|images|public).*)",
-  ],
-};
+export const matcher = [
+  "/((?!_next/static|_next/image|favicon.ico|.*\\.svg|.*\\.png|.*\\.jpg|fonts|images|public).*)",
+];
 
 export const loginPageRoute = "/login";

@@ -284,3 +284,63 @@ export const renderSuccessPaymentEmail = (
   });
 
 //! ----------------------------------------------------------
+
+const SuccessPaymentEmailToAdmin = (data: {
+  fullName: string;
+  payment: PaymentType;
+}) => {
+  const { fullName, payment } = data;
+
+  return (
+    <Html lang="fa" dir="rtl">
+      <Head />
+      <Preview>🔹 ثبت نام جدید</Preview>
+      <Body style={bodyStyles}>
+        <Header />
+
+        <Container style={containerStyles}>
+          <Text style={{ fontSize: "18px", color: "#333", direction: "rtl" }}>
+            کاربر: {fullName}
+          </Text>
+
+          <Text style={{ fontSize: "18px", color: "#333", direction: "rtl" }}>
+            پرداخت به مبلغ{" "}
+            <strong>{payment.total.toLocaleString("en-US")} تومان</strong> با
+            موفقیت انجام شد و ثبت‌نام در دوره‌های زیر تکمیل گردید:
+          </Text>
+
+          <Hr className="my-[16px] border-t-2 border-gray-300" />
+
+          {payment.enrollment.map(({ course }, index) => (
+            <Text
+              key={index}
+              style={{
+                fontSize: "18px",
+                color: "#333",
+                direction: "rtl",
+              }}
+            >
+              🎓 {course.title}
+            </Text>
+          ))}
+
+          <Hr className="my-[16px] border-t-2 border-gray-300" />
+
+          <Link href={process.env.NEXT_PUBLIC_BASE_URL} style={linkStyles}>
+            iGraphical.ir
+          </Link>
+        </Container>
+      </Body>
+    </Html>
+  );
+};
+
+export const renderSuccessPaymentEmailToAdmin = (
+  fullName: string,
+  payment: PaymentType
+) =>
+  render(<SuccessPaymentEmailToAdmin payment={payment} fullName={fullName} />, {
+    pretty: true,
+  });
+
+//! ----------------------------------------------------------
