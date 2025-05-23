@@ -7,12 +7,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { CourseType } from "./CoursesList";
 import Avatar from "@igraph/ui/components/Avatar";
+import { Enrollment } from "@igraph/database";
 
 interface Props {
   course: CourseType;
+  enrollment: Enrollment[];
 }
 
-const CourseCard = ({ course }: Props) => {
+const CourseCard = ({ course, enrollment }: Props) => {
   const rating = course.review
     ? (
         course.review?.reduce((acc, curr) => acc + curr.rate, 0) /
@@ -69,7 +71,7 @@ const CourseCard = ({ course }: Props) => {
         <Separator />
         <li className="flex justify-between py-2 text-gray-500 text-sm">
           <span>Students</span>
-          <span>{(12332).toLocaleString("en-US")}</span>
+          <span>{enrollment.length.toLocaleString("en-US")}</span>
         </li>
 
         <Separator />

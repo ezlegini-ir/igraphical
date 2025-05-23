@@ -4,6 +4,7 @@ import {
   Course,
   CourseCategory,
   Curriculum,
+  Enrollment,
   Image,
   Lesson,
   Review,
@@ -17,6 +18,7 @@ export interface CourseType extends Course {
   category: CourseCategory | null;
   curriculum: (Curriculum & { lessons: Lesson[] })[];
   review: Review[] | null;
+  enrollment: Enrollment[];
 }
 
 interface Props {
@@ -37,7 +39,7 @@ const CoursesList = async ({ courses, totalCourses, pageSize }: Props) => {
       <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
         {courses.map((course, index) => (
           <div key={index} className="col-span-1 md:col-span-3 ">
-            <CourseCard course={course} />
+            <CourseCard course={course} enrollment={course.enrollment} />
           </div>
         ))}
       </div>

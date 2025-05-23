@@ -58,6 +58,7 @@ const page = async ({ searchParams }: Props) => {
   const courses = await database.course.findMany({
     where,
     include: {
+      enrollment: true,
       review: true,
       image: true,
       tutor: {
