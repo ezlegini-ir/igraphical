@@ -4,9 +4,11 @@ import { database, User, Wallet } from "@igraph/database";
 import {
   cashBackCalculator,
   sendSuccessPaymentEmail,
+  sendSuccessPaymentEmailToAdmin,
   sendSuccessPaymentSms,
 } from "@igraph/utils";
 import { InitiatePurchase, verifyPurchase } from "./zarinPal";
+import { adminData } from "@/data/adminData";
 
 //* CREATE PAYMENT -------------------------------------------------------
 
@@ -146,6 +148,13 @@ export const createQuickPayment = async (data: QuickPaymentDataType) => {
       //* Send Email
       await sendSuccessPaymentEmail(
         newPayment.user.email,
+        newPayment.user.fullName,
+        newPayment
+      );
+
+      //* Send Email To Admin
+      await sendSuccessPaymentEmailToAdmin(
+        adminData.email,
         newPayment.user.fullName,
         newPayment
       );
