@@ -2,6 +2,7 @@ import {
   BookOpen,
   ChartBarBig,
   ChartNoAxesCombined,
+  FileDown,
   GalleryHorizontal,
   GraduationCap,
   MessageCircle,
@@ -21,7 +22,7 @@ export const sideBarMenuItems = [
     subMenuItems: [
       {
         tabName: "Posts",
-        tabHref: "/posts",
+        tabHref: "/posts/list",
         tabIcon: BookOpen,
         subMenuItems: [
           { label: "new", href: "/posts/new" },
@@ -32,7 +33,7 @@ export const sideBarMenuItems = [
       },
       {
         tabName: "Courses",
-        tabHref: "/courses",
+        tabHref: "/courses/list",
         tabIcon: TvMinimalPlay,
         subMenuItems: [
           { label: "new", href: "/courses/new" },
@@ -55,7 +56,7 @@ export const sideBarMenuItems = [
     subMenuItems: [
       {
         tabName: "Enrollment",
-        tabHref: "/enrollments",
+        tabHref: "/enrollments/list",
         tabIcon: UserPlus,
         subMenuItems: [
           { label: "New", href: "/enrollments/new" },
@@ -65,7 +66,7 @@ export const sideBarMenuItems = [
       },
       {
         tabName: "Marketing",
-        tabHref: "/marketing",
+        tabHref: "/marketing/coupons",
         tabIcon: Percent,
         subMenuItems: [
           { label: "Coupons", href: "/marketing/coupons" },
@@ -86,7 +87,7 @@ export const sideBarMenuItems = [
     subMenuItems: [
       {
         tabName: "Tickets",
-        tabHref: "/tickets",
+        tabHref: "/tickets/list",
         tabIcon: MessageCircle,
         subMenuItems: [
           { label: "New", href: "/tickets/new" },
@@ -133,7 +134,7 @@ export const sideBarMenuItems = [
   },
 
   {
-    groupName: "Data Analysis",
+    groupName: "Data Analysis & Export",
     subMenuItems: [
       {
         tabName: "Analysis",
@@ -163,6 +164,13 @@ export const sideBarMenuItems = [
           { label: "Refers", href: "/statistics/refers" },
           { label: "Devices", href: "/statistics/refers" },
         ],
+      },
+
+      {
+        tabName: "Export",
+        tabHref: "/export/users",
+        tabIcon: FileDown,
+        subMenuItems: [{ label: "Users", href: "/export/users" }],
       },
     ],
   },

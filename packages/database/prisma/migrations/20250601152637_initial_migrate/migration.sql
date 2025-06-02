@@ -144,7 +144,7 @@ CREATE TABLE `postcategory` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `_posttopostcategory` (
+CREATE TABLE `posttopostcategory` (
     `postId` INTEGER NOT NULL,
     `categoryId` INTEGER NOT NULL,
 
@@ -556,7 +556,7 @@ CREATE TABLE `cartitem` (
     `cartId` INTEGER NOT NULL,
     `courseId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `cartitem_courseId_key`(`courseId`),
+    UNIQUE INDEX `cartitem_courseId_cartId_key`(`courseId`, `cartId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -615,10 +615,10 @@ ALTER TABLE `file` ADD CONSTRAINT `file_certificateId_fkey` FOREIGN KEY (`certif
 ALTER TABLE `post` ADD CONSTRAINT `post_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `admin`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_posttopostcategory` ADD CONSTRAINT `_posttopostcategory_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `posttopostcategory` ADD CONSTRAINT `posttopostcategory_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_posttopostcategory` ADD CONSTRAINT `_posttopostcategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `postcategory`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `posttopostcategory` ADD CONSTRAINT `posttopostcategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `postcategory`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `comment` ADD CONSTRAINT `comment_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

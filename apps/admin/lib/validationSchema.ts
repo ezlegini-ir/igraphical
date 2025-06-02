@@ -339,3 +339,11 @@ export const walletFormSchema = z.object({
   description: z.string(),
 });
 export type WalletFormType = z.infer<typeof walletFormSchema>;
+
+//! EXPORT ------------------------
+
+export const exportUsersFormSchema = z.object({
+  includedCourses: z.array(z.object({ id: z.number() })),
+  excludedCourses: z.array(z.object({ id: z.number() })),
+});
+export type ExportUsersFormType = z.infer<typeof exportUsersFormSchema>;
