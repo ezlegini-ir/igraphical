@@ -234,20 +234,21 @@ enum PostStatus {
 
 //! Course ---------------------------------------------------------
 model Course {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
-  url         String   @unique
-  summary     String   @db.VarChar(1024)
-  description String   @db.Text
+  url         String    @unique
+  summary     String    @db.VarChar(1024)
+  description String    @db.Text
   tizerUrl    String
-  jobMarket   String   @db.VarChar(1024)
-  audience    String   @db.VarChar(1024)
-  needs       String   @db.VarChar(1024)
+  jobMarket   String    @db.VarChar(1024)
+  audience    String    @db.VarChar(1024)
+  needs       String    @db.VarChar(1024)
   duration    Int
   basePrice   Float
   price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  releaseDate DateTime?
 
   // RELATIONS
   category          CourseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
@@ -255,7 +256,7 @@ model Course {
   tutor             Tutor?          @relation(fields: [tutorId], references: [id], onDelete: SetNull)
   tutorId           Int?
   image             Image?
-  status            Status
+  status            CourseStatus
   learn             Learn[]
   prerequisite      Prerequisite[]
   discount          Discount?
@@ -316,9 +317,10 @@ enum DiscountType {
   PERCENT
 }
 
-enum Status {
+enum CourseStatus {
   DRAFT
   PUBLISHED
+  PRESALE
 }
 
 model Curriculum {

@@ -161,6 +161,8 @@ const CourseFormSidebar = ({
     }
   };
 
+  const isPresale = form.getValues("status") === "PRESALE";
+
   return (
     <>
       <div className="col-span-12 md:col-span-3 space-y-4 order-first md:order-last">
@@ -198,8 +200,9 @@ const CourseFormSidebar = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="0">⬜ Draft</SelectItem>
-                        <SelectItem value="1">🟩 Published</SelectItem>
+                        <SelectItem value="DRAFT">⬜ Draft</SelectItem>
+                        <SelectItem value="PUBLISHED">🟩 Published</SelectItem>
+                        <SelectItem value="PRESALE">🟦 Presale</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -207,6 +210,56 @@ const CourseFormSidebar = ({
                 </FormItem>
               )}
             />
+
+            {isPresale && (
+              <FormField
+                control={form.control}
+                name="releaseDate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    {/* <FormLabel>Date of birth</FormLabel> */}
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              <div className="flex gap-1">
+                                {format(
+                                  field.value || new Date(),
+                                  "dd / MM / yyyy"
+                                )}
+                              </div>
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto p-0 en-digits"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          onSelect={field.onChange}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <Separator />
 

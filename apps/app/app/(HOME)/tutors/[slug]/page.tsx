@@ -19,6 +19,7 @@ const getTutor = cache(async (slug: string) => {
     include: {
       image: true,
       courses: {
+        where: { status: { not: "DRAFT" } },
         include: {
           discount: true,
           image: true,

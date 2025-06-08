@@ -16,7 +16,7 @@ const Page = async ({ searchParams }: Props) => {
   const { category, isFree, tutor } = await searchParams;
 
   const where: Prisma.CourseWhereInput = {
-    status: "PUBLISHED",
+    status: { not: "DRAFT" },
     ...(category ? { category: { is: { url: category } } } : {}),
     ...(isFree === "YES"
       ? { price: 0 }

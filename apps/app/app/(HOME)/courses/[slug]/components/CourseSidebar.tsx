@@ -113,6 +113,8 @@ const CourseSidebar = async ({ course }: Props) => {
             )}
 
             <CourseRegisterButton
+              isPresale={course.status === "PRESALE"}
+              releaseDate={course.releaseDate}
               classroomId={classroomId}
               isUserEnrolled={isUserEnrolled}
               basePrice={course.basePrice}

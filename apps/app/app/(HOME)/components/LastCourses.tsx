@@ -12,7 +12,7 @@ import { database } from "@igraph/database";
 
 const LastCourses = async () => {
   const courses = await database.course.findMany({
-    where: { status: "PUBLISHED" },
+    where: { status: { not: "DRAFT" } },
     orderBy: { id: "desc" },
     include: {
       image: true,

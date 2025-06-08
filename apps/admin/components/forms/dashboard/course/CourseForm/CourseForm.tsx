@@ -80,7 +80,8 @@ const CourseForm = ({ type, course, tutors, categories }: Props) => {
       learns: course?.learn || [{ value: "" }],
       prerequisite: course?.prerequisite || [{ value: "" }],
       basePrice: course?.basePrice || 0,
-      status: course?.status === "DRAFT" ? "0" : "1",
+      status: course?.status || "DRAFT",
+      releaseDate: course?.releaseDate || undefined,
       summary: course?.summary || "",
       tizerUrl: course?.tizerUrl || "",
       discount: course?.discount

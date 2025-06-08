@@ -2,7 +2,7 @@ import z from "zod";
 
 const requiredMessage = "Required";
 export const adminRoles = ["ADMIN", "AUTHOR"] as const;
-export const status = ["1", "0"] as const;
+export const status = ["DRAFT", "PUBLISHED", "PRESALE"] as const;
 export const lessonsType = ["FILE", "VIDEO", "ASSET"] as const;
 export const settlementStatus = ["PENDING", "PAID"] as const;
 export const paymentStatus = [
@@ -97,6 +97,7 @@ export const courseFormSchema = z.object({
   audience: z.string().min(1, requiredMessage),
   description: z.string().min(1, requiredMessage),
   status: z.enum(status, { required_error: requiredMessage }),
+  releaseDate: z.date().optional(),
   tutorId: z.string().min(1, requiredMessage),
   tizerUrl: z.string().url(),
   duration: z.number().min(1, requiredMessage),

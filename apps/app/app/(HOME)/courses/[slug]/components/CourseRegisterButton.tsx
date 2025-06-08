@@ -6,6 +6,7 @@ import { Discount } from "@igraph/database";
 import Price from "@igraph/ui/components/Price";
 import { Badge } from "@igraph/ui/components/ui/badge";
 import { Button } from "@igraph/ui/components/ui/button";
+import { formatJalaliDate } from "@igraph/utils";
 import { Check, Plus, TvMinimalPlay, UserRoundPlus } from "lucide-react";
 import Link from "next/link";
 import { redirect, usePathname, useRouter } from "next/navigation";
@@ -20,6 +21,8 @@ const CourseRegisterButton = ({
   price,
   isUserEnrolled,
   classroomId,
+  isPresale,
+  releaseDate,
 }: {
   courseId: number;
   isFree: boolean;
@@ -29,6 +32,8 @@ const CourseRegisterButton = ({
   discount: Discount | null;
   isUserEnrolled: boolean;
   classroomId: string | undefined;
+  isPresale: boolean;
+  releaseDate: Date | null;
 }) => {
   const router = useRouter();
   const pathName = usePathname();
@@ -65,9 +70,9 @@ const CourseRegisterButton = ({
               <div className="flex gap-3">
                 {!isInCart ? (
                   <Link href={`/quick-cart/${courseId}`}>
-                    <Button>
+                    <Button variant={isPresale ? "dark" : "default"}>
                       <UserRoundPlus size={20} />
-                      ثبت نام سریع
+                      {isPresale ? "پیش خرید" : "ثبت نام سریع"}
                     </Button>
                   </Link>
                 ) : (
@@ -109,12 +114,24 @@ const CourseRegisterButton = ({
       {!isUserEnrolled && (
         <div className="space-y-3 pb-3">
           {!isInCart && (
-            <Link href={`/quick-cart/${courseId}`}>
-              <Button className="w-full">
-                <UserRoundPlus size={20} />
-                ثبت نام سریع
-              </Button>
-            </Link>
+            <div>
+              <Link href={`/quick-cart/${courseId}`}>
+                <Button
+                  variant={isPresale ? "dark" : "default"}
+                  className="w-full"
+                >
+                  <UserRoundPlus size={20} />
+                  {isPresale ? "پیش خرید دوره" : "ثبت نام سریع"}
+                </Button>
+              </Link>
+
+              {releaseDate && (
+                <Badge variant={"blue"} className="w-full gap-1">
+                  <span>تاریخ انتشار:</span>
+                  <span>{formatJalaliDate(releaseDate)}</span>
+                </Badge>
+              )}
+            </div>
           )}
 
           {!isFree &&

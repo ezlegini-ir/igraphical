@@ -50,6 +50,7 @@ export const createCourse = async (data: CourseFormType) => {
     prerequisite,
     audience,
     jobMarket,
+    releaseDate,
     needs,
   } = data;
 
@@ -78,7 +79,8 @@ export const createCourse = async (data: CourseFormType) => {
           audience,
           jobMarket,
           needs,
-          status: status === "0" ? "DRAFT" : "PUBLISHED",
+          status,
+          releaseDate,
 
           category: {
             connect: { id: +categoryId },
@@ -233,6 +235,7 @@ export const updateCourse = async (data: CourseFormType, courseId: number) => {
     gallery,
     image,
     prerequisite,
+    releaseDate,
   } = data;
 
   const price = discount
@@ -263,7 +266,8 @@ export const updateCourse = async (data: CourseFormType, courseId: number) => {
           jobMarket,
           category: { connect: { id: +categoryId } },
           needs,
-          status: status === "0" ? "DRAFT" : "PUBLISHED",
+          status,
+          releaseDate,
           tutor: { connect: { id: +tutorId } },
         },
         include: { image: true },
