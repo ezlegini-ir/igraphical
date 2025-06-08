@@ -249,6 +249,7 @@ model Course {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   releaseDate DateTime?
+  test        String? //! REMOVE THIS LATER 
 
   // RELATIONS
   category          CourseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
