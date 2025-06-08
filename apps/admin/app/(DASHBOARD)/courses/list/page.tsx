@@ -12,7 +12,7 @@ import { pagination } from "@igraph/utils";
 import { database } from "@igraph/database";
 import { SlidersHorizontal } from "lucide-react";
 import CoursesList from "./CoursesList";
-import { Prisma, Status } from "@igraph/database";
+import { Prisma, CourseStatus } from "@igraph/database";
 
 interface Props {
   searchParams: Promise<{
@@ -47,7 +47,7 @@ const page = async ({ searchParams }: Props) => {
 
       tutor ? { tutor: { slug: tutor } } : {},
       isFree ? (isFree === "yes" ? { price: 0 } : { price: { not: 0 } }) : {},
-      status ? { status: status as Status } : {},
+      status ? { status: status as CourseStatus } : {},
     ],
   };
 
@@ -138,6 +138,7 @@ const Filters = async () => {
         options={[
           { label: "Published", value: "PUBLISHED" },
           { label: "Drafts", value: "DRAFT" },
+          { label: "Presale", value: "PRESALE" },
         ]}
       />
       <Filter
