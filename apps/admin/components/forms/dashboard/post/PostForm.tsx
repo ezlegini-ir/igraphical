@@ -105,7 +105,7 @@ const PostForm = ({ type, post, categories, authors }: Props) => {
       title: post?.title || "",
       url: post?.url || "",
       content: post?.content || "",
-      status: post?.status ? (post?.status === "DRAFT" ? "0" : "1") : "0",
+      status: post?.status,
       categories: post?.categories?.map((c) => c.category.id.toString()) || [],
       image: undefined,
       author: post?.author?.id?.toString() || "",
@@ -252,8 +252,8 @@ const PostForm = ({ type, post, categories, authors }: Props) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="0">⬜ Draft</SelectItem>
-                        <SelectItem value="1">🟩 Published</SelectItem>
+                        <SelectItem value="DRAFT">⬜ Draft</SelectItem>
+                        <SelectItem value="PUBLISHED">🟩 Published</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

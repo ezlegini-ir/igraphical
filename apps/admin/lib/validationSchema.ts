@@ -2,7 +2,8 @@ import z from "zod";
 
 const requiredMessage = "Required";
 export const adminRoles = ["ADMIN", "AUTHOR"] as const;
-export const status = ["DRAFT", "PUBLISHED", "PRESALE"] as const;
+export const courseStatus = ["DRAFT", "PUBLISHED", "PRESALE"] as const;
+export const postStatus = ["DRAFT", "PUBLISHED"] as const;
 export const lessonsType = ["FILE", "VIDEO", "ASSET"] as const;
 export const settlementStatus = ["PENDING", "PAID"] as const;
 export const paymentStatus = [
@@ -68,7 +69,7 @@ export const postFormSchema = z.object({
   image,
   content: z.string().min(1),
   categories: z.array(z.string()),
-  status: z.enum(status),
+  status: z.enum(postStatus),
   author: z.string().min(1),
 });
 export type PostFormType = z.infer<typeof postFormSchema>;
@@ -96,7 +97,7 @@ export const courseFormSchema = z.object({
   jobMarket: z.string().min(1, requiredMessage),
   audience: z.string().min(1, requiredMessage),
   description: z.string().min(1, requiredMessage),
-  status: z.enum(status, { required_error: requiredMessage }),
+  status: z.enum(courseStatus, { required_error: requiredMessage }),
   releaseDate: z.date().optional(),
   tutorId: z.string().min(1, requiredMessage),
   tizerUrl: z.string().url(),

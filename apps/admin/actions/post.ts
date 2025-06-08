@@ -24,7 +24,7 @@ export const createPost = async (data: PostFormType) => {
         title,
         url: encodedUrl,
         content,
-        status: status === "0" ? "DRAFT" : "PUBLISHED",
+        status,
         author: {
           connect: {
             id: +author,
@@ -99,7 +99,7 @@ export const updatePost = async (data: PostFormType, id: number) => {
       },
       data: {
         content,
-        status: status === "0" ? "DRAFT" : "PUBLISHED",
+        status,
         title,
         url: encodedUrl,
         categories: {
