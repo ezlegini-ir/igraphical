@@ -20,7 +20,7 @@
   FROM base AS installer
   WORKDIR /repo
   COPY --from=builder /repo/out/json/ ./
-  RUN npm install --legacy-peer-deps
+  RUN npm install prisma@6.6.0 @prisma/client@6.6.0 --legacy-peer-deps
   
   # -----------------------------
   # !Builder again: copy full source + generate + build admin
