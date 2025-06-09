@@ -13,9 +13,9 @@
   "dependencies": {
     "@google-analytics/data": "^4.12.1",
     "@hookform/resolvers": "^4.1.2",
-    "@igraph/auth": "^0.0.0",
+    "@igraph/auth": "*",
     "@igraph/database": "*",
-    "@igraph/editor": "^0.0.0",
+    "@igraph/editor": "*",
     "@igraph/ui": "*",
     "@igraph/utils": "*",
     "@webiny/lexical-converter": "^5.42.2",
