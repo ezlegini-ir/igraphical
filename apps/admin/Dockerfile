@@ -74,11 +74,5 @@
   COPY --from=installer /repo/node_modules/@prisma /app/node_modules/@prisma
   COPY --from=installer /repo/node_modules/.prisma /app/node_modules/.prisma
   COPY --from=installer /repo/node_modules/@prisma/client /app/node_modules/@prisma/client
-  
-  # ✅ Just in case: regenerate client (optional, but useful if schema changed externally)
-  RUN npm install prisma@6.6.0 @prisma/client@6.6.0 --legacy-peer-deps
-  RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
- 
-
 
   CMD ["/app/entrypoint.sh"]

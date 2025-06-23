@@ -1,4 +1,4 @@
-version: "3.8"
+# version: "3.8"
 
 services:
   nginx-proxy:
@@ -40,6 +40,7 @@ services:
     platform: linux/amd64
     restart: always
     environment:
+      DATABASE_URL: mysql://root:R@MIN3517r@m@localhost:3306/igraphical
       MYSQL_DATABASE: igraphical
       MYSQL_ALLOW_EMPTY_PASSWORD: "1"
     volumes:
@@ -55,6 +56,9 @@ services:
     build:
       context: .
       dockerfile: ./apps/tutor/Dockerfile
+      extra_hosts:
+        - "binaries.prisma.sh:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
+        - "registry.npmjs.org:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
       args:
         DATABASE_URL: ${DATABASE_URL}
         NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
@@ -83,6 +87,9 @@ services:
     build:
       context: .
       dockerfile: ./apps/admin/Dockerfile
+      extra_hosts:
+        - "binaries.prisma.sh:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
+        - "registry.npmjs.org:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
       args:
         DATABASE_URL: ${DATABASE_URL}
         NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
@@ -111,6 +118,9 @@ services:
     build:
       context: .
       dockerfile: ./apps/app/Dockerfile
+      extra_hosts:
+        - "binaries.prisma.sh:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
+        - "registry.npmjs.org:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
       args:
         DATABASE_URL: ${DATABASE_URL}
         NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
