@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@igraph/database";
-import { detectInputType, isHumanOrNot } from "@igraph/utils";
+import { detectInputType } from "@igraph/utils";
 import bcrypt from "bcryptjs";
 
 export const verifyOtp = async (

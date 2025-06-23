@@ -13,6 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@igraph/auth": "*",
+    "@igraph/editor": "*",
     "@igraph/database": "*",
     "@igraph/ui": "*",
     "@igraph/utils": "*",

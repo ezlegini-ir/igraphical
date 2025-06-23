@@ -3,7 +3,10 @@
 import { authenticator } from "@/actions/login/authenticator";
 import { verifyOtp } from "@/actions/login/verify-otp";
 import { LoginFormsProps } from "@/app/login/page";
+import { OtpType, otpSchema } from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import CountdownTimer from "@igraph/ui/components/CountDown";
+import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
   CardContent,
@@ -23,17 +26,13 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@igraph/ui/components/ui/input-otp";
-import Loader from "@igraph/ui/components/Loader";
 import { useLoading } from "@igraph/utils";
-import { OtpType, otpSchema } from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { CircleCheckBig } from "lucide-react";
+import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { redirect, useSearchParams } from "next/navigation";
 
 const OtpForm = ({
   setLoginStep,
@@ -51,7 +50,7 @@ const OtpForm = ({
       otp: "",
     },
   });
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  // const { executeRecaptcha } = useGoogleReCaptcha();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 

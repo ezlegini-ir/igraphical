@@ -5,7 +5,6 @@ import { LoginFormType } from "@/lib/validationSchema";
 import {
   convertPersianDigitsToEnglish,
   detectInputType,
-  isHumanOrNot,
   sendOtpEmail,
   sendOtpSms,
 } from "@igraph/utils";
@@ -13,7 +12,7 @@ import {
 export async function sendOtp(
   data: LoginFormType & { recaptchaToken?: string; userId?: number }
 ) {
-  const { phoneOrEmail, recaptchaToken } = data;
+  const { phoneOrEmail } = data;
 
   // DETECT INPUT TYPE
   const inputType = detectInputType(phoneOrEmail);

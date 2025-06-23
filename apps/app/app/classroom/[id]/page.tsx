@@ -76,7 +76,6 @@ const page = async ({ params }: Props) => {
   if (!user) return notFound();
   const { id } = await params;
 
-  console.log(await getClassroom(id));
   const classroom = await getClassroom(id);
 
   if (!classroom) return notFound();
