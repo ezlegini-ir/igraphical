@@ -19,9 +19,9 @@ export async function sendOtp(
   const inputType = detectInputType(phoneOrEmail);
 
   try {
-    if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA");
+    // if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA"); //! ENABLE THIS AFTER WAR!
 
-    // USE LOOK UP
+    // LOOK UP
     const existingUser = await getUserByIdentifier(
       inputType === "phone"
         ? convertPersianDigitsToEnglish(phoneOrEmail)

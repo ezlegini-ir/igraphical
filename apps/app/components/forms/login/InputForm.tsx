@@ -25,7 +25,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const InputForm = ({
   setLoginStep,
@@ -43,21 +42,12 @@ const InputForm = ({
       phoneOrEmail: "",
     },
   });
-  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const onSendOtp = async (data: LoginFormType) => {
     setLoading(true);
     setIsNewUser?.(false);
 
-    // reCaptcha
-    if (!executeRecaptcha) {
-      toast.error("ری‌کپچا لود نشده است. لطفا مجددا تلاش کنید");
-      setLoading(false);
-      return;
-    }
-    const token = await executeRecaptcha("send_otp");
-
-    const res = await sendOtp({ ...data, recaptchaToken: token });
+    const res = await sendOtp({ ...data });
 
     if (res.error) {
       toast.error(res.error);

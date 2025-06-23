@@ -69,15 +69,15 @@ const OtpForm = ({
 
     let recaptchaToken = undefined;
 
-    if (failedAttempts >= 2) {
-      if (!executeRecaptcha) {
-        toast.error("reCAPTCHA is not ready");
-        setLoading(false);
-        return;
-      }
+    // if (failedAttempts >= 2) {
+    //   if (!executeRecaptcha) {
+    //     toast.error("reCAPTCHA is not ready");
+    //     setLoading(false);
+    //     return;
+    //   }
 
-      recaptchaToken = await executeRecaptcha("verify_otp");
-    }
+    //   recaptchaToken = await executeRecaptcha("verify_otp");
+    // }
 
     const res = await verifyOtp(data.otp, identifier, recaptchaToken);
 

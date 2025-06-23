@@ -10,7 +10,7 @@ export const verifyOtp = async (
   recaptchaToken?: string
 ) => {
   try {
-    if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA");
+    // if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA");
 
     // OTP LOOK UP
     const existingOtp = await database.otp.findFirst({
