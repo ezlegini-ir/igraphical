@@ -150,7 +150,7 @@ export async function verifyRecaptcha(token: string): Promise<boolean> {
     }
   );
 
-  return data.success && data.score > 0.7;
+  return data.success && data.score > 0.5;
 }
 
 export async function isHumanOrNot(token: string, lang: "FA" | "EN") {

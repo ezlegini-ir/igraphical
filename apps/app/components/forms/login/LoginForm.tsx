@@ -16,28 +16,24 @@ const LoginForm = () => {
 
   return (
     <>
-      {loginStep === "INPUT" && (
-        <RecaptchaWrapper
-          recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-        >
+      <RecaptchaWrapper
+        recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+      >
+        {loginStep === "INPUT" && (
           <InputForm
             setIsNewUser={setIsNewUser}
             setLoginStep={setLoginStep}
             setInputFormValue={setInputFormValue}
           />
-        </RecaptchaWrapper>
-      )}
-      {loginStep === "OTP" && (
-        <RecaptchaWrapper
-          recaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-        >
+        )}
+        {loginStep === "OTP" && (
           <OtpForm
             setLoginStep={setLoginStep}
             inputFormValue={inputFormValue}
             isNewUser={isNewUser}
           />
-        </RecaptchaWrapper>
-      )}
+        )}
+      </RecaptchaWrapper>
       {loginStep === "REGISTER" && (
         <RegisterForm
           setLoginStep={setLoginStep}

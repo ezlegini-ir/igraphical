@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@igraph/database";
-import { detectInputType } from "@igraph/utils";
+import { detectInputType, isHumanOrNot } from "@igraph/utils";
 import bcrypt from "bcryptjs";
 
 export const verifyOtp = async (
@@ -10,7 +10,7 @@ export const verifyOtp = async (
   recaptchaToken?: string
 ) => {
   try {
-    // if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA");
+    if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA");
 
     // OTP LOOK UP
     const existingOtp = await database.otp.findFirst({

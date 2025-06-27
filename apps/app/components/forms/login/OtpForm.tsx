@@ -31,6 +31,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { CircleCheckBig } from "lucide-react";
 import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -50,7 +51,7 @@ const OtpForm = ({
       otp: "",
     },
   });
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
@@ -68,15 +69,15 @@ const OtpForm = ({
 
     let recaptchaToken = undefined;
 
-    // if (failedAttempts >= 2) {
-    //   if (!executeRecaptcha) {
-    //     toast.error("reCAPTCHA is not ready");
-    //     setLoading(false);
-    //     return;
-    //   }
+    if (failedAttempts >= 2) {
+      if (!executeRecaptcha) {
+        toast.error("reCAPTCHA is not ready");
+        setLoading(false);
+        return;
+      }
 
-    //   recaptchaToken = await executeRecaptcha("verify_otp");
-    // }
+      recaptchaToken = await executeRecaptcha("verify_otp");
+    }
 
     const res = await verifyOtp(data.otp, identifier, recaptchaToken);
 
