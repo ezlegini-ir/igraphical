@@ -12,6 +12,7 @@ import { useWindowSize } from "react-use";
 import { LessonType } from "./ClassroomContent";
 import dynamic from "next/dynamic";
 
+//! REPLACE AFTER WAR
 const Video = dynamic(() => import("@igraph/ui/components/Video"), {
   ssr: false,
 });
