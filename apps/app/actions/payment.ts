@@ -300,6 +300,13 @@ export const verifyPayment = async (
         updatedPayment
       );
 
+      //* Send Email To Admin
+      await sendSuccessPaymentEmailToAdmin(
+        adminData.email,
+        updatedPayment.user.fullName,
+        updatedPayment
+      );
+
       //* Send Sms
       await sendSuccessPaymentSms(
         updatedPayment.user.fullName,
