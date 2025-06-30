@@ -1,15 +1,21 @@
 "use server";
 
+import { adminData } from "@/data/adminData";
 import { kavenegar } from "./config/kavenegar";
 import { generateSmsOtp } from "./otp";
 import {
   finishCourseSmsText,
   newJoinedStudentSmsText,
+  newQaCreationText,
+  newQaResponseText,
+  newTicketCreationText,
+  newTicketRsponseText,
   paidSettlmentSmsText,
   remindPendingEnrollmentText,
   successfullPaymentSmsText,
 } from "./sms-templates";
 import { convertPersianDigitsToEnglish } from "./utils";
+import { database } from "@igraph/database";
 
 export const sendOtpSms = async (phone: string, userId?: number) => {
   const { plainOtp } = await generateSmsOtp(phone, userId);
@@ -110,5 +116,42 @@ export const sendRemindPedningEnrollmentSms = async ({
   sendSms({
     message: remindPendingEnrollmentText(firstName, courseTitle),
     phone: phone,
+  });
+};
+
+//! -----------------------------------------------------
+
+export const sendNewTicketResponseSms = async (phone: string) => {
+  sendSms({
+    message: newTicketRsponseText(),
+    phone: phone,
+  });
+};
+
+//! -----------------------------------------------------
+
+export const sendNewTicketCreationSms = async () => {
+  const ticketsCount = await database.ticket.count();
+
+  sendSms({
+    message: newTicketCreationText(ticketsCount),
+    phone: adminData.phone,
+  });
+};
+
+//! -----------------------------------------------------
+
+export const sendNewQaCreationSms = async (phone: string) => {
+  sendSms({
+    message: newQaCreationText(),
+    phone,
+  });
+};
+//! -----------------------------------------------------
+
+export const newQaResponseSms = async (phone: string) => {
+  sendSms({
+    message: newQaResponseText(),
+    phone,
   });
 };

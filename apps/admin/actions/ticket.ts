@@ -2,7 +2,11 @@
 
 import { TicketFormType } from "@/lib/validationSchema";
 import { database, File as FileType } from "@igraph/database";
-import { deleteManyCloudFiles, uploadCloudFile } from "@igraph/utils";
+import {
+  deleteManyCloudFiles,
+  sendNewTicketResponseSms,
+  uploadCloudFile,
+} from "@igraph/utils";
 import { UploadApiResponse } from "cloudinary";
 
 //* CREATE ---------------------------------------------------------
@@ -79,7 +83,10 @@ export const sendTicketMessage = async (
   const { file, message } = data;
 
   try {
-    const existingTicket = await database.ticket.findFirst({ where: { id } });
+    const existingTicket = await database.ticket.findFirst({
+      where: { id },
+      include: { user: true },
+    });
 
     if (!existingTicket) return { error: "Ticket Not Found" };
 
@@ -128,6 +135,9 @@ export const sendTicketMessage = async (
         },
       });
     }
+
+    //* Send Sms to user
+    await sendNewTicketResponseSms(existingTicket.user.phone);
 
     return { success: "Message Sent Seccessfully" };
   } catch (error) {

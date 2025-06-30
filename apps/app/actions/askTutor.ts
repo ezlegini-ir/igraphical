@@ -1,7 +1,7 @@
 "use server";
 
 import { TicketMessageFormType } from "@/lib/validationSchema";
-import { uploadCloudFile } from "@igraph/utils";
+import { sendNewQaCreationSms, uploadCloudFile } from "@igraph/utils";
 import { UploadApiResponse } from "cloudinary";
 import { database } from "@igraph/database";
 
@@ -82,6 +82,14 @@ export const createAskTutor = async (
         });
       }
     });
+
+    const tutor = await database.tutor.findFirst({
+      where: { id: tutorId },
+      select: { phone: true },
+    });
+
+    //* SEND SMS TO TUTOR
+    await sendNewQaCreationSms(tutor?.phone!);
 
     return { success: "پیام شما با موفقیت ارسال شد!" };
   } catch (error) {

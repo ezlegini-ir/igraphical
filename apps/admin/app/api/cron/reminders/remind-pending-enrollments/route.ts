@@ -49,6 +49,8 @@ export async function POST(req: NextRequest) {
           courseTitle: enrollment.course.title,
         });
 
+        //TODO: SEND EMAIl AS WELL
+
         await database.smsLog.create({
           data: {
             enrollmentId: enrollment.id,

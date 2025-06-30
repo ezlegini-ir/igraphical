@@ -2,7 +2,7 @@
 
 import { TicketFormType } from "@/lib/validationSchema";
 import { database } from "@igraph/database";
-import { uploadCloudFile } from "@igraph/utils";
+import { sendNewTicketCreationSms, uploadCloudFile } from "@igraph/utils";
 import { UploadApiResponse } from "cloudinary";
 
 export const createTicket = async (data: TicketFormType, userId: number) => {
@@ -54,6 +54,9 @@ export const createTicket = async (data: TicketFormType, userId: number) => {
         },
       });
     }
+
+    //* Send Sms to Admin
+    await sendNewTicketCreationSms();
 
     return { success: "تیکت شما با موفقیت ارسال شد", data: newTicket };
   } catch (error) {

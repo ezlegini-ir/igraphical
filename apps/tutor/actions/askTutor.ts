@@ -1,7 +1,7 @@
 "use server";
 
 import { database } from "@igraph/database";
-import { uploadCloudFile } from "@igraph/utils";
+import { newQaResponseSms, uploadCloudFile } from "@igraph/utils";
 import { UploadApiResponse } from "cloudinary";
 import { QaFormType } from "@/lib/validationSchema";
 
@@ -16,11 +16,18 @@ export const sendAskTutorMessage = async (
       throw new Error("Message content is required.");
     }
 
-    await database.$transaction(async (tx) => {
+    const newMessage = await database.$transaction(async (tx) => {
       const updatedAskTutor = await tx.askTutor.update({
         where: { id: askTutorId },
         data: {
           status: "REPLIED",
+        },
+        include: {
+          user: {
+            select: {
+              phone: true,
+            },
+          },
         },
       });
 
@@ -67,6 +74,8 @@ export const sendAskTutorMessage = async (
 
       return updatedAskTutor;
     });
+
+    await newQaResponseSms(newMessage.user.phone);
 
     return { success: "Message Sent Successfully." };
   } catch (error) {

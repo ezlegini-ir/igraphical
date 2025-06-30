@@ -45,10 +45,39 @@ export function remindPendingEnrollmentText(
 ) {
   const message = [
     `🔷 ${firstName} عزیز،`,
-    `⏳ هنوز ${courseTitle} رو شروع نکردی 😅!`,
+    `😅 هنوز ${courseTitle} رو شروع نکردی!`,
     "🚀 وقتشه که به مهارت هات اضافه کنی.",
     "آی‌گرافیکال",
   ].join("\n");
+
+  return message;
+}
+
+export function newTicketRsponseText() {
+  const message = [`🔷 به تیکت شما پاسخ داده شد.`, "آی‌گرافیکال"].join("\n");
+
+  return message;
+}
+
+export function newTicketCreationText(ticketsCount: number) {
+  const message = [
+    `🔷 یک تیکت جدید دریافت شد.`,
+    `تعداد کل: ${ticketsCount}`,
+  ].join("\n");
+
+  return message;
+}
+
+export function newQaCreationText() {
+  const message = [`🔷 مدرس محترم آی‌گرافیکال`, `یک پرسش جدید ایجاد شد `].join(
+    "\n"
+  );
+
+  return message;
+}
+
+export function newQaResponseText() {
+  const message = [`🔷 به پرسش شما پاسخ داده شد`, `آی‌گرافیکال`].join("\n");
 
   return message;
 }

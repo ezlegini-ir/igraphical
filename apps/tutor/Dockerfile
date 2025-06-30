@@ -3,7 +3,7 @@
 # -----------------------------
     FROM node:20.18-alpine AS base
     WORKDIR /repo
-    RUN apk update && apk add --no-cache libc6-compat openssl
+    RUN apk add --no-cache libc6-compat openssl
     RUN npm install -g turbo
     
     # -----------------------------
@@ -44,7 +44,6 @@
     # -----------------------------
     FROM node:20.18-alpine AS runner
     WORKDIR /app
-    RUN apk update && apk add --no-cache nano
     RUN apk add --no-cache mysql mysql-client
     
     # Create user and set permissions
