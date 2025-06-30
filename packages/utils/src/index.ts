@@ -9,3 +9,4 @@ export * from "./sms-templates";
 export * from "./menu";
 export * from "./cloudinary";
 export * from "./actions";
+export * from "./rating";

@@ -20,6 +20,7 @@ import {
 import { ChevronLeft, SquareMenu, Star, TvMinimalPlay } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { calculateCourseRate } from "@igraph/utils";
 
 export interface CourseType extends Course {
   image: ImageType | null;
@@ -33,10 +34,6 @@ interface Props {
 }
 
 const CourseCard = ({ course }: Props) => {
-  const courseRate =
-    course.review.reduce((acc, curr) => acc + curr.rate, 0) /
-    course.review.length;
-
   return (
     <Card className="overflow-hidden group shadow-none hover:shadow-md">
       <Link href={`/courses/${course.url}`}>
@@ -68,7 +65,7 @@ const CourseCard = ({ course }: Props) => {
           <CardTitle className="text-base font-medium">
             <span className="flex items-center gap-1 tracking-wider text-slate-500 text-xs">
               <Star size={14} className="text-orange-400" />
-              {parseFloat((courseRate || 0).toFixed(1))}
+              {calculateCourseRate(course.review)}
             </span>
             <span>{course.title}</span>
           </CardTitle>

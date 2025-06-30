@@ -2,25 +2,30 @@ import React from "react";
 import CourseTitle from "./CourseTitle";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { CourseCategory } from "@igraph/database";
+import { CourseCategory, Review } from "@igraph/database";
 import { placeHolder } from "@/public";
+import { calculateCourseRate } from "@igraph/utils";
 
-interface Props {
-  courseInfo: {
-    imageSrc: string | undefined;
-    rate: number;
-    title: string;
-    category: CourseCategory | null;
-  };
+export interface CourseInfo {
+  imageSrc: string | undefined;
+  reviews: Review[];
+  title: string;
+  category: CourseCategory | null;
 }
 
-const CourseBanner = ({ courseInfo }: Props) => {
+interface CourseBannerProps {
+  courseInfo: CourseInfo;
+}
+
+const CourseBanner = ({ courseInfo }: CourseBannerProps) => {
   return (
     <div className="space-y-4">
       <div className="hidden md:flex items-center justify-between">
         <CourseTitle title={courseInfo.title} category={courseInfo.category!} />
         <div className="flex gap-2">
-          <span className="font-semibold">{courseInfo.rate}</span>
+          <span className="font-semibold">
+            {calculateCourseRate(courseInfo.reviews)}
+          </span>
           <Star size={20} className="text-orange-400" />
         </div>
       </div>

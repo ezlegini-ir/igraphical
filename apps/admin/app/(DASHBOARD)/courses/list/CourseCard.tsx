@@ -19,7 +19,7 @@ const CourseCard = ({ course, enrollment }: Props) => {
     ? (
         course.review?.reduce((acc, curr) => acc + curr.rate, 0) /
         course.review?.length
-      ).toFixed(2)
+      ).toFixed(1)
     : "No Rate";
 
   return (

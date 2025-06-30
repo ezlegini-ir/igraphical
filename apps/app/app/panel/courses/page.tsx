@@ -28,7 +28,9 @@ const page = async () => {
             include: {
               lessons: {
                 include: {
-                  lessonProgress: true,
+                  lessonProgress: {
+                    where: { userId },
+                  },
                 },
               },
             },

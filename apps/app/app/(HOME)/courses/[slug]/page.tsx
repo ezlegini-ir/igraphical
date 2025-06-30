@@ -1,7 +1,7 @@
 import CourseSidebar from "@/app/(HOME)/courses/[slug]/components/CourseSidebar";
 import { database } from "@igraph/database";
 import BreadCrumb from "@igraph/ui/components/BreadCrumb";
-import { extractSummaryFromLexical } from "@igraph/utils";
+import { calculateCourseRate, extractSummaryFromLexical } from "@igraph/utils";
 import { Star } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -64,10 +64,6 @@ const page = async ({ params, searchParams }: Props) => {
 
   if (!course) return notFound();
 
-  const courseRate =
-    course.review.reduce((acc, curr) => acc + curr.rate, 0) /
-      course.review.length || 0;
-
   return (
     <div className="mt-10 space-y-6">
       <BreadCrumb
@@ -79,7 +75,9 @@ const page = async ({ params, searchParams }: Props) => {
         <CourseTitle title={course.title} category={course.category!} />
 
         <div className="flex gap-2">
-          <span className="font-semibold">{courseRate}</span>
+          <span className="font-semibold">
+            {calculateCourseRate(course.review)}
+          </span>
           <Star size={20} className="text-orange-400" />
         </div>
       </div>

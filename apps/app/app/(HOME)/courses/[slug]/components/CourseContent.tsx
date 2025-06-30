@@ -14,7 +14,7 @@ import {
   Tutor,
   User,
 } from "@igraph/database";
-import CourseBanner from "./CourseBanner";
+import CourseBanner, { CourseInfo } from "./CourseBanner";
 import CourseCurriculum from "./CourseCurriculum";
 import CourseDescription from "./CourseDescription";
 import CourseTutor from "./CourseInstructor";
@@ -39,14 +39,10 @@ export interface CourseType extends Course {
 }
 
 const CourseContent = ({ course }: { course: CourseType }) => {
-  const courseRate =
-    course.review.reduce((acc, curr) => acc + curr.rate, 0) /
-      course.review.length || 0;
-
-  const courseInfo = {
+  const courseInfo: CourseInfo = {
     title: course.title,
     category: course.category,
-    rate: courseRate,
+    reviews: course.review,
     imageSrc: course.image?.url,
   };
 
