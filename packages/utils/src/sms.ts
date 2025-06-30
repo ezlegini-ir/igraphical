@@ -6,6 +6,7 @@ import {
   finishCourseSmsText,
   newJoinedStudentSmsText,
   paidSettlmentSmsText,
+  remindPendingEnrollmentText,
   successfullPaymentSmsText,
 } from "./sms-templates";
 import { convertPersianDigitsToEnglish } from "./utils";
@@ -91,6 +92,23 @@ export const sendPaidSettlmentSms = async (
 ) => {
   sendSms({
     message: paidSettlmentSmsText(fullName, amount),
+    phone: phone,
+  });
+};
+
+//! -----------------------------------------------------
+
+export const sendRemindPedningEnrollmentSms = async ({
+  firstName,
+  phone,
+  courseTitle,
+}: {
+  firstName: string;
+  phone: string;
+  courseTitle: string;
+}) => {
+  sendSms({
+    message: remindPendingEnrollmentText(firstName, courseTitle),
     phone: phone,
   });
 };

@@ -38,3 +38,17 @@ export function paidSettlmentSmsText(fullName: string, amount: number) {
 
   return message;
 }
+
+export function remindPendingEnrollmentText(
+  firstName: string,
+  courseTitle: string
+) {
+  const message = [
+    `🔷 ${firstName} عزیز،`,
+    `⏳ هنوز ${courseTitle} رو شروع نکردی 😅!`,
+    "🚀 وقتشه که به مهارت هات اضافه کنی.",
+    "آی‌گرافیکال",
+  ].join("\n");
+
+  return message;
+}

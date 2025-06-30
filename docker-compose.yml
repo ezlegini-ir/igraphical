@@ -66,7 +66,7 @@ services:
     container_name: tutor
     restart: always
     env_file:
-      - /root/secrets/envs/tutor/.env.local
+      - /root/projects/igraphical/apps/tutor/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: tutor.igraphical.ir
@@ -97,7 +97,7 @@ services:
     container_name: admin
     restart: always
     env_file:
-      - /root/secrets/envs/admin/.env.local
+      - /root/projects/igraphical/apps/admin/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: admin.igraphical.ir
@@ -128,7 +128,7 @@ services:
     container_name: app
     restart: always
     env_file:
-      - /root/secrets/envs/app/.env.local
+      - /root/projects/igraphical/apps/app/.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: igraphical.ir

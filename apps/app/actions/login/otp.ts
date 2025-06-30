@@ -18,8 +18,6 @@ export async function sendOtp(
   const inputType = detectInputType(phoneOrEmail);
 
   try {
-    // if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA"); //! ENABLE THIS AFTER WAR!
-
     // LOOK UP
     const existingUser = await getUserByIdentifier(
       inputType === "phone"

@@ -163,6 +163,15 @@ export const createPayment = async (data: PaymentDataType) => {
         });
       }
 
+      if (newPayment.discountCode) {
+        await database.coupon.update({
+          where: { code: newPayment.discountCode },
+          data: {
+            used: { increment: 1 },
+          },
+        });
+      }
+
       await database.cart.delete({
         where: { userId: user.id },
       });
@@ -289,6 +298,15 @@ export const verifyPayment = async (
                 paymentId: updatedPayment.id,
               },
             },
+          },
+        });
+      }
+
+      if (updatedPayment.discountCode) {
+        await database.coupon.update({
+          where: { code: updatedPayment.discountCode },
+          data: {
+            used: { increment: 1 },
           },
         });
       }

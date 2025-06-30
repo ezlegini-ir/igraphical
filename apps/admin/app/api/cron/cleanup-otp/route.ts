@@ -2,9 +2,9 @@ import { database } from "@igraph/database";
 import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request) {
-  const authHeader = req.headers.get("x-cron-key");
+  const cronKey = req.headers.get("x-cron-key");
 
-  if (authHeader !== process.env.CRON_SECRET_KEY) {
+  if (cronKey !== process.env.CRON_SECRET_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

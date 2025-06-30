@@ -393,6 +393,7 @@ model Review {
   @@map("review")
 }
 
+//! ANNOUCEMENT ---------------------------------------------------------
 model Slider {
   id     Int        @id @default(autoincrement())
   link   String?
@@ -419,6 +420,7 @@ model Notifbar {
   @@map("notifbar")
 }
 
+//! ENROLLMENTS ---------------------------------------------------------
 model Enrollment {
   id                  Int              @id @default(autoincrement())
   enrolledAt          DateTime         @default(now())
@@ -438,6 +440,7 @@ model Enrollment {
   courseId       Int
   certificate    Certificate?
   classroom      ClassRoom?
+  smsLog         SmsLog[]
 
   @@map("enrollment")
 }
@@ -462,6 +465,7 @@ enum EnrollmentStatus {
   COMPLETED
 }
 
+//! PAYMENTS ---------------------------------------------------------
 model Wallet {
   id        String   @id @default(uuid())
   balance   Float    @default(0)
@@ -601,6 +605,7 @@ enum OverallOffType {
   PERCENT
 }
 
+//! TICKET ---------------------------------------------------------
 model Ticket {
   id         Int              @id @default(autoincrement())
   subject    String
@@ -720,6 +725,7 @@ enum AskTutorSenderType {
   TUTOR
 }
 
+//! CLASSROOM ---------------------------------------------------------
 model ClassRoom {
   id String @id @default(uuid())
 
@@ -734,6 +740,7 @@ model ClassRoom {
   @@map("classroom")
 }
 
+//! CART ---------------------------------------------------------
 model QuickCart {
   id        String   @id @default(uuid())
   amount    Float
@@ -778,4 +785,20 @@ model CartItem {
 
   @@unique([courseId, cartId])
   @@map("cartitem")
+}
+
+//! LOGS ---------------------------------------------------------
+model SmsLog {
+  id     Int      @id @default(autoincrement())
+  sentAt DateTime @default(now())
+  type   SmsType
+
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollmentId Int
+
+  @@map("smsLog")
+}
+
+enum SmsType {
+  REMIND_PENDING_ENROLLMENT
 }
