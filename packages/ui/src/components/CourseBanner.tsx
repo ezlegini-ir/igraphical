@@ -78,7 +78,7 @@ const CourseBanner = ({ courseId }: { courseId: string }) => {
           src={resource.image?.url || "/placeholder.svg"}
           width={80}
           height={80}
-          className="rounded-md object-cover bg-muted aspect-video"
+          className="rounded-md object-cover bg-primary/10 aspect-video"
         />
         <div className="text-right">
           <p

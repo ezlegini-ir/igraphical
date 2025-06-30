@@ -69,7 +69,6 @@ export const createLessonProgress = async (
         },
       });
 
-      const isLastLesson = totalCompletedLessons === totalLessons;
       const progress = (totalCompletedLessons / totalLessons) * 100;
 
       await tx.enrollment.update({
@@ -81,6 +80,8 @@ export const createLessonProgress = async (
           status: "IN_PROGRESS",
         },
       });
+
+      const isLastLesson = totalCompletedLessons === totalLessons;
 
       if (isLastLesson) {
         await tx.enrollment.update({

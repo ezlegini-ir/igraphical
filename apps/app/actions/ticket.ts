@@ -1,5 +1,6 @@
 "use server";
 
+import { adminData } from "@/data/adminData";
 import { TicketFormType } from "@/lib/validationSchema";
 import { database } from "@igraph/database";
 import { sendNewTicketCreationSms, uploadCloudFile } from "@igraph/utils";
@@ -56,7 +57,7 @@ export const createTicket = async (data: TicketFormType, userId: number) => {
     }
 
     //* Send Sms to Admin
-    await sendNewTicketCreationSms();
+    await sendNewTicketCreationSms(adminData.phone);
 
     return { success: "تیکت شما با موفقیت ارسال شد", data: newTicket };
   } catch (error) {

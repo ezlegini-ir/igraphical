@@ -32,9 +32,8 @@ const ClassroomVideo = ({
   const router = useRouter();
   const { loading, setLoading } = useLoading();
   const [showConfetti, setShowConfetti] = useState(false);
-  const { width, height } = showConfetti
-    ? useWindowSize()
-    : { width: 0, height: 0 };
+  const windowSize = useWindowSize();
+  const { width, height } = showConfetti ? windowSize : { width: 0, height: 0 };
   const [confettiRecycle, setConfettiRecycle] = useState(true);
 
   const handleNextLesson = async () => {
@@ -70,7 +69,7 @@ const ClassroomVideo = ({
 
   const completed = currentLesson?.lessonProgress.length > 0;
 
-  if (!currentLesson) return <div>No Lesson Provided</div>;
+  if (!currentLesson) return <div>No Lessons Provided</div>;
 
   return (
     <div className="space-y-6 px-3 mb-3">

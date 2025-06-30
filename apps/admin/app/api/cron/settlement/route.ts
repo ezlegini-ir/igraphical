@@ -1,55 +1,70 @@
 import { database } from "@igraph/database";
+import { endOfMonth, startOfMonth, subDays } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { date, tutorId: tutorIdRaw } = body;
+    const allTutors = await database.tutor.findMany();
 
-    const tutorId = +tutorIdRaw;
-
-    const existingTutor = await database.tutor.findFirst({
-      where: { id: tutorId },
-    });
-    if (!existingTutor) {
-      return NextResponse.json({ error: "No Tutor Found" }, { status: 404 });
+    if (!allTutors.length) {
+      return NextResponse.json({ error: "No tutors found." }, { status: 404 });
     }
 
-    const enrollments = await database.enrollment.groupBy({
-      by: ["enrolledAt"],
-      where: {
-        course: { tutorId },
-        enrolledAt: {
-          gte: date.from,
-          lte: date.to,
+    let createdCount = 0;
+    const startOfThisMonth = startOfMonth(subDays(new Date(), 1));
+    const endOfThisMonth = endOfMonth(subDays(new Date(), 1));
+
+    for (const tutor of allTutors) {
+      const enrollments = await database.enrollment.groupBy({
+        by: ["enrolledAt"],
+        where: {
+          course: { tutorId: tutor.id },
+          enrolledAt: {
+            gte: startOfThisMonth,
+            lte: endOfThisMonth,
+          },
         },
-      },
-      _sum: { price: true },
+        _sum: { price: true },
+      });
+
+      const totalSell = enrollments.reduce(
+        (acc, curr) => acc + (curr._sum.price || 0),
+        0
+      );
+
+      const amount = totalSell * (tutor.profit / 100);
+
+      const totalEnrollments = await database.enrollment.count({
+        where: {
+          course: { tutorId: tutor.id },
+          enrolledAt: {
+            gte: startOfThisMonth,
+            lte: endOfThisMonth,
+          },
+        },
+      });
+
+      await database.settlement.create({
+        data: {
+          amount,
+          from: startOfThisMonth,
+          to: endOfThisMonth,
+          profit: tutor.profit,
+          status: "PENDING",
+          totalEnrollments,
+          totalSell,
+          tutorId: tutor.id,
+          paidAt: null,
+        },
+      });
+
+      createdCount++;
+    }
+
+    return NextResponse.json({
+      message: "Settlements created successfully.",
+      createdCount,
     });
-
-    const totalSell = enrollments.reduce(
-      (acc, curr) => acc + (curr._sum.price || 0),
-      0
-    );
-
-    const profitFactor = existingTutor.profit / 100;
-    const amount = totalSell * profitFactor;
-
-    await database.settlement.create({
-      data: {
-        amount,
-        from: date.from,
-        to: date.to,
-        profit: existingTutor.profit,
-        status: "PENDING",
-        totalEnrollments: 0, //todo: this is hardcoded
-        totalSell,
-        tutorId,
-        paidAt: null,
-      },
-    });
-
-    return NextResponse.json({ success: "Settlements Created Successfully" });
   } catch (error) {
     console.error("[SETTLEMENT_CREATION_ERROR]", error);
     return NextResponse.json(

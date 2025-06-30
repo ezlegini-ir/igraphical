@@ -1,6 +1,6 @@
 "use server";
 
-import { adminData } from "@/data/adminData";
+import { database } from "@igraph/database";
 import { kavenegar } from "./config/kavenegar";
 import { generateSmsOtp } from "./otp";
 import {
@@ -15,7 +15,6 @@ import {
   successfullPaymentSmsText,
 } from "./sms-templates";
 import { convertPersianDigitsToEnglish } from "./utils";
-import { database } from "@igraph/database";
 
 export const sendOtpSms = async (phone: string, userId?: number) => {
   const { plainOtp } = await generateSmsOtp(phone, userId);
@@ -130,12 +129,12 @@ export const sendNewTicketResponseSms = async (phone: string) => {
 
 //! -----------------------------------------------------
 
-export const sendNewTicketCreationSms = async () => {
+export const sendNewTicketCreationSms = async (phone: string) => {
   const ticketsCount = await database.ticket.count();
 
   sendSms({
     message: newTicketCreationText(ticketsCount),
-    phone: adminData.phone,
+    phone,
   });
 };
 
