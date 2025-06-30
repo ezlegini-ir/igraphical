@@ -33,7 +33,7 @@ const page = () => {
               ایمیل
             </h3>
 
-            <a href="mailto:info@igraphical.ir">info@iGraphical.ir</a>
+            <a href="mailto:igraphical.ir@gmail.com">igraphical.ir@gmail.com</a>
           </div>
           <div className="border rounded-sm p-3 text-sm text-gray-500 flex justify-between items-center">
             <h3 className="text-base font-medium flex gap-2 items-center">

@@ -132,7 +132,7 @@ const CertificateVerifyForm = () => {
               استعلام
             </Button>
 
-            <div className="pt-8 text-center space-y-2">
+            {/* <div className="pt-8 text-center space-y-2">
               <h4>توجه:</h4>
               <div className="text-gray-500 text-sm">
                 تنها مدارکی که از تاریخ 4 اردیبهشت 1404 به بعد صادر شده باشند
@@ -141,7 +141,7 @@ const CertificateVerifyForm = () => {
                 برای تاریخ های ماقبل، استعلام مدرک از طریق ایمیل
                 info@igraphical.ir مقدور می باشد.
               </div>
-            </div>
+            </div> */}
           </div>
         )}
 
