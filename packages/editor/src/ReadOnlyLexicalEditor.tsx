@@ -10,6 +10,8 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import { HeadingNode } from "@lexical/rich-text";
+import { CourseBannerNode } from "./nodes/CourseBannerNode";
+import ReplacePrintPostPlugin from "./plugins/ReplacePrintPostPlugin/ReplacePrintPostPlugin";
 
 let headingCounter = 0;
 
@@ -47,6 +49,7 @@ export default function ReadOnlyLexicalEditor({
     nodes: [
       ...PlaygroundNodes,
       CustomHeadingNode,
+      CourseBannerNode, // Assuming CourseBannerNode is imported from the correct path
       {
         replace: HeadingNode,
         with: (node: any) => new CustomHeadingNode(node.__key),
@@ -64,6 +67,7 @@ export default function ReadOnlyLexicalEditor({
       />
       <HistoryPlugin />
       <AutoFocusPlugin />
+      <ReplacePrintPostPlugin />
     </LexicalComposer>
   );
 }

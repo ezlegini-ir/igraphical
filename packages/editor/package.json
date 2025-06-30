@@ -34,7 +34,9 @@
   "exports": {
     "./Editor": "./src/TextEditor.tsx",
     "./ReadOnlyEditor": "./src/ReadOnlyLexicalEditor.tsx",
-    "./index.css": "./src/index.css"
+    "./index.css": "./src/index.css",
+    "./getCourseById": "./src/utils/getCourseById.ts",
+    "./getPostById": "./src/utils/getPostById.ts"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12"

@@ -30,6 +30,7 @@ import { parseAllowedFontSize } from "./plugins/ToolbarPlugin/fontSize";
 import TypingPerfPlugin from "./plugins/TypingPerfPlugin";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import { parseAllowedColor } from "./ui/ColorPicker";
+import { CourseBannerNode } from "./nodes/CourseBannerNode";
 
 // console.warn(
 //   "If you are profiling the playground app, please ensure you turn off the debug view. You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting."
@@ -203,7 +204,7 @@ export default function TextEditor({
         : $prepopulatedRichText,
     html: { import: buildImportMap() },
     namespace: "Playground",
-    nodes: [...PlaygroundNodes],
+    nodes: [...PlaygroundNodes, CourseBannerNode],
     onError: (error: Error) => {
       throw error;
     },

@@ -205,7 +205,7 @@ model PostCategory {
 }
 
 model PostToPostCategory {
-  post       Post         @relation(fields: [postId], references: [id])
+  post       Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId     Int
   category   PostCategory @relation(fields: [categoryId], references: [id])
   categoryId Int
