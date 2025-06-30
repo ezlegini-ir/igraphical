@@ -178,14 +178,15 @@ enum ResourceType {
 
 //! Posts ---------------------------------------------------------
 model Post {
-  id         Int                  @id @default(autoincrement())
-  title      String
-  url        String               @unique @db.VarChar(512)
-  content    String               @db.Text
+  id        Int        @id @default(autoincrement())
+  title     String
+  url       String     @unique @db.VarChar(512)
+  content   String     @db.LongText
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  status    PostStatus @default(DRAFT)
+
   categories PostToPostCategory[]
-  status     PostStatus           @default(DRAFT)
-  createdAt  DateTime             @default(now())
-  updatedAt  DateTime             @updatedAt
   comments   Comment[]
   image      Image?
   imageId    Int?
@@ -249,7 +250,6 @@ model Course {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   releaseDate DateTime?
-  test        String? //! REMOVE THIS LATER 
 
   // RELATIONS
   category          CourseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
