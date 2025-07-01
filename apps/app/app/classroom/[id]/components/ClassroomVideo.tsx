@@ -1,16 +1,15 @@
-import { useState } from "react";
 import { createLessonProgress } from "@/actions/classroom";
-import { Button } from "@igraph/ui/components/ui/button";
+import ConfettiWrapper from "@igraph/ui/components/ConfettiWrapper";
 import Loader from "@igraph/ui/components/Loader";
+import { Button } from "@igraph/ui/components/ui/button";
 import { useLoading } from "@igraph/utils";
 import { Check, Download, File } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
-import Confetti from "react-confetti";
-import { useWindowSize } from "react-use";
 import { LessonType } from "./ClassroomContent";
-import dynamic from "next/dynamic";
 
 //! REPLACE AFTER WAR
 const Video = dynamic(() => import("@igraph/ui/components/Video"), {
@@ -32,8 +31,6 @@ const ClassroomVideo = ({
   const router = useRouter();
   const { loading, setLoading } = useLoading();
   const [showConfetti, setShowConfetti] = useState(false);
-  const windowSize = useWindowSize();
-  const { width, height } = showConfetti ? windowSize : { width: 0, height: 0 };
   const [confettiRecycle, setConfettiRecycle] = useState(true);
 
   const handleNextLesson = async () => {
@@ -75,12 +72,7 @@ const ClassroomVideo = ({
     <div className="space-y-6 px-3 mb-3">
       <div className="fixed top-0 right-0 z-10">
         {showConfetti && (
-          <Confetti
-            gravity={0.2}
-            width={width}
-            height={height}
-            recycle={confettiRecycle}
-          />
+          <ConfettiWrapper show={showConfetti} recycle={confettiRecycle} />
         )}
       </div>
       <div className="space-y-3">
