@@ -9,6 +9,9 @@ import {
   renderSuccessPaymentEmailToAdmin,
 } from "./email-templates";
 import { generateEmailOtp } from "./otp";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async ({
   to,
@@ -20,20 +23,19 @@ export const sendEmail = async ({
   html: string;
 }) => {
   try {
-    const mailOptions = {
-      from: '"igraphical" <admin@igraphical.ir>',
+    const { data, error } = await resend.emails.send({
+      from: "آی‌گرافیکال <noreply@igraphical.ir>",
       to,
       subject,
       html,
-    };
-
-    mailer.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return console.error("Error:", error);
-      }
     });
 
-    return { success: true };
+    if (error) {
+      console.error(error);
+      return { success: false, error };
+    }
+
+    return { success: true, messageId: data?.id };
   } catch (error) {
     console.error(error);
     return { success: false, error };
