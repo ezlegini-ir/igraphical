@@ -1,6 +1,5 @@
 "use server";
 
-import { mailer } from "./config/mailer";
 import {
   PaymentType,
   renderFinishCourseEmail,
