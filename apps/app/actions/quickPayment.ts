@@ -145,6 +145,15 @@ export const createQuickPayment = async (data: QuickPaymentDataType) => {
         });
       }
 
+      if (newPayment.discountCode) {
+        await database.coupon.update({
+          where: { code: newPayment.discountCode },
+          data: {
+            used: { increment: 1 },
+          },
+        });
+      }
+
       //* Send Email
       await sendSuccessPaymentEmail(
         newPayment.user.email,
@@ -274,6 +283,15 @@ export const verifyQuickPayment = async (
             },
           });
         }
+      }
+
+      if (updatedPayment.discountCode) {
+        await database.coupon.update({
+          where: { code: updatedPayment.discountCode },
+          data: {
+            used: { increment: 1 },
+          },
+        });
       }
 
       //* Send Email
