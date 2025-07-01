@@ -103,9 +103,10 @@ export const updatePost = async (data: PostFormType, id: number) => {
         title,
         url: encodedUrl,
         categories: {
-          create: categories.map((categoryId) => ({
-            category: {
-              connect: { id: +categoryId },
+          set: categories.map((categoryId) => ({
+            postId_categoryId: {
+              postId: id,
+              categoryId: +categoryId,
             },
           })),
         },
@@ -176,7 +177,7 @@ export const deletePost = async (id: number) => {
 
     if (deletedPost.image) await deleteCloudFile(deletedPost.image?.public_id);
 
-    return { success: "Deleted Successfully" };
+    return { success: "Post Deleted Successfully" };
   } catch (error) {
     return { error: "500: " + error };
   }

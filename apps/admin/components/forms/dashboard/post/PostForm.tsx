@@ -313,7 +313,7 @@ const PostForm = ({ type, post, categories, authors }: Props) => {
                     return (
                       <FormItem
                         key={item.id}
-                        className="flex flex-row items-start gap-3 pb-1.5"
+                        className="flex flex-row items-center gap-3 pb-1.5"
                       >
                         <FormControl>
                           <Checkbox

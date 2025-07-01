@@ -229,3 +229,25 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+//! --------------------------------------------------
+
+export function catchErrorMessage(
+  error: unknown,
+  defaultMessage: string = "An unexpected error occurred.",
+  lang: "EN" | "FA" = "EN"
+): string {
+  const messages = {
+    EN: defaultMessage,
+    FA: "یک خطای غیرمنتظره رخ داد.",
+  };
+
+  console.error(error);
+  if (error instanceof Error) {
+    return error.message || messages[lang];
+  } else if (typeof error === "string") {
+    return error;
+  } else {
+    return messages[lang];
+  }
+}
