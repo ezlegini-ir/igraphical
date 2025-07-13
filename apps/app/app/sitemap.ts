@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   //! 2) Courses (only published)
   const courses = await database.course.findMany({
-    where: { status: "PUBLISHED" },
+    where: { status: { not: "DRAFT" } },
     select: { url: true, updatedAt: true },
   });
   const coursePaths = courses.map(({ url: courseUrl, updatedAt }) => ({
