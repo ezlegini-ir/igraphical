@@ -1,4 +1,4 @@
 export const adminData = {
-  email: "ezlegini.ir@gmail.com",
+  email: "igraphical.ir@gmail.com",
   phone: "09127452859",
 };

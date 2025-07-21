@@ -125,7 +125,7 @@ const CourseRegisterButton = ({
                 </Button>
               </Link>
 
-              {releaseDate && (
+              {releaseDate && isPresale && (
                 <Badge variant={"blue"} className="w-full gap-1">
                   <span>تاریخ انتشار:</span>
                   <span>{formatJalaliDate(releaseDate)}</span>

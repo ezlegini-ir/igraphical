@@ -19,12 +19,6 @@ const FaqBanner = () => {
             </span>
             می توانید به سرعت مشکل خود را حل کنید!
           </p>
-
-          <p className="font-semibold">
-            (<span className="text-destructive">توجه:</span> برای{" "}
-            <span className="text-primary">ارتباط با مدرس</span> به کلاس درس
-            مراجعه کنید.)
-          </p>
         </div>
 
         <div className="flex gap-3">
