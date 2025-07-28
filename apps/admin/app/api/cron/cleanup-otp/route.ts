@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request) {
   const cronKey = req.headers.get("x-cron-key");
-
   if (cronKey !== process.env.CRON_SECRET_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

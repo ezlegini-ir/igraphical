@@ -56,9 +56,9 @@ export const sendSms = async (data: { message: string; phone: string }) => {
 
 //! -----------------------------------------------------
 
-export const sendFinishCourseSms = async (fullName: string, phone: string) => {
+export const sendFinishCourseSms = async (firstName: string, phone: string) => {
   sendSms({
-    message: finishCourseSmsText(fullName),
+    message: finishCourseSmsText(firstName),
     phone: phone,
   });
 };
@@ -66,11 +66,11 @@ export const sendFinishCourseSms = async (fullName: string, phone: string) => {
 //! -----------------------------------------------------
 
 export const sendRegistrationCongratsSms = async (
-  fullName: string,
+  firstName: string,
   phone: string
 ) => {
   sendSms({
-    message: newJoinedStudentSmsText(fullName),
+    message: newJoinedStudentSmsText(firstName),
     phone: phone,
   });
 };
@@ -78,12 +78,11 @@ export const sendRegistrationCongratsSms = async (
 //! -----------------------------------------------------
 
 export const sendSuccessPaymentSms = async (
-  fullName: string,
-  phone: string,
-  total: number
+  firstName: string,
+  phone: string
 ) => {
   sendSms({
-    message: successfullPaymentSmsText(fullName, total),
+    message: successfullPaymentSmsText(firstName),
     phone: phone,
   });
 };
@@ -106,14 +105,12 @@ export const sendPaidSettlmentSms = async (
 export const sendRemindPedningEnrollmentSms = async ({
   firstName,
   phone,
-  courseTitle,
 }: {
   firstName: string;
   phone: string;
-  courseTitle: string;
 }) => {
   sendSms({
-    message: remindPendingEnrollmentText(firstName, courseTitle),
+    message: remindPendingEnrollmentText(firstName),
     phone: phone,
   });
 };

@@ -56,7 +56,7 @@ export async function registerUser(
       },
     });
 
-    await sendRegistrationCongratsSms(newUser.fullName, newUser.phone);
+    await sendRegistrationCongratsSms(newUser.firstName, newUser.phone);
 
     return { success: "User Created Successfully" };
   } catch (error) {

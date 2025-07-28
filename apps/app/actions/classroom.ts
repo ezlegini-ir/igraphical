@@ -175,7 +175,7 @@ export const createLessonProgress = async (
           },
         });
 
-        await sendFinishCourseSms(user.fullName, user.phone);
+        await sendFinishCourseSms(user.firstName, user.phone);
 
         await sendFinishCourseEmail(
           user.email,

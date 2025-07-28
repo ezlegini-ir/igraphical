@@ -1,25 +1,26 @@
 import { database } from "@igraph/database";
 import { sendRemindPedningEnrollmentSms } from "@igraph/utils";
-import { differenceInDays, subDays } from "date-fns";
+import { subDays } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const now = new Date();
-  const fourDaysAgo = subDays(now, 4);
+  const cronKey = req.headers.get("x-cron-key");
+  if (cronKey !== process.env.CRON_SECRET_KEY) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const sevenDaysAgo = subDays(new Date(), 7);
 
   try {
     const pendingEnrollments = await database.enrollment.findMany({
       where: {
         status: "PENDING",
         enrolledAt: {
-          lte: fourDaysAgo,
+          lte: sevenDaysAgo,
         },
       },
       include: {
         smsLog: true,
-        course: {
-          select: { title: true },
-        },
         user: {
           select: {
             firstName: true,
@@ -29,31 +30,41 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    let count = 0;
+    const phoneToEnrollmentsMap = new Map<string, typeof pendingEnrollments>();
 
     for (const enrollment of pendingEnrollments) {
-      const alreadySent = enrollment.smsLog.some(
-        (log) => log.type === "REMIND_PENDING_ENROLLMENT"
+      const phone = enrollment.user?.phone;
+      if (!phone) continue;
+
+      if (!phoneToEnrollmentsMap.has(phone)) {
+        phoneToEnrollmentsMap.set(phone, []);
+      }
+
+      phoneToEnrollmentsMap.get(phone)?.push(enrollment);
+    }
+
+    let count = 0;
+
+    for (const [phone, enrollments] of phoneToEnrollmentsMap) {
+      const alreadySent = enrollments.some((enrollment) =>
+        enrollment.smsLog.some(
+          (log) => log.type === "REMIND_PENDING_ENROLLMENT"
+        )
       );
 
-      const daysSinceEnroll = differenceInDays(
-        now,
-        new Date(enrollment.enrolledAt)
-      );
+      const firstName = enrollments[0]?.user?.firstName || "کاربر";
 
-      if (daysSinceEnroll >= 4 && !alreadySent) {
-        //* Send Sms
+      if (!alreadySent) {
+        // Send SMS without course title
         await sendRemindPedningEnrollmentSms({
-          firstName: enrollment.user.firstName,
-          phone: enrollment.user.phone,
-          courseTitle: enrollment.course.title,
+          phone,
+          firstName,
         });
 
-        //TODO: SEND EMAIl AS WELL
-
+        // Log the first enrollment
         await database.smsLog.create({
           data: {
-            enrollmentId: enrollment.id,
+            enrollmentId: enrollments[0].id,
             type: "REMIND_PENDING_ENROLLMENT",
           },
         });
@@ -69,7 +80,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Reminder Error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error." },
       { status: 500 }
     );
   }

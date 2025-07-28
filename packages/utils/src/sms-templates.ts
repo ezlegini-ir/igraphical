@@ -1,6 +1,6 @@
-export function finishCourseSmsText(fullName: string) {
+export function finishCourseSmsText(firstName: string) {
   const message = [
-    `🔷 تبریک ${fullName} عزیز،`,
+    `🔷 تبریک ${firstName} عزیز،`,
     "🎉 شما دوره خود را به اتمام رساندید.",
     "لطفا با ثبت نظر، ما را در جهت بهبود کیفیت دوره‌ها یاری بفرمایید.",
     "آی‌گرافیکال",
@@ -9,19 +9,19 @@ export function finishCourseSmsText(fullName: string) {
   return message;
 }
 
-export function newJoinedStudentSmsText(fullName: string) {
+export function newJoinedStudentSmsText(firstName: string) {
   const message = [
-    `🔷 ${fullName} عزیز،`,
+    `🔷 ${firstName} عزیز،`,
     "❤️ به جمع کاربران آی‌گرافیکال خوش آمدید.",
   ].join("\n");
 
   return message;
 }
 
-export function successfullPaymentSmsText(fullName: string, price: number) {
+export function successfullPaymentSmsText(firstName: string) {
   const message = [
-    `🔷 ${fullName} عزیز،`,
-    `✅ ثبت نام شما با مبلغ ${price.toLocaleString("en-US")} تومان موفق بود.`,
+    `🔷 ${firstName} عزیز،`,
+    `✅ ثبت نام شما موفق بود.`,
     "آی‌گرافیکال",
   ].join("\n");
 
@@ -39,13 +39,10 @@ export function paidSettlmentSmsText(fullName: string, amount: number) {
   return message;
 }
 
-export function remindPendingEnrollmentText(
-  firstName: string,
-  courseTitle: string
-) {
+export function remindPendingEnrollmentText(firstName: string) {
   const message = [
     `🔷 ${firstName} عزیز،`,
-    `😅 هنوز ${courseTitle} رو شروع نکردی!`,
+    `😅 هنوز دوره‌هایی که ثبت نام کردی رو شروع نکردی!`,
     "🚀 وقتشه که به مهارت هات اضافه کنی.",
     "آی‌گرافیکال",
   ].join("\n");

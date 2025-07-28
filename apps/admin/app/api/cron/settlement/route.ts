@@ -1,8 +1,14 @@
 import { database } from "@igraph/database";
+import { sendPaidSettlmentSms } from "@igraph/utils";
 import { endOfMonth, startOfMonth, subDays } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+  const cronKey = req.headers.get("x-cron-key");
+  if (cronKey !== process.env.CRON_SECRET_KEY) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
   try {
     const allTutors = await database.tutor.findMany();
 
@@ -59,6 +65,8 @@ export async function POST(req: NextRequest) {
       });
 
       createdCount++;
+
+      await sendPaidSettlmentSms(tutor.name, tutor.phone, amount);
     }
 
     return NextResponse.json({
