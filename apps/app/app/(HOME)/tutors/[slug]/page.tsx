@@ -157,5 +157,11 @@ export async function generateMetadata({
   return {
     title: `${tutor.displayName} - مدرس آی‌گرافیکال`,
     description: tutor.bio?.slice(0, 120) || `آشنایی با ${tutor.displayName}،`,
+    twitter: {
+      card: "summary_large_image",
+      title: tutor.name,
+      description: tutor.bio,
+      images: [tutor.image?.url || "/og-cover.png"],
+    },
   };
 }

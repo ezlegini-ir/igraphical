@@ -123,5 +123,11 @@ export async function generateMetadata({
         },
       ],
     },
+    twitter: {
+      card: "summary_large_image",
+      title: course.title,
+      description,
+      images: [course.image?.url || "/og-cover.png"],
+    },
   };
 }

@@ -102,5 +102,11 @@ export async function generateMetadata({
         },
       ],
     },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images: [post.image?.url || "/og-cover.png"],
+    },
   };
 }
