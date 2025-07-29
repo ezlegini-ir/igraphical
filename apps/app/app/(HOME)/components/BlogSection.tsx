@@ -17,7 +17,7 @@ const BlogSection = async () => {
     <div className="flex justify-center items-center">
       <div className="bg-slate-100 rounded-lg h-96 w-full absolute -z-10 hidden md:block" />
 
-      <div className="rounded-lg p-5 space-y-3 flex gap-3 flex-wrap md:flex-nowrap justify-center items-center md:mx-3">
+      <div className="rounded-lg p-5 space-y-3 flex gap-6 flex-wrap md:flex-nowrap justify-center items-center md:mx-3">
         <div className="space-y-3 text-center md:text-right">
           <h2>از گوشه و اطراف دنیای گرافیک</h2>
           <p>
@@ -34,18 +34,20 @@ const BlogSection = async () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3   left-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 left-0">
           {posts.map((item, index) => (
-            <div key={index} className="card space-y-3">
+            <div key={index} className="card w-full md:max-w-[350px] space-y-3">
               <Link href={`/${item.url}`} className="space-y-3">
                 <Image
                   alt={"post" + (index + 1)}
                   src={item.image?.url || placeHolder}
                   width={300}
                   height={300}
-                  className="aspect-video rounded-lg"
+                  className="aspect-[3/2] object-cover w-full rounded-lg"
                 />
-                <h3 className="text-base font-semibold">{item.title} </h3>
+                <h3 className="text-base line-clamp-1 font-semibold">
+                  {item.title.slice(0, 75)}
+                </h3>
               </Link>
 
               <div className="flex gap-2">

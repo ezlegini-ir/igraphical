@@ -170,9 +170,8 @@ export const createQuickPayment = async (data: QuickPaymentDataType) => {
 
       //* Send Sms
       await sendSuccessPaymentSms(
-        newPayment.user.fullName,
-        newPayment.user.phone,
-        newPayment.total
+        newPayment.user.firstName,
+        newPayment.user.phone
       );
 
       return {
@@ -310,9 +309,8 @@ export const verifyQuickPayment = async (
 
       //* Send Sms
       await sendSuccessPaymentSms(
-        updatedPayment.user.fullName,
-        updatedPayment.user.phone,
-        updatedPayment.total
+        updatedPayment.user.firstName,
+        updatedPayment.user.phone
       );
 
       return { success: "پرداخت موفق!", refId: res.data.ref_id };

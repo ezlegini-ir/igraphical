@@ -20,7 +20,7 @@ export const createSlider = async (data: SlidersFormType, type: SliderType) => {
     const uploadedSliders = (await uploadManyCloudFiles(buffers, {
       folder: "slider",
       resource_type: "image",
-      width: 1500,
+      width: 2500,
     })) as UploadApiResponse[];
 
     await database.$transaction(async (tx) => {
@@ -95,7 +95,7 @@ export const updateSlider = async (
             const [uploadedImage] = (await uploadManyCloudFiles([buffer], {
               folder: "slider",
               resource_type: "image",
-              width: 1500,
+              width: 2500,
             })) as UploadApiResponse[];
 
             // Use upsert so that if an image record exists, it’s updated; otherwise, it’s created.
@@ -133,7 +133,7 @@ export const updateSlider = async (
             const [uploadedImage] = (await uploadManyCloudFiles([buffer], {
               folder: "slider",
               resource_type: "image",
-              width: 1500,
+              width: 2500,
             })) as UploadApiResponse[];
 
             await tx.image.create({

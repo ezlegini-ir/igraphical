@@ -49,7 +49,7 @@ export default function Slider({ type, sliders }: Props) {
       ? // PANEL
         "aspect-[2.3/1] sm:aspect-[2.8/1] md:aspect-[2.25/1] lg:aspect-[3.5/1] xl:aspect-[5.43/1]"
       : // MAIN
-        "aspect-[2/1] sm:aspect-[2.2/1] md:aspect-[2.4/1] lg:aspect-[2.94/1]"
+        "aspect-[2/1] sm:aspect-[2.2/1] md:aspect-[2.4/1] lg:aspect-[2.94/1] w-full h-auto "
   } `;
 
   return (
@@ -71,8 +71,8 @@ export default function Slider({ type, sliders }: Props) {
                   <Image
                     src={slider.image?.url || sliderPlaceholder}
                     alt="slider"
-                    width={1300}
-                    height={1300}
+                    width={2500}
+                    height={2500}
                     className={sliderStyles}
                   />
                 </Link>

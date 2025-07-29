@@ -84,6 +84,7 @@ const ClassroomVideo = ({
             <Link
               href={currentLesson.url}
               className="aspect-video bg-orange-400 text-primary-foreground flex flex-col gap-3 justify-center items-center rounded-sm group"
+              target="_blank"
             >
               <Download size={60} />
               <span className="text-sm">{currentLesson.title}</span>
@@ -94,6 +95,7 @@ const ClassroomVideo = ({
             <Link
               href={currentLesson.url}
               className="aspect-video bg-slate-400 flex flex-col gap-3 justify-center items-center rounded-sm group"
+              target="_blank"
             >
               <File className="text-gray-500" size={60} />
               <span className="text-sm text-gray-500">

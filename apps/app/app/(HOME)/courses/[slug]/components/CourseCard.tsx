@@ -41,9 +41,9 @@ const CourseCard = ({ course }: Props) => {
           <Image
             alt=""
             src={course.image?.url || placeHolder}
-            width={300}
-            height={175}
-            className="w-full aspect-video object-cover"
+            width={500}
+            height={500}
+            className="w-full aspect-[3/2] object-cover"
           />
         </CardHeader>
 
