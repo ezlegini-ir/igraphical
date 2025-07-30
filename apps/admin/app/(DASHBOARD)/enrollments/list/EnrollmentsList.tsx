@@ -1,10 +1,3 @@
-import Avatar from "@igraph/ui/components/Avatar";
-import Pagination from "@igraph/ui/components/Pagination";
-import Table from "@igraph/ui/components/Table";
-import { Badge } from "@igraph/ui/components/ui/badge";
-import { TableCell, TableRow } from "@igraph/ui/components/ui/table";
-import { formatMiladiDate } from "@igraph/utils";
-import { formatPrice } from "@igraph/utils";
 import {
   Course,
   Enrollment,
@@ -12,6 +5,17 @@ import {
   Payment,
   User,
 } from "@igraph/database";
+import Avatar from "@igraph/ui/components/Avatar";
+import Pagination from "@igraph/ui/components/Pagination";
+import Table from "@igraph/ui/components/Table";
+import { Badge } from "@igraph/ui/components/ui/badge";
+import { TableCell, TableRow } from "@igraph/ui/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@igraph/ui/components/ui/tooltip";
+import { formatMiladiDate, formatPrice } from "@igraph/utils";
 import Link from "next/link";
 import EnrollmentPreview from "./EnrollmentPreview";
 
@@ -44,20 +48,6 @@ const renderRows = (enrollment: EnrollmentType) => {
   const pending = enrollment.status === "PENDING";
   const in_progress = enrollment.status === "IN_PROGRESS";
 
-  const statuses = pending ? (
-    <Badge className="w-[100px]" variant={"orange"}>
-      Pending
-    </Badge>
-  ) : in_progress ? (
-    <Badge className="w-[100px]" variant={"blue"}>
-      In Progress
-    </Badge>
-  ) : (
-    <Badge className="w-[100px]" variant={"green"}>
-      Completed
-    </Badge>
-  );
-
   return (
     <TableRow key={enrollment.id} className="odd:bg-slate-50">
       <TableCell>
@@ -87,7 +77,39 @@ const renderRows = (enrollment: EnrollmentType) => {
       </TableCell>
 
       <TableCell className="text-center hidden lg:table-cell">
-        {statuses}
+        <Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="relative w-[100px]">
+                {enrollment.status === "IN_PROGRESS" && (
+                  <div
+                    className={
+                      "absolute left-0 top-0 h-full rounded-full bg-blue-500/20"
+                    }
+                    style={{ width: `${enrollment.progress}%` }}
+                  />
+                )}
+
+                <Badge
+                  className="w-full"
+                  variant={pending ? "orange" : in_progress ? "blue" : "green"}
+                >
+                  {enrollment.status === "PENDING" && "Pending"}
+                  {enrollment.status === "IN_PROGRESS" && "In Progress"}
+                  {enrollment.status === "COMPLETED" && "Completed"}
+                </Badge>
+              </div>
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <p>{enrollment.progress}% complete</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <TooltipContent>
+            <p>{enrollment.progress.toString()}</p>
+          </TooltipContent>
+        </Tooltip>
       </TableCell>
 
       <TableCell className="text-center hidden lg:table-cell">

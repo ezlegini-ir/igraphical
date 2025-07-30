@@ -127,7 +127,9 @@ export const sendNewTicketResponseSms = async (phone: string) => {
 //! -----------------------------------------------------
 
 export const sendNewTicketCreationSms = async (phone: string) => {
-  const ticketsCount = await database.ticket.count();
+  const ticketsCount = await database.ticket.count({
+    where: { status: "PENDING" },
+  });
 
   sendSms({
     message: newTicketCreationText(ticketsCount),
