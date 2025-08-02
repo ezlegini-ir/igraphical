@@ -1,6 +1,6 @@
 "use client";
 
-import { sendAskTutorMessage } from "@/actions/askTutor";
+import { markAsRead, sendAskTutorMessage } from "@/actions/askTutor";
 import Avatar from "@igraph/ui/components/Avatar";
 import CardBox from "@igraph/ui/components/CardBox";
 import Loader from "@igraph/ui/components/Loader";
@@ -21,7 +21,6 @@ import { useLoading } from "@igraph/utils";
 import { formatJalaliDate } from "@igraph/utils";
 import { truncateFileName as truncateName } from "@igraph/utils";
 import { QaFormSchema, QaFormType } from "@/lib/validationSchema";
-
 import { placeHolder } from "@/public";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -118,6 +117,18 @@ const QaChat = ({ qa }: Props) => {
       setFileName("");
       router.refresh();
       return;
+    }
+  };
+
+  const onMarkAsRead = async () => {
+    const res = await markAsRead(qa.id);
+    if (res.error) {
+      toast.error(res.error);
+    }
+
+    if (res.success) {
+      toast.success(res.success);
+      router.refresh();
     }
   };
 
@@ -326,6 +337,19 @@ const QaChat = ({ qa }: Props) => {
                 />
                 <span>{qa.course.title}</span>
               </div>
+
+              <Separator />
+
+              {qa.status === "PENDING" && (
+                <Button
+                  type="button"
+                  onClick={onMarkAsRead}
+                  className="w-full"
+                  variant={"lightBlue"}
+                >
+                  Mark As Read
+                </Button>
+              )}
             </div>
           }
         </CardBox>

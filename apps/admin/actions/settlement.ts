@@ -2,7 +2,6 @@
 
 import { SettlementFormType } from "@/lib/validationSchema";
 import { database } from "@igraph/database";
-import { sendPaidSettlmentSms } from "@igraph/utils";
 
 export const createSettlement = async (data: SettlementFormType) => {
   const { date } = data;
@@ -80,12 +79,7 @@ export const updateSettlement = async (
       },
     });
 
-    if (status === "PAID")
-      await sendPaidSettlmentSms(
-        existingSettlement.tutor.name,
-        existingSettlement.tutor.phone,
-        existingSettlement.amount
-      );
+    //TODO: SEND SMS TO TUTOR
 
     return { success: "Status of Settlement Updated Successfully" };
   } catch (error) {

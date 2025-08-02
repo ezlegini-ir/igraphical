@@ -80,7 +80,7 @@ const renderRows = (enrollment: EnrollmentType) => {
         <Tooltip>
           <Tooltip>
             <TooltipTrigger>
-              <div className="relative w-[100px]">
+              <div className="relative w-[100px] rounded-full overflow-hidden">
                 {enrollment.status === "IN_PROGRESS" && (
                   <div
                     className={
@@ -102,7 +102,7 @@ const renderRows = (enrollment: EnrollmentType) => {
             </TooltipTrigger>
 
             <TooltipContent>
-              <p>{enrollment.progress}% complete</p>
+              <p>{enrollment.progress.toFixed()}% complete</p>
             </TooltipContent>
           </Tooltip>
 

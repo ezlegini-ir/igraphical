@@ -12,10 +12,6 @@ export async function POST(req: NextRequest) {
   try {
     const allTutors = await database.tutor.findMany();
 
-    if (!allTutors.length) {
-      return NextResponse.json({ error: "No tutors found." }, { status: 404 });
-    }
-
     let createdCount = 0;
     const startOfThisMonth = startOfMonth(subDays(new Date(), 1));
     const endOfThisMonth = endOfMonth(subDays(new Date(), 1));
@@ -66,7 +62,7 @@ export async function POST(req: NextRequest) {
 
       createdCount++;
 
-      await sendPaidSettlmentSms(tutor.name, tutor.phone, amount);
+      await sendPaidSettlmentSms(tutor.displayName, tutor.phone, amount);
     }
 
     return NextResponse.json({

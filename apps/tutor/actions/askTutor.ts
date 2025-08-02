@@ -82,3 +82,21 @@ export const sendAskTutorMessage = async (
     return { error: String(error) };
   }
 };
+
+export const markAsRead = async (askTutorId: number) => {
+  try {
+    const qa = await database.askTutor.findFirst({ where: { id: askTutorId } });
+    if (!qa) return { error: "QA did not exist." };
+
+    await database.askTutor.update({
+      where: { id: askTutorId },
+      data: {
+        status: "REPLIED",
+      },
+    });
+
+    return { success: "QA Marked as read successfully." };
+  } catch (error) {
+    return { error: String(error) };
+  }
+};
