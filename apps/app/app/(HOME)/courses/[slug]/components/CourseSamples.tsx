@@ -45,8 +45,8 @@ const CourseExercise = ({ exercises }: Props) => {
                     key={index}
                     alt={`Sample ${index + 1}`}
                     src={item.url}
-                    width={800}
-                    height={800}
+                    width={900}
+                    height={900}
                     draggable={false}
                     className="rounded-lg bg-muted-foreground"
                   />

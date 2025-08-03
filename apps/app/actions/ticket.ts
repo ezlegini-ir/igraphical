@@ -39,6 +39,7 @@ export const createTicket = async (data: TicketFormType, userId: number) => {
         (await uploadCloudFile(buffer, {
           format: fileFormat,
           resource_type: isImageType ? "image" : "raw",
+          width: 900,
           folder: "ticket",
         })) as UploadApiResponse;
 
@@ -107,6 +108,7 @@ export const sendTicketMessage = async (
         (await uploadCloudFile(buffer, {
           format: fileFormat,
           resource_type: isImageType ? "image" : "raw",
+          width: 900,
           folder: "ticket",
         })) as UploadApiResponse;
 
