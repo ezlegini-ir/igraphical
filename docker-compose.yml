@@ -112,7 +112,7 @@ services:
       - app_network
     volumes:
       - db_backups:/app/backups
-      - /root/projects/igraphical/admin/ga.json:/app/ga.json:ro
+      - /root/projects/igraphical/apps/admin/ga.json:/app/ga.json:ro
 
   app:
     build:
