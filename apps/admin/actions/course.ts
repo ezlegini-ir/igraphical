@@ -175,7 +175,7 @@ export const createCourse = async (data: CourseFormType) => {
 
         const uploadedGallery = (await uploadManyCloudFiles(buffers, {
           folder: "course",
-          width: 800,
+          width: 900,
           resource_type: "image",
         })) as UploadApiResponse[];
 
@@ -441,7 +441,7 @@ export const updateCourse = async (data: CourseFormType, courseId: number) => {
         const uploadedGallery = (await uploadManyCloudFiles(buffers, {
           folder: "course",
           resource_type: "image",
-          width: 800,
+          width: 900,
         })) as UploadApiResponse[];
 
         let courseGallery = await tx.galleryItem.findFirst({

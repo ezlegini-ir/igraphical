@@ -32,32 +32,34 @@ const CourseReviews = ({ reviews }: Props) => {
   };
 
   return (
-    <div>
-      <h2 className="text-lg font-semibold mb-3">نظرات دانش آموزان:</h2>
+    reviews.length > 0 && (
+      <div>
+        <h2 className="text-lg font-semibold mb-3">نظرات دانش آموزان:</h2>
 
-      <Masonry
-        breakpointCols={{ default: 2, 1024: 1 }}
-        className="flex gap-3"
-        columnClassName="masonry-column"
-      >
-        {reviews.slice(0, currentReviews).map((review, index) => (
-          <ReviewCard key={index} review={review} />
-        ))}
-      </Masonry>
+        <Masonry
+          breakpointCols={{ default: 2, 1024: 1 }}
+          className="flex gap-3"
+          columnClassName="masonry-column"
+        >
+          {reviews.slice(0, currentReviews).map((review, index) => (
+            <ReviewCard key={index} review={review} />
+          ))}
+        </Masonry>
 
-      {reviews.length > reviewInitialCount && (
-        <div className="flex justify-center mt-10">
-          <Button
-            size={"sm"}
-            disabled={reviews.length < currentReviews}
-            variant="dark"
-            onClick={handleLoadMore}
-          >
-            مشاهده بیشتر
-          </Button>
-        </div>
-      )}
-    </div>
+        {reviews.length > reviewInitialCount && (
+          <div className="flex justify-center mt-10">
+            <Button
+              size={"sm"}
+              disabled={reviews.length < currentReviews}
+              variant="dark"
+              onClick={handleLoadMore}
+            >
+              مشاهده بیشتر
+            </Button>
+          </div>
+        )}
+      </div>
+    )
   );
 };
 

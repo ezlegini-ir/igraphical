@@ -40,7 +40,7 @@ const CourseExercise = ({ exercises }: Props) => {
                   />
                 </DialogTrigger>
 
-                <DialogContent className="w-fit gap-2 p-1.5 border-none pb-2 bg-slate-700 flex flex-col items-center">
+                <DialogContent className="max-w-4xl w-fit gap-2 p-1.5 border-none pb-2 bg-slate-700 flex flex-col items-center">
                   <Image
                     key={index}
                     alt={`Sample ${index + 1}`}
