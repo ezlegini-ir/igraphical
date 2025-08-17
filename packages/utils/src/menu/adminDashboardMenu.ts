@@ -2,6 +2,7 @@ import {
   BookOpen,
   ChartBarBig,
   ChartNoAxesCombined,
+  Download,
   FileDown,
   GalleryHorizontal,
   GraduationCap,
@@ -29,6 +30,16 @@ export const sideBarMenuItems = [
           { label: "List", href: "/posts/list" },
           { label: "Categories", href: "/posts/categories" },
           { label: "Comments", href: "/posts/comments" },
+        ],
+      },
+      {
+        tabName: "Assets",
+        tabHref: "/assets/list",
+        tabIcon: Download,
+        subMenuItems: [
+          { label: "new", href: "/assets/new" },
+          { label: "List", href: "/assets/list" },
+          { label: "Categories", href: "/assets/categories" },
         ],
       },
       {

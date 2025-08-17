@@ -110,20 +110,23 @@ model Image {
   size      Int
   createdAt DateTime  @default(now())
 
-  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int?         @unique
-  admin     Admin?       @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  adminId   Int?         @unique
-  tutor     Tutor?       @relation(fields: [tutorId], references: [id], onDelete: Cascade)
-  tutorId   Int?         @unique
-  post      Post?        @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    Int?         @unique
-  course    Course?      @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  Int?         @unique
-  gallery   GalleryItem? @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  galleryId Int?
-  slider    Slider?      @relation(fields: [sliderId], references: [id], onDelete: Cascade)
-  sliderId  Int?         @unique
+  user           User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int?          @unique
+  admin          Admin?        @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId        Int?          @unique
+  tutor          Tutor?        @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  tutorId        Int?          @unique
+  post           Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId         Int?          @unique
+  course         Course?       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId       Int?          @unique
+  gallery        GalleryItem?  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  galleryId      Int?
+  slider         Slider?       @relation(fields: [sliderId], references: [id], onDelete: Cascade)
+  sliderId       Int?          @unique
+  asset          Asset[]
+  assetGallery   AssetGallery? @relation(fields: [assetGalleryId], references: [id])
+  assetGalleryId Int?
 
   @@map("image")
 }
@@ -158,6 +161,7 @@ model File {
   askTutorMessageId Int?              @unique
   certificate       Certificate?      @relation(fields: [certificateId], references: [id])
   certificateId     Int?              @unique
+  Asset             Asset[]
 
   @@map("file")
 }
@@ -231,6 +235,34 @@ model Comment {
 enum PostStatus {
   DRAFT
   PUBLISHED
+}
+
+//! Assets ---------------------------------------------------------
+
+model Asset {
+  id            Int           @id @default(autoincrement())
+  title         String
+  description   String?
+  file          File          @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId        Int
+  image         Image?        @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  imageId       Int?
+  gallery       AssetGallery?
+  format        String
+  downloadCount Int           @default(0)
+  createdAt     DateTime      @default(now())
+
+  @@map("asset")
+}
+
+model AssetGallery {
+  id      Int     @id @default(autoincrement())
+  title   String?
+  images  Image[]
+  asset   Asset   @relation(fields: [assetId], references: [id])
+  assetId Int     @unique
+
+  @@map("assetgallery")
 }
 
 //! Course ---------------------------------------------------------
@@ -622,7 +654,9 @@ model Campaign {
 
   couponId         Int?
   coupon           Coupon?            @relation(fields: [couponId], references: [id], onDelete: SetNull)
-  CampaignMessages CampaignMessages[]
+  campaignMessages CampaignMessages[]
+
+  @@map("campaign")
 }
 
 model CampaignMessages {
@@ -632,6 +666,8 @@ model CampaignMessages {
 
   campaignId Int
   campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@map("campaignmessage")
 }
 
 //! TICKET ---------------------------------------------------------
