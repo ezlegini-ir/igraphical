@@ -124,9 +124,10 @@ model Image {
   galleryId      Int?
   slider         Slider?       @relation(fields: [sliderId], references: [id], onDelete: Cascade)
   sliderId       Int?          @unique
-  asset          Asset[]
-  assetGallery   AssetGallery? @relation(fields: [assetGalleryId], references: [id])
+  assetGallery   AssetGallery? @relation(fields: [assetGalleryId], references: [id], onDelete: Cascade)
   assetGalleryId Int?
+  asset          Asset?        @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId        Int?          @unique
 
   @@map("image")
 }
@@ -161,7 +162,6 @@ model File {
   askTutorMessageId Int?              @unique
   certificate       Certificate?      @relation(fields: [certificateId], references: [id])
   certificateId     Int?              @unique
-  asset             Asset[]
 
   @@map("file")
 }
@@ -241,22 +241,41 @@ enum PostStatus {
 //! Assets ---------------------------------------------------------
 
 model Asset {
-  id            Int           @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   title         String
-  status        AssetStatus
-  url           String        @unique
-  description   String?
-  file          File          @relation(fields: [fileId], references: [id], onDelete: Cascade)
-  fileId        Int
-  image         Image?        @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  imageId       Int?
-  gallery       AssetGallery?
+  url           String      @unique
+  fileUrl       String
+  description   String?     @db.Text
   format        String
-  downloadCount Int           @default(0)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  downloadCount Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  status        AssetStatus
+
+  gallery    AssetGallery?
+  categories AssetToAssetCategory[]
+  image      Image?
 
   @@map("asset")
+}
+
+model AssetCategory {
+  id     Int                    @id @default(autoincrement())
+  name   String
+  url    String                 @unique
+  assets AssetToAssetCategory[]
+
+  @@map("assetcategory")
+}
+
+model AssetToAssetCategory {
+  asset      Asset         @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId    Int
+  category   AssetCategory @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@id([assetId, categoryId])
+  @@map("assettoassetcategory")
 }
 
 enum AssetStatus {
@@ -267,7 +286,7 @@ enum AssetStatus {
 model AssetGallery {
   id      Int     @id @default(autoincrement())
   title   String?
-  images  Image[]
+  image   Image[]
   asset   Asset   @relation(fields: [assetId], references: [id])
   assetId Int     @unique
 

@@ -2,6 +2,13 @@
 
 import { createPost, deletePost, updatePost } from "@/actions/post";
 import { PostType } from "@/app/(DASHBOARD)/posts/list/PostsList";
+import {
+  AssetFormType,
+  PostFormType,
+  postFormSchema,
+} from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Admin, PostCategory } from "@igraph/database";
 import CardBox from "@igraph/ui/components/CardBox";
 import DeleteButton from "@igraph/ui/components/DeleteButton";
 import Loader from "@igraph/ui/components/Loader";
@@ -29,11 +36,7 @@ import {
 } from "@igraph/ui/components/ui/select";
 import { Separator } from "@igraph/ui/components/ui/separator";
 import { Skeleton } from "@igraph/ui/components/ui/skeleton";
-import { useImagePreview } from "@igraph/utils";
-import { PostFormType, postFormSchema } from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Admin, PostCategory } from "@igraph/database";
-import { useLoading } from "@igraph/utils";
+import { useImagePreview, useLoading } from "@igraph/utils";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -117,7 +120,7 @@ const PostForm = ({ type, post, categories, authors }: Props) => {
     setLoading(true);
 
     // Process the Lexical JSON to ensure headings have sequential IDs.
-    const updatedData: PostFormType = {
+    const updatedData: AssetFormType = {
       ...data,
       content: processLexicalJSON(data.content),
     };

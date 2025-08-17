@@ -1,5 +1,10 @@
 import { placeHolder } from "@/public";
-import { Asset, Image as ImageType } from "@igraph/database";
+import {
+  Asset,
+  AssetCategory,
+  AssetGallery,
+  Image as ImageType,
+} from "@igraph/database";
 import EditButton from "@igraph/ui/components/EditButton";
 import Pagination from "@igraph/ui/components/Pagination";
 import Table from "@igraph/ui/components/Table";
@@ -12,6 +17,14 @@ import Link from "next/link";
 
 export interface AssetType extends Asset {
   image: ImageType | null;
+  gallery: (AssetGallery & { image: ImageType[] }) | null;
+  categories: CategoriesType[];
+}
+
+export interface CategoriesType {
+  category: AssetCategory;
+  assetId: number;
+  categoryId: number;
 }
 
 interface Props {
@@ -69,6 +82,17 @@ const renderRows = (asset: AssetType) => {
         {formatMiladiDate(asset.createdAt)}
       </TableCell>
 
+      <TableCell className="text-center" dir="rtl">
+        {asset.categories &&
+          asset.categories
+            ?.map((item) => item.category.name)
+            .slice(0, 2)
+            .join(", ") +
+            (asset.categories.length > 2
+              ? `، ${asset?.categories?.length - 2} دیگر...`
+              : "")}
+      </TableCell>
+
       <TableCell className="lg:flex gap-2 hidden ">
         <EditButton href={`/posts/${asset.id}`} />
         <ViewButton
@@ -85,6 +109,7 @@ const columns = [
   { label: "Views", className: "text-center" },
   { label: "Downloaded", className: "text-center" },
   { label: "Published At", className: "text-center hidden xl:table-cell" },
+  { label: "Category", className: "text-center hidden xl:table-cell" },
   {
     label: "Actions",
     className: "text-right w-[60px] hidden lg:table-cell",

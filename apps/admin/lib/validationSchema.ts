@@ -4,6 +4,7 @@ const requiredMessage = "Required";
 export const adminRoles = ["ADMIN", "AUTHOR"] as const;
 export const courseStatus = ["DRAFT", "PUBLISHED", "PRESALE"] as const;
 export const postStatus = ["DRAFT", "PUBLISHED"] as const;
+export const assetStatus = ["DRAFT", "PUBLISHED"] as const;
 export const lessonsType = ["FILE", "VIDEO", "ASSET"] as const;
 export const settlementStatus = ["PENDING", "PAID"] as const;
 export const paymentStatus = [
@@ -87,6 +88,24 @@ export const commentFormSchema = z.object({
   date: z.date(),
 });
 export type CommentFormType = z.infer<typeof commentFormSchema>;
+
+//! ASSETS
+export const assetFormSchema = z.object({
+  title: z.string().min(1),
+  status: z.enum(assetStatus),
+  url: z.string().min(1).trim(),
+  description: z.string().min(1, requiredMessage),
+  image,
+  format: z.string().min(1),
+  fileUrl: z.string().min(1).url(),
+  categories: z.array(z.string()),
+  gallery: z
+    .array(
+      z.instanceof(File, { message: "Each gallery item must be an image file" })
+    )
+    .optional(),
+});
+export type AssetFormType = z.infer<typeof assetFormSchema>;
 
 //! COURSES
 export const courseFormSchema = z.object({

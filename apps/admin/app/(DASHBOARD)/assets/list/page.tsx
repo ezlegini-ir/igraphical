@@ -22,10 +22,12 @@ const page = async ({ searchParams }: Props) => {
     title: { contains: search },
   };
 
-  const posts = await database.asset.findMany({
+  const assets = await database.asset.findMany({
     where,
     include: {
       image: true,
+      categories: { include: { category: true } },
+      gallery: { include: { image: true } },
     },
     orderBy: download
       ? { downloadCount: download === "MOST" ? "desc" : "asc" }
@@ -65,7 +67,7 @@ const page = async ({ searchParams }: Props) => {
       </div>
 
       <AssetsList
-        assets={posts}
+        assets={assets}
         totalAssets={totalAssets}
         pageSize={globalPageSize}
       />
