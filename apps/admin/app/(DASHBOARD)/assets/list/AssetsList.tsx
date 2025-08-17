@@ -94,7 +94,7 @@ const renderRows = (asset: AssetType) => {
       </TableCell>
 
       <TableCell className="lg:flex gap-2 hidden ">
-        <EditButton href={`/posts/${asset.id}`} />
+        <EditButton href={`/assets/${asset.id}`} />
         <ViewButton
           href={`${process.env.NEXT_PUBLIC_MAIN_URL}/assets/${asset.url}`}
         />

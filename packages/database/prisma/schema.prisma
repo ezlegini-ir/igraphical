@@ -138,6 +138,7 @@ enum ImageType {
   ANNOUNCEMENT
   USER
   SLIDER
+  DOWNLOADABLE_ASSET
 
   COURSE_ASSET
   POST_ASSET
@@ -213,7 +214,7 @@ model PostCategory {
 model PostToPostCategory {
   post       Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId     Int
-  category   PostCategory @relation(fields: [categoryId], references: [id])
+  category   PostCategory @relation(fields: [categoryId], references: [id], onDelete: NoAction)
   categoryId Int
 
   @@id([postId, categoryId])
@@ -259,6 +260,11 @@ model Asset {
   @@map("asset")
 }
 
+enum AssetStatus {
+  PUBLISHED
+  DRAFT
+}
+
 model AssetCategory {
   id     Int                    @id @default(autoincrement())
   name   String
@@ -271,23 +277,17 @@ model AssetCategory {
 model AssetToAssetCategory {
   asset      Asset         @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId    Int
-  category   AssetCategory @relation(fields: [categoryId], references: [id])
+  category   AssetCategory @relation(fields: [categoryId], references: [id], onDelete: NoAction)
   categoryId Int
 
   @@id([assetId, categoryId])
   @@map("assettoassetcategory")
 }
 
-enum AssetStatus {
-  PUBLISHED
-  DRAFT
-}
-
 model AssetGallery {
   id      Int     @id @default(autoincrement())
-  title   String?
   image   Image[]
-  asset   Asset   @relation(fields: [assetId], references: [id])
+  asset   Asset   @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId Int     @unique
 
   @@map("assetgallery")

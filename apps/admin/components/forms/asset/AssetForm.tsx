@@ -1,6 +1,6 @@
 "use client";
 
-import { deletePost } from "@/actions/post";
+import { createAsset, deleteAsset, updateAsset } from "@/actions/asset";
 import { AssetType } from "@/app/(DASHBOARD)/assets/list/AssetsList";
 import { assetFormSchema, AssetFormType } from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,15 +29,15 @@ import {
 import { Separator } from "@igraph/ui/components/ui/separator";
 import { Skeleton } from "@igraph/ui/components/ui/skeleton";
 import { deleteImage, useImagePreview, useLoading } from "@igraph/utils";
+import { Plus, X } from "lucide-react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ImageField from "../ImageField";
-import Image from "next/image";
-import { Plus, X } from "lucide-react";
-import { useState } from "react";
 
 const TextEditor = dynamic(() => import("@igraph/editor/Editor"), {
   ssr: false,
@@ -122,40 +122,32 @@ const AssetForm = ({ type, asset, categories }: Props) => {
   // onSubmit handles post creation/updating.
   const onSubmit = async (data: AssetFormType) => {
     setLoading(true);
-    console.log(data);
-    setLoading(false);
 
-    // Process the Lexical JSON to ensure headings have sequential IDs.
-    // const updatedData: AssetFormType = {
-    //   ...data,
-    //   content: processLexicalJSON(data.content),
-    // };
+    const res = isUpdateType
+      ? await updateAsset(data, asset?.id!)
+      : await createAsset(data);
 
-    // const res = isUpdateType
-    //   ? await updatePost(updatedData, asset?.id!)
-    //   : await createPost(updatedData);
+    if (res.error) {
+      toast.error(res.error);
+      setLoading(false);
+      return;
+    }
 
-    // if (res.error) {
-    //   toast.error(res.error);
-    //   setLoading(false);
-    //   return;
-    // }
-
-    // if (res.success) {
-    //   toast.success(res.success);
-    //   setLoading(false);
-    //   if (isUpdateType) {
-    //     router.refresh();
-    //   } else {
-    //     router.push(`/posts/${res.data?.id}`);
-    //   }
-    // }
+    if (res.success) {
+      toast.success(res.success);
+      setLoading(false);
+      if (isUpdateType) {
+        router.refresh();
+      } else {
+        router.push(`/assets/${res.data?.id}`);
+      }
+    }
   };
 
   const onDelete = async () => {
     setLoading(true);
 
-    const res = await deletePost(asset?.id!); //TODO
+    const res = await deleteAsset(asset?.id!);
 
     if (res.error) {
       toast.error(res.error);
