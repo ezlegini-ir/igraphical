@@ -13,7 +13,7 @@ export async function PATCH(req: Request) {
   try {
     const result = await database.ticket.updateMany({
       where: {
-        status: "REPLIED",
+        status: { in: ["REPLIED", "PENDING"] },
         updatedAt: { lt: threeDaysAgo },
       },
       data: {

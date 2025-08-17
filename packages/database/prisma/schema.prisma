@@ -270,6 +270,7 @@ model Course {
   askTutor          AskTutor[]
   quickCart         QuickCart[]
   CartItem          CartItem[]
+  campaignId        Int?
 
   @@map("course")
 }
@@ -563,6 +564,7 @@ enum SettlementStatus {
   PAID
 }
 
+//! MARKETING ---------------------------------------------------------
 model Coupon {
   id            Int        @id @default(autoincrement())
   code          String     @unique
@@ -578,6 +580,7 @@ model Coupon {
   payment       Payment[]
   courseInclude Course[]   @relation("includescoupons")
   courseExclude Course[]   @relation("excludescoupons")
+  Campaign      Campaign[]
 
   @@map("coupon")
 }
@@ -603,6 +606,32 @@ enum OverallOffType {
   FIXED_ON_CART
   FIXED_ON_COURSE
   PERCENT
+}
+
+model Campaign {
+  id               Int      @id @default(autoincrement())
+  title            String
+  url              String   @unique
+  message          String
+  startAt          DateTime
+  endAt            DateTime
+  createdAt        DateTime @default(now())
+  messageSent      Int
+  messageDelivered Int?
+  sellGoal         Int?
+
+  couponId         Int?
+  coupon           Coupon?            @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  CampaignMessages CampaignMessages[]
+}
+
+model CampaignMessages {
+  id      Int @id @default(autoincrement())
+  smsId   Int
+  smsCost Int
+
+  campaignId Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 }
 
 //! TICKET ---------------------------------------------------------

@@ -16,6 +16,8 @@ import {
 } from "./sms-templates";
 import { convertPersianDigitsToEnglish } from "./utils";
 
+const sender = process.env.KAVENEGAR_SENDER!;
+
 export const sendOtpSms = async (phone: string, userId?: number) => {
   const { plainOtp } = await generateSmsOtp(phone, userId);
 
@@ -34,7 +36,7 @@ export const sendOtpSms = async (phone: string, userId?: number) => {
   );
 };
 
-//! -----------------------------------------------------
+//! SEND -----------------------------------------------------
 
 export const sendSms = async (data: { message: string; phone: string }) => {
   const { message, phone } = data;
@@ -44,7 +46,7 @@ export const sendSms = async (data: { message: string; phone: string }) => {
   return kavenegar.Send(
     {
       message,
-      sender: process.env.KAVENEGAR_SENDER,
+      sender,
       receptor,
     },
     function (response, status) {
@@ -53,6 +55,76 @@ export const sendSms = async (data: { message: string; phone: string }) => {
     }
   );
 };
+
+//! SEND ARRAY -----------------------------------------------------
+type Entry = {
+  messageid: number;
+  status: number;
+  statustext: string;
+  cost?: number;
+  receptor?: string;
+};
+
+function sendArrayChunk(receptors: string[], msg: string): Promise<Entry[]> {
+  const messages = new Array(receptors.length).fill(msg);
+
+  return new Promise((resolve, reject) => {
+    kavenegar.SendArray(
+      {
+        receptor: JSON.stringify(receptors),
+        sender: JSON.stringify([sender]),
+        message: JSON.stringify(messages),
+      },
+      (entries, status, responseMessage) => {
+        if (status === 200) {
+          resolve(entries);
+        } else {
+          reject(new Error(responseMessage || `Status ${status}`));
+        }
+      }
+    );
+  });
+}
+
+type SendArrayOptions = {
+  numbers: string[];
+  message: string;
+};
+
+export async function sendArraySms(
+  options: SendArrayOptions
+): Promise<Entry[]> {
+  const numbers = (options.numbers || []).filter(Boolean);
+  if (numbers.length === 0) return [];
+
+  const chunkSize = 200; // BASED ON KAVENEGAR POLICY
+  const allEntries: Entry[] = [];
+
+  for (let i = 0; i < numbers.length; i += chunkSize) {
+    const chunk = numbers.slice(i, i + chunkSize);
+    const sentMessages = await sendArrayChunk(chunk, options.message);
+    allEntries.push(...sentMessages);
+  }
+
+  return allEntries;
+}
+
+//! -----------------------------------------------------
+
+export async function statusChunk(ids: number[]): Promise<any[]> {
+  return new Promise((resolve, reject) => {
+    kavenegar.Status(
+      { messageid: ids.join(",") },
+      (entries: any[], status: number, message: string) => {
+        if (status === 200) {
+          resolve(entries);
+        } else {
+          reject(new Error(message || `Status API error ${status}`));
+        }
+      }
+    );
+  });
+}
 
 //! -----------------------------------------------------
 

@@ -89,8 +89,6 @@ export const getOnlineUsers = async () => {
 
 export const getTopPages = async () => {
   try {
-    const propertyId = process.env.GA_PROPERTY_ID;
-
     const [response] = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
@@ -113,3 +111,44 @@ export const getTopPages = async () => {
     return { error: "Failed to fetch top pages" };
   }
 };
+
+//* GET CAMPAIGN OPENED LINK BY USERS --------------------------------------------
+
+export async function getCampaignOpensLink(
+  campaignUrl: string
+  // start: Date,
+  // end?: Date
+) {
+  try {
+    const [response] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [
+        {
+          startDate: "2025-01-01",
+          endDate: "2025-09-14",
+        },
+      ],
+      dimensions: [{ name: "sessionCampaignName" }],
+      dimensionFilter: {
+        filter: {
+          fieldName: "sessionCampaignName",
+          stringFilter: {
+            matchType: "EXACT",
+            value: campaignUrl,
+          },
+        },
+      },
+    });
+
+    const total = parseInt(
+      response.rows?.[0]?.metricValues?.[0]?.value || "0",
+      10
+    );
+
+    console.log(total);
+    return { data: total };
+  } catch (err) {
+    console.error("Error fetching GA4 data:", err);
+    return { data: 0, error: "Failed to fetch campaign opens" };
+  }
+}

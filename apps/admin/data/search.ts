@@ -22,6 +22,19 @@ export const searchUsers = async (query: string) => {
   });
 };
 
+export const searchCoupons = async (query: string) => {
+  const where: Prisma.CouponWhereInput = query
+    ? {
+        OR: [{ code: { contains: query } }],
+      }
+    : {};
+
+  return await database.coupon.findMany({
+    where,
+    take: 5,
+  });
+};
+
 export const searchPosts = async (query: string) => {
   const where: Prisma.PostWhereInput = query
     ? {

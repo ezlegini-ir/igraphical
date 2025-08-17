@@ -70,6 +70,7 @@ export const sideBarMenuItems = [
         tabIcon: Percent,
         subMenuItems: [
           { label: "Coupons", href: "/marketing/coupons" },
+          { label: "Campaigns", href: "/marketing/campaigns" },
           { label: "Overall Off", href: "/marketing/overall-off" },
         ],
       },

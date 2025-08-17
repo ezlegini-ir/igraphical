@@ -8,6 +8,7 @@ import { ScrollArea } from "@igraph/ui/components/ui/scroll-area";
 import Image from "next/image";
 
 interface Props {
+  courseTitle: string;
   exercises:
     | {
         title: string;
@@ -16,7 +17,7 @@ interface Props {
     | undefined;
 }
 
-const CourseExercise = ({ exercises }: Props) => {
+const CourseExercise = ({ exercises, courseTitle }: Props) => {
   return (
     exercises && (
       <div>
@@ -31,7 +32,7 @@ const CourseExercise = ({ exercises }: Props) => {
                 <DialogTrigger asChild>
                   <Image
                     key={index}
-                    alt={`Sample ${index + 1}`}
+                    alt={courseTitle}
                     src={item.url}
                     width={300}
                     height={300}
@@ -43,7 +44,7 @@ const CourseExercise = ({ exercises }: Props) => {
                 <DialogContent className="max-w-4xl w-fit gap-2 p-1.5 border-none pb-2 bg-slate-700 flex flex-col items-center">
                   <Image
                     key={index}
-                    alt={`Sample ${index + 1}`}
+                    alt={courseTitle}
                     src={item.url}
                     width={900}
                     height={900}

@@ -1,10 +1,12 @@
+import { getEnrollmentByUserIdAndCourseId } from "@/data/enrollment";
+import { getSessionUser } from "@/data/user";
+import { database } from "@igraph/database";
 import CashBackCard from "@igraph/ui/components/CashBackCard";
 import Price from "@igraph/ui/components/Price";
 import TizerVideo from "@igraph/ui/components/TizerVideo";
 import { Button } from "@igraph/ui/components/ui/button";
 import { Card, CardContent } from "@igraph/ui/components/ui/card";
 import { Separator } from "@igraph/ui/components/ui/separator";
-import { getSessionUser } from "@/data/user";
 import { formatDuration } from "@igraph/utils";
 import {
   Headset,
@@ -16,12 +18,10 @@ import {
   TvMinimalPlay,
 } from "lucide-react";
 import Link from "next/link";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { CourseType } from "./CourseContent";
 import CourseIncludes from "./CourseIncludes";
 import CourseRegisterButton from "./CourseRegisterButton";
-import { database } from "@igraph/database";
-import { getEnrollmentByUserIdAndCourseId } from "@/data/enrollment";
-import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 interface Props {
   course: CourseType;
@@ -40,7 +40,7 @@ const CourseSidebar = async ({ course }: Props) => {
   const duration = formatDuration(course.duration);
   const seasons = course.curriculum.length;
   const lessons = course.curriculum.reduce(
-    (acc, curr) => acc + curr.lessons.length,
+    (acc, curr) => acc + curr.lessons.filter((l) => l.type === "VIDEO").length,
     0
   );
 
@@ -107,6 +107,15 @@ const CourseSidebar = async ({ course }: Props) => {
                     discount={course.discount}
                     price={course.price}
                   />
+
+                  {/* <Badge
+                    variant={"gray"}
+                    className="text-center font-medium p-1 text-slate-500"
+                  >
+                    امکان خرید
+                    <br />
+                    اقساطی
+                  </Badge> */}
                 </div>
                 <CashBackCard price={course.price} />
               </>

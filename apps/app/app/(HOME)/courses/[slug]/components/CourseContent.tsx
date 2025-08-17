@@ -79,7 +79,7 @@ const CourseContent = ({ course }: { course: CourseType }) => {
 
       <CourseTutor tutor={course.tutor!} />
 
-      <CourseExercise exercises={exercises} />
+      <CourseExercise exercises={exercises} courseTitle={course.title} />
 
       <CourseReviews reviews={course.review} />
 

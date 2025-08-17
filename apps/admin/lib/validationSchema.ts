@@ -248,6 +248,19 @@ export const couponFormSchema = z.object({
 });
 export type CouponFormType = z.infer<typeof couponFormSchema>;
 
+export const campaignFormSchema = z.object({
+  title: z.string().min(1).trim(),
+  url: z.string().min(1).trim(),
+  message: z.string().min(1),
+  sellGoal: z.number().min(1).optional(),
+  couponId: z.number(),
+  date: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
+});
+export type CampaignFormType = z.infer<typeof campaignFormSchema>;
+
 // -------------------------------------
 
 export const overallOffFormSchema = z.object({
