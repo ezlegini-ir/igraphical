@@ -161,7 +161,7 @@ model File {
   askTutorMessageId Int?              @unique
   certificate       Certificate?      @relation(fields: [certificateId], references: [id])
   certificateId     Int?              @unique
-  Asset             Asset[]
+  asset             Asset[]
 
   @@map("file")
 }
@@ -170,6 +170,7 @@ enum FileType {
   TICKET_ASSET
   QA_ASSET
   CERTIFICATE
+  DOWNLOADABLE_ASSET
   OTHER
 }
 
@@ -242,6 +243,8 @@ enum PostStatus {
 model Asset {
   id            Int           @id @default(autoincrement())
   title         String
+  status        AssetStatus
+  url           String        @unique
   description   String?
   file          File          @relation(fields: [fileId], references: [id], onDelete: Cascade)
   fileId        Int
@@ -251,8 +254,14 @@ model Asset {
   format        String
   downloadCount Int           @default(0)
   createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@map("asset")
+}
+
+enum AssetStatus {
+  PUBLISHED
+  DRAFT
 }
 
 model AssetGallery {
