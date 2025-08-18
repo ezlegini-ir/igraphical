@@ -1,6 +1,6 @@
-import AskTutorForm from "@/components/forms/AskTutorForm";
 import { getSessionUser } from "@/data/user";
 import { database } from "@igraph/database";
+import BreadCrumb from "@igraph/ui/components/BreadCrumb";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
   Dialog,
@@ -10,13 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@igraph/ui/components/ui/dialog";
-import { ScrollArea } from "@igraph/ui/components/ui/scroll-area";
 import { OctagonMinus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
-import AskTutorChat from "./components/AskTutorChat";
 import ClassroomContent from "./components/ClassroomContent";
 
 interface Props {
@@ -49,6 +47,7 @@ const getClassroom = cache(async (id: string) => {
           lessonProgress: true,
           course: {
             include: {
+              image: true,
               curriculum: {
                 include: {
                   lessons: {
@@ -83,49 +82,35 @@ const page = async ({ params }: Props) => {
   if (user.id !== classroom.userId) return redirect("/panel");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[3fr_5fr] xl:grid-cols-[6fr_12fr_6fr] gap-3 ">
-      <ClassroomContent enrollment={classroom.enrollment} />
-
-      <div className="space-y-3">
-        <Dialog open={!user.nationalId}>
-          <DialogTrigger dir="rtl" />
-
-          <DialogContent dir="rtl">
-            <DialogHeader className="space-y-3">
-              <DialogTitle className="text-center flex flex-col items-center gap-3">
-                <OctagonMinus className="text-destructive" size={60} />
-                لطفا ابتدا کد ملی خود را ذخیره کنید.
-              </DialogTitle>
-              <DialogDescription className="text-sm text-muted-foreground text-center">
-                برای صدور مدرک پایان دوره، ثبت کد ملی ضروری است. لطفاً با مراجعه
-                به بخش پروفایل، کد ملی خود را وارد و ذخیره کنید.
-              </DialogDescription>
-
-              <Link href={"/panel/profile"}>
-                <Button className="w-full">پروفایل من</Button>
-              </Link>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-
-        <AskTutorForm
-          classRoomId={id}
-          status={classroom.askTutor?.status!}
-          askTutorId={classroom.askTutorId}
-          courseId={classroom.enrollment?.courseId!}
-          tutorId={classroom.enrollment.course.tutorId!}
-          userId={classroom.enrollment?.userId!}
+    <div>
+      <div className="space-y-3 max-w-screen-xl mx-auto">
+        <BreadCrumb
+          finalStep="کلاس درس"
+          steps={[{ label: "دوره ها", href: "/panel/courses" }]}
         />
-        <div>
-          <ScrollArea dir="rtl" className="h-[500px]">
-            <AskTutorChat
-              messages={classroom.askTutor?.messages}
-              user={classroom.askTutor?.user}
-              tutor={classroom.askTutor?.tutor}
-            />
-          </ScrollArea>
-        </div>
+        <ClassroomContent classroom={classroom} />
       </div>
+
+      <Dialog open={!user.nationalId}>
+        <DialogTrigger dir="rtl" />
+
+        <DialogContent dir="rtl">
+          <DialogHeader className="space-y-3">
+            <DialogTitle className="text-center flex flex-col items-center gap-3">
+              <OctagonMinus className="text-destructive" size={60} />
+              لطفا ابتدا کد ملی خود را ذخیره کنید.
+            </DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground text-center">
+              برای صدور مدرک پایان دوره، ثبت کد ملی ضروری است. لطفاً با مراجعه
+              به بخش پروفایل، کد ملی خود را وارد و ذخیره کنید.
+            </DialogDescription>
+
+            <Link href={"/panel/profile"}>
+              <Button className="w-full">پروفایل من</Button>
+            </Link>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

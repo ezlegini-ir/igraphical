@@ -1,15 +1,14 @@
 import CardBox from "@/app/panel/components/CardBox";
-import BreadCrumb from "@igraph/ui/components/BreadCrumb";
+import { Curriculum, Lesson } from "@igraph/database";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@igraph/ui/components/ui/accordion";
-import { Curriculum, Lesson } from "@igraph/database";
 import { Download, File, Video } from "lucide-react";
-import { LessonType } from "./ClassroomContent";
 import { useEffect, useState } from "react";
+import { LessonType } from "./ClassroomContent";
 
 interface Props {
   curriculums: (Curriculum & {
@@ -48,13 +47,7 @@ const CurriculumsList = ({
   }
 
   return (
-    <div>
-      <div className="py-3">
-        <BreadCrumb
-          finalStep="کلاس درس"
-          steps={[{ label: "دوره ها", href: "/panel/courses" }]}
-        />
-      </div>
+    <div className="sticky top-20 right-0 space-y-3">
       <CardBox title="درس‌ها" className="h-min">
         <Accordion
           value={activeSection}

@@ -14,7 +14,7 @@ export default async function PanelLayout({
 
   return (
     <div
-      className={`px-3 lg:px-10 py-3 grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen`}
+      className={`p-3 lg:px-10 grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen`}
     >
       <div>
         <NotifBar />

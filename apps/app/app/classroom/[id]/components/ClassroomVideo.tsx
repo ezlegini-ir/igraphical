@@ -69,14 +69,13 @@ const ClassroomVideo = ({
   if (!currentLesson) return <div>No Lessons Provided</div>;
 
   return (
-    <div className="space-y-6 px-3 mb-3">
+    <div>
       <div className="fixed top-0 right-0 z-10">
         {showConfetti && (
           <ConfettiWrapper show={showConfetti} recycle={confettiRecycle} />
         )}
       </div>
       <div className="space-y-3">
-        <p className="font-semibold">{courseTitle}</p>
         {currentLesson?.type === "VIDEO" ? (
           <Video key={currentLesson.url} src={currentLesson.url} />
         ) : currentLesson?.type === "ASSET" ? (
@@ -106,7 +105,7 @@ const ClassroomVideo = ({
         )}
         <div className="flex justify-between items-center">
           <p className="text-sm font-medium text-gray-500">
-            {currentLesson.title}
+            جلسه: {currentLesson.title}
           </p>
           <div className="flex gap-2">
             <Button

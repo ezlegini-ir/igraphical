@@ -53,7 +53,7 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto rounded-md overflow-hidden">
+    <div className="mx-auto rounded-md overflow-hidden">
       <div className="relative aspect-video bg-black">
         {isLoading && (
           <div className="absolute inset-0 z-10">
