@@ -46,7 +46,7 @@ const page = async ({ searchParams }: Props) => {
     take,
   });
 
-  const totalCampaigns = await database.coupon.count();
+  const totalCampaigns = await database.campaign.count();
 
   return (
     <div className="space-y-3">

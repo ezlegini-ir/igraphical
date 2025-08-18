@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import MobileNavbar from "@/components/MobileNavbar";
 import NavBar from "@/components/NavBar";
 import DecorativeImage from "@igraph/ui/components/DecorativeImage";
 import NotifBar from "@igraph/ui/components/NotifBar";
@@ -19,6 +20,7 @@ export default function HomeLayout({
       <main className="relative">
         <DecorativeImage />
         {children}
+        <MobileNavbar />
       </main>
       <Footer />
     </div>

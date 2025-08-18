@@ -1,20 +1,15 @@
-import DropDownMenuBar from "@igraph/ui/components/DropdownMenuBar";
+import Avatar from "@igraph/ui/components/Avatar";
 import IgraphLogoSquare from "@igraph/ui/components/IgraphLogoSquare";
 import { Button } from "@igraph/ui/components/ui/button";
-import {
-  BookOpen,
-  CircleCheckBig,
-  Phone,
-  ShoppingCart,
-  TvMinimalPlay,
-  UserIcon,
-  Users,
-} from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
-import { JSX } from "react";
 import { NavbarProps } from "./NavBar";
+import { usePathname } from "next/navigation";
 
 const SmallNavBar = ({ user, isThereItemsInCart }: NavbarProps) => {
+  const pathName = usePathname();
+  const showProfileButton = pathName.startsWith("/courses/");
+
   return (
     <div className="px-2">
       <div className="flex justify-between">
@@ -32,7 +27,22 @@ const SmallNavBar = ({ user, isThereItemsInCart }: NavbarProps) => {
             )}
           </Link>
 
-          <DropDownMenuBar menuItems={dropDownMenuItems} user={user} />
+          {user ? (
+            <Link href={"/panel"}>
+              <Button variant={"outline"}>
+                <Avatar src={user.image?.url} size={25} />
+                {user.fullName}
+              </Button>
+            </Link>
+          ) : (
+            showProfileButton && (
+              <Link href={"/panel"}>
+                <Button size={"icon"} variant={"outline"}>
+                  <User className="scale-125" />
+                </Button>
+              </Link>
+            )
+          )}
         </div>
       </div>
     </div>
@@ -40,13 +50,3 @@ const SmallNavBar = ({ user, isThereItemsInCart }: NavbarProps) => {
 };
 
 export default SmallNavBar;
-
-const dropDownMenuItems: { label: string; href: string; icon: JSX.Element }[] =
-  [
-    { label: "حساب کاربری", href: "/panel", icon: <UserIcon /> },
-    { label: "دوره‌ها", href: "/courses", icon: <TvMinimalPlay /> },
-    { label: "وبلاگ", href: "/blog", icon: <BookOpen /> },
-    { label: "مدرسین", href: "/tutors", icon: <Users /> },
-    { label: "استعلام مدرک", href: "/verify-cert", icon: <CircleCheckBig /> },
-    { label: "تماس با ما", href: "/contact", icon: <Phone /> },
-  ];

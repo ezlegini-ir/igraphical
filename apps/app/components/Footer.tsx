@@ -1,5 +1,6 @@
 import IgraphLogoSquare from "@igraph/ui/components/IgraphLogoSquare";
 import SocialsIcon from "@igraph/ui/components/SocialsIcon";
+import { Button } from "@igraph/ui/components/ui/button";
 import { Copyright } from "lucide-react";
 import Link from "next/link";
 
@@ -12,11 +13,13 @@ const Footer = () => {
             <IgraphLogoSquare />
           </Link>
 
-          <ul className="md:flex space-x-10 space-y-5 md:space-y-0 md:space-x-0 md:text-base text-nowrap md:gap-10 text-gray-600 columns-2">
+          <ul className="flex flex-wrap gap-5">
             {menuItems.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="hover:text-black text-sm">
-                  {item.label}
+                  <Button className="text-slate-500" variant={"ghost"}>
+                    {item.label}
+                  </Button>
                 </Link>
               </li>
             ))}
@@ -66,6 +69,7 @@ const menuItems = [
   { label: "صفحه اصلی", href: "/" },
   { label: "تماس با ما", href: "/contact" },
   { label: "سوالات متداول", href: "/faq" },
+  { label: "مدرسین", href: "/tutors" },
 ];
 
 export default Footer;

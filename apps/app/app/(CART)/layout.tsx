@@ -4,6 +4,7 @@ import NotifBar from "@igraph/ui/components/NotifBar";
 import { Metadata } from "next";
 import SimpleFooter from "@/components/SimpleFooter";
 import { authenticateSession } from "@/lib/auth";
+import MobileNavbar from "@/components/MobileNavbar";
 
 export default async function PanelLayout({
   children,
@@ -28,8 +29,12 @@ export default async function PanelLayout({
           className="absolute -top-40 md:right-40 select-none pointer-events-none -z-10"
         />
         {children}
+        <MobileNavbar />
       </main>
-      <SimpleFooter />
+
+      <div className="hidden md:block">
+        <SimpleFooter />
+      </div>
     </div>
   );
 }

@@ -26,12 +26,9 @@ export default async function Layout({
         <SideBar user={user} />
         <main className="sm:max-w-screen-xl w-full mx-auto p-4">
           <div className="flex justify-between items-center mb-3 lg:hidden">
+            <SidebarTrigger variant={"outline"} size={"icon"} className="p-5" />
+
             <div className="flex gap-2">
-              <SidebarTrigger
-                variant={"outline"}
-                size={"icon"}
-                className="p-5"
-              />
               <Link className="mr-auto" href={"/"}>
                 <Button
                   className=" text-slate-500"
@@ -41,9 +38,8 @@ export default async function Layout({
                   <Home />
                 </Button>
               </Link>
+              <UserBar user={user!} />
             </div>
-
-            <UserBar user={user!} />
           </div>
 
           <div className="flex items-center gap-3 mb-5">

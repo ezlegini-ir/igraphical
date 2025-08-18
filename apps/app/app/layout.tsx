@@ -1,8 +1,8 @@
 import "@igraph/ui/globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./fonts.css";
-import { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default function RootLayout({
   children,
