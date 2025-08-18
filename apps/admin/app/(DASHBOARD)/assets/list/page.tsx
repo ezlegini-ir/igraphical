@@ -26,8 +26,6 @@ const page = async ({ searchParams }: Props) => {
     where,
     include: {
       image: true,
-      categories: { include: { category: true } },
-      gallery: { include: { image: true } },
     },
     orderBy: download
       ? { downloadCount: download === "MOST" ? "desc" : "asc" }

@@ -94,17 +94,10 @@ export const assetFormSchema = z.object({
   title: z.string().min(1),
   status: z.enum(assetStatus),
   url: z.string().min(1).trim(),
-  description: z.string().min(1, requiredMessage),
   image,
   fileSize: z.number().min(0),
   format: z.string().min(1),
   fileUrl: z.string().min(1).url(),
-  categories: z.array(z.string()),
-  gallery: z
-    .array(
-      z.instanceof(File, { message: "Each gallery item must be an image file" })
-    )
-    .optional(),
 });
 export type AssetFormType = z.infer<typeof assetFormSchema>;
 

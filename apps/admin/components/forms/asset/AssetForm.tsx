@@ -4,12 +4,10 @@ import { createAsset, deleteAsset, updateAsset } from "@/actions/asset";
 import { AssetType } from "@/app/(DASHBOARD)/assets/list/AssetsList";
 import { assetFormSchema, AssetFormType } from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AssetCategory } from "@igraph/database";
 import CardBox from "@igraph/ui/components/CardBox";
 import DeleteButton from "@igraph/ui/components/DeleteButton";
 import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
-import { Checkbox } from "@igraph/ui/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,47 +25,23 @@ import {
   SelectValue,
 } from "@igraph/ui/components/ui/select";
 import { Separator } from "@igraph/ui/components/ui/separator";
-import { Skeleton } from "@igraph/ui/components/ui/skeleton";
-import { deleteImage, useImagePreview, useLoading } from "@igraph/utils";
-import { Plus, X } from "lucide-react";
-import dynamic from "next/dynamic";
-import Image from "next/image";
+import { useImagePreview, useLoading } from "@igraph/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ImageField from "../ImageField";
 
-const TextEditor = dynamic(() => import("@igraph/editor/Editor"), {
-  ssr: false,
-  loading: () => (
-    <Skeleton className="w-full h-[450px] bg-white border rounded-sm" />
-  ),
-});
-
-export interface CategoriesType {
-  category: AssetCategory;
-  postId: number;
-  categoryId: number;
-}
-
 interface Props {
   type: "NEW" | "UPDATE";
   asset?: AssetType;
-  categories: AssetCategory[];
 }
 
-const AssetForm = ({ type, asset, categories }: Props) => {
+const AssetForm = ({ type, asset }: Props) => {
   // HOOKS
   const router = useRouter();
   const { loading, setLoading } = useLoading();
   const { imagePreview, setImagePreview } = useImagePreview(asset?.image?.url);
-  const { loading: removeImageLoading, setLoading: setRemoveImageLoading } =
-    useLoading();
-  const [galleryPreviews, setGalleryPreviews] = useState<
-    { public_id?: string; url: string }[] | undefined
-  >();
 
   // CONSTS
   const isUpdateType = type === "UPDATE";
@@ -77,9 +51,7 @@ const AssetForm = ({ type, asset, categories }: Props) => {
     defaultValues: {
       title: asset?.title || "",
       url: asset?.url || "",
-      description: asset?.description || "",
       status: asset?.status,
-      categories: asset?.categories?.map((c) => c.category.id.toString()) || [],
       image: undefined,
       fileUrl: asset?.fileUrl || "",
       format: asset?.format || "",
@@ -87,38 +59,6 @@ const AssetForm = ({ type, asset, categories }: Props) => {
     },
     mode: "onChange",
   });
-
-  const handleGalleryPreview = (files: File[]) => {
-    const imageUrls = files.map((file) => ({
-      url: URL.createObjectURL(file),
-    }));
-
-    setGalleryPreviews((prev = []) => [...prev, ...imageUrls]);
-  };
-
-  const handleGalleryRemove = async (publicId: string) => {
-    setRemoveImageLoading(true);
-
-    const res = await deleteImage(publicId); //TODO
-
-    if (res.error) {
-      toast.error(res.error);
-      setRemoveImageLoading(false);
-      return;
-    }
-
-    router.refresh();
-    setRemoveImageLoading(false);
-  };
-
-  const handleGalleryPreviewRemove = async (index: number) => {
-    setGalleryPreviews((prev) => prev?.filter((_, i) => i !== index));
-
-    form.setValue(
-      "gallery",
-      form.getValues("gallery")?.filter((_, i) => i !== index) || []
-    );
-  };
 
   // onSubmit handles post creation/updating.
   const onSubmit = async (data: AssetFormType) => {
@@ -196,13 +136,14 @@ const AssetForm = ({ type, asset, categories }: Props) => {
                 </FormItem>
               )}
             />
+
             {isUpdateType && (
               <Link
-                href={`${process.env.NEXT_PUBLIC_BASE_URL}/${asset?.url}`}
+                href={`${process.env.NEXT_PUBLIC_MAIN_URL}/assets/${asset?.url}`}
                 className="text-xs text-gray-500"
               >
                 <p>
-                  {process.env.NEXT_PUBLIC_BASE_URL}/{asset?.url}
+                  {process.env.NEXT_PUBLIC_MAIN_URL}/assets/{asset?.url}
                 </p>
               </Link>
             )}
@@ -210,13 +151,49 @@ const AssetForm = ({ type, asset, categories }: Props) => {
 
           <FormField
             control={form.control}
-            name="description"
+            name="fileUrl"
             render={({ field }) => (
-              <FormItem className="pb-10">
-                <FormLabel>Content</FormLabel>
+              <FormItem>
+                <FormLabel>File URL</FormLabel>
                 <FormControl>
-                  <TextEditor onChange={field.onChange} value={field.value} />
+                  <Input {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="format"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>File Format</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={"fileSize"}
+            render={({ field }) => (
+              <FormItem
+                className={`w-full ${isUpdateType && "pointer-events-none"}`}
+              >
+                <FormLabel>File Size (MB)</FormLabel>
+                <Input
+                  min={0}
+                  type="number"
+                  {...field}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === "" ? 0 : Number(value));
+                  }}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -293,56 +270,6 @@ const AssetForm = ({ type, asset, categories }: Props) => {
             )}
           </CardBox>
 
-          <FormField
-            control={form.control}
-            name="fileUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>File URL</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="format"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>File Format</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name={"fileSize"}
-            render={({ field }) => (
-              <FormItem
-                className={`w-full ${isUpdateType && "pointer-events-none"}`}
-              >
-                <FormLabel>File Size (MB)</FormLabel>
-                <Input
-                  min={0}
-                  type="number"
-                  {...field}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value === "" ? 0 : Number(value));
-                  }}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <CardBox title="Image">
             <ImageField
               control={form.control}
@@ -350,140 +277,6 @@ const AssetForm = ({ type, asset, categories }: Props) => {
               imagePreview={imagePreview}
               setValue={form.setValue}
               public_id={asset?.image?.public_id}
-            />
-          </CardBox>
-
-          <CardBox title="Gallery">
-            <FormField
-              control={form.control}
-              name="gallery"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="gallery">
-                    <div className="flex gap-2 justify-center items-center bg-secondary  p-3 rounded-sm w-full cursor-pointer hover:bg-neutral-200/60">
-                      <Plus size={18} />
-                      Add Image
-                    </div>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      id="gallery"
-                      className="hidden"
-                      multiple
-                      onChange={(e) => {
-                        if (e.target.files) {
-                          const newFilesArray = Array.from(e.target.files);
-                          const allFiles = [
-                            ...(field.value || []),
-                            ...newFilesArray,
-                          ];
-                          field.onChange(allFiles);
-                          handleGalleryPreview(newFilesArray);
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {galleryPreviews && galleryPreviews?.length > 0 && (
-              <div className="space-y-3">
-                <div className="grid grid-cols-4 gap-1">
-                  {galleryPreviews?.map((image, index) => (
-                    <div className="relative group" key={index}>
-                      <Image
-                        alt=""
-                        src={image.url}
-                        className="aspect-square object-cover rounded-sm"
-                        width={100}
-                        height={100}
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => handleGalleryPreviewRemove(index)}
-                        className="h-4 w-4 absolute top-0 left-0 m-1 hidden group-hover:block"
-                        size={"icon"}
-                        variant={"secondary"}
-                      >
-                        <X />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                <Separator />
-              </div>
-            )}
-
-            <div className="grid grid-cols-4 gap-1">
-              {asset?.gallery?.image.map((image, index) => (
-                <div
-                  className="relative group overflow-hidden rounded-sm"
-                  key={index}
-                >
-                  <Image
-                    alt=""
-                    src={image.url}
-                    className="aspect-square object-cover rounded-sm"
-                    width={100}
-                    height={100}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => handleGalleryRemove(image.public_id!)}
-                    className={`w-6 h-6 rounded-full absolute top-0 left-0 m-1 hidden group-hover:flex`}
-                    size={"icon"}
-                    variant={"destructive"}
-                  >
-                    <Loader loading={removeImageLoading} />
-
-                    {!removeImageLoading && <X />}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardBox>
-
-          <CardBox title="Categories">
-            <FormField
-              control={form.control}
-              name="categories"
-              render={({ field }) => (
-                <FormItem>
-                  {categories?.map((item) => {
-                    const isChecked = field.value?.includes(item.id.toString());
-
-                    return (
-                      <FormItem
-                        key={item.id}
-                        className="flex flex-row items-center gap-3 pb-1.5"
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={isChecked}
-                            onCheckedChange={(checked) => {
-                              const updatedCategories = checked
-                                ? [...field.value, item.id.toString()]
-                                : field.value.filter(
-                                    (value) => value !== item.id.toString()
-                                  );
-
-                              field.onChange(updatedCategories);
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-sm font-normal cursor-pointer">
-                          {item.name}
-                        </FormLabel>
-                      </FormItem>
-                    );
-                  })}
-                  <FormMessage />
-                </FormItem>
-              )}
             />
           </CardBox>
         </div>

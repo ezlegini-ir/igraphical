@@ -4,7 +4,7 @@ import { addDownloadCount as downloadAsset } from "@/actions/asset";
 import LoginForm from "@/components/forms/login/LoginForm";
 import { getSessionUser } from "@/data/user";
 import { placeHolder } from "@/public";
-import { Asset, AssetCategory, Image as ImageType } from "@igraph/database";
+import { Asset, Image as ImageType } from "@igraph/database";
 import IgraphLogoSquare from "@igraph/ui/components/IgraphLogoSquare";
 import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
@@ -27,15 +27,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export interface CategoriesType {
-  category: AssetCategory;
-  assetId: number;
-  categoryId: number;
-}
-
 interface AssetType extends Asset {
   image: ImageType | null;
-  categories: CategoriesType[];
 }
 
 interface Props {

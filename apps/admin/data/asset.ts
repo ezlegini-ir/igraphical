@@ -16,10 +16,6 @@ export async function getAssetById(
     where: { id: +id },
     include: {
       image: true,
-      categories: { include: { category: true } },
-      gallery: {
-        include: { image: true },
-      },
     },
   });
 }

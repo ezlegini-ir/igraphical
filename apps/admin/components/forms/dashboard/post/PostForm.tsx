@@ -2,11 +2,7 @@
 
 import { createPost, deletePost, updatePost } from "@/actions/post";
 import { PostType } from "@/app/(DASHBOARD)/posts/list/PostsList";
-import {
-  AssetFormType,
-  PostFormType,
-  postFormSchema,
-} from "@/lib/validationSchema";
+import { PostFormType, postFormSchema } from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Admin, PostCategory } from "@igraph/database";
 import CardBox from "@igraph/ui/components/CardBox";
@@ -120,7 +116,7 @@ const PostForm = ({ type, post, categories, authors }: Props) => {
     setLoading(true);
 
     // Process the Lexical JSON to ensure headings have sequential IDs.
-    const updatedData: AssetFormType = {
+    const updatedData: PostFormType = {
       ...data,
       content: processLexicalJSON(data.content),
     };
@@ -199,11 +195,11 @@ const PostForm = ({ type, post, categories, authors }: Props) => {
             />
             {isUpdateType && (
               <Link
-                href={`${process.env.NEXT_PUBLIC_BASE_URL}/${post?.url}`}
+                href={`${process.env.NEXT_PUBLIC_MAIN_URL}/${post?.url}`}
                 className="text-xs text-gray-500"
               >
                 <p>
-                  {process.env.NEXT_PUBLIC_BASE_URL}/{post?.url}
+                  {process.env.NEXT_PUBLIC_MAIN_URL}/{post?.url}
                 </p>
               </Link>
             )}

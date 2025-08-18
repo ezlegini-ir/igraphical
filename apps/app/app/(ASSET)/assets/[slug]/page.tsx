@@ -13,7 +13,6 @@ const page = async ({ params }: Props) => {
     where: { url: slug },
     include: {
       image: true,
-      categories: { include: { category: true } },
     },
   });
 

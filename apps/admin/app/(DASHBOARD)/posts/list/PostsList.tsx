@@ -89,7 +89,7 @@ const renderRows = (post: PostType) => {
       </TableCell>
       <TableCell className="lg:flex gap-2 hidden ">
         <EditButton href={`/posts/${post.id}`} />
-        <ViewButton href={`${process.env.NEXT_PUBLIC_BASE_URL}/${post?.url}`} />
+        <ViewButton href={`${process.env.NEXT_PUBLIC_MAIN_URL}/${post?.url}`} />
       </TableCell>
     </TableRow>
   );
