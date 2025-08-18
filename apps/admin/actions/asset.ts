@@ -3,30 +3,13 @@
 import { getAssetById, getAssetByUrl } from "@/data/asset";
 import { AssetFormType } from "@/lib/validationSchema";
 import { database } from "@igraph/database";
-import {
-  deleteCloudFile,
-  deleteManyCloudFiles,
-  encodeUrl,
-  uploadCloudFile,
-  uploadManyCloudFiles,
-} from "@igraph/utils";
+import { deleteCloudFile, encodeUrl, uploadCloudFile } from "@igraph/utils";
 import { UploadApiResponse } from "cloudinary";
 
 //* CREATE ------------------------------------------------------------
 
 export const createAsset = async (data: AssetFormType) => {
-  const {
-    categories,
-    description,
-    image,
-    status,
-    title,
-    url,
-    fileUrl,
-    format,
-    gallery,
-    fileSize,
-  } = data;
+  const { image, status, title, url, fileUrl, format, fileSize } = data;
 
   try {
     const encodedUrl = encodeUrl(url);
@@ -40,18 +23,10 @@ export const createAsset = async (data: AssetFormType) => {
       data: {
         title,
         url: encodedUrl,
-        description,
         status,
         fileUrl,
         fileSize,
         format,
-        categories: {
-          create: categories.map((categoryId) => ({
-            category: {
-              connect: { id: +categoryId },
-            },
-          })),
-        },
       },
     });
 
@@ -84,41 +59,6 @@ export const createAsset = async (data: AssetFormType) => {
       });
     }
 
-    if (gallery) {
-      const buffers = await Promise.all(
-        gallery.map(async (item) => Buffer.from(await item.arrayBuffer()))
-      );
-
-      const uploadedGallery = (await uploadManyCloudFiles(buffers, {
-        folder: "asset",
-        width: 900,
-        resource_type: "image",
-      })) as UploadApiResponse[];
-
-      const newGallery = await database.assetGallery.create({
-        data: {
-          asset: {
-            connect: {
-              id: newAsset.id,
-            },
-          },
-        },
-      });
-
-      await database.image.createMany({
-        data: uploadedGallery.map(
-          ({ secure_url, bytes, format, public_id }) => ({
-            url: secure_url,
-            public_id,
-            format,
-            type: "DOWNLOADABLE_ASSET",
-            size: bytes,
-            assetGalleryId: newGallery.id,
-          })
-        ),
-      });
-    }
-
     return { success: "Asset Created Successfully", data: newAsset };
   } catch (error) {
     return { error: "Error 500: " + error };
@@ -128,18 +68,7 @@ export const createAsset = async (data: AssetFormType) => {
 //? UPDATE ------------------------------------------------------------
 
 export const updateAsset = async (data: AssetFormType, assetId: number) => {
-  const {
-    categories,
-    description,
-    fileUrl,
-    format,
-    gallery,
-    image,
-    status,
-    title,
-    url,
-    fileSize,
-  } = data;
+  const { fileUrl, format, image, status, title, url, fileSize } = data;
 
   try {
     const encodedUrl = url.split(" ").join("-");
@@ -159,21 +88,12 @@ export const updateAsset = async (data: AssetFormType, assetId: number) => {
         id: assetId,
       },
       data: {
-        description,
         status,
         title,
         url: encodedUrl,
         fileUrl,
         fileSize,
         format,
-        categories: {
-          set: categories.map((categoryId) => ({
-            assetId_categoryId: {
-              assetId: assetId,
-              categoryId: +categoryId,
-            },
-          })),
-        },
       },
       include: { image: true },
     });
@@ -214,40 +134,6 @@ export const updateAsset = async (data: AssetFormType, assetId: number) => {
       });
     }
 
-    if (gallery) {
-      const buffers = await Promise.all(
-        gallery.map(async (item) => Buffer.from(await item.arrayBuffer()))
-      );
-      const uploadedGallery = (await uploadManyCloudFiles(buffers, {
-        folder: "course",
-        resource_type: "image",
-        width: 900,
-      })) as UploadApiResponse[];
-
-      let existingAssetGallery = await database.assetGallery.findFirst({
-        where: { assetId },
-      });
-
-      if (!existingAssetGallery) {
-        existingAssetGallery = await database.assetGallery.create({
-          data: { asset: { connect: { id: assetId } } },
-        });
-      }
-
-      await database.image.createMany({
-        data: uploadedGallery.map(
-          ({ secure_url, bytes, format, public_id }) => ({
-            url: secure_url,
-            public_id,
-            format,
-            type: "DOWNLOADABLE_ASSET",
-            size: bytes,
-            assetGallery: existingAssetGallery.id,
-          })
-        ),
-      });
-    }
-
     return { success: "Asset Updated Successfully", data: updatedAsset };
   } catch (error) {
     return { error: "Error 500: " + error };
@@ -263,18 +149,13 @@ export const deleteAsset = async (id: number) => {
 
     const deletedAsset = await database.asset.delete({
       where: { id },
-      include: { image: true, gallery: { include: { image: true } } },
+      include: { image: true },
     });
 
     if (!deletedAsset) return { error: "Could not remove Asset" };
 
     if (deletedAsset.image)
       await deleteCloudFile(deletedAsset.image?.public_id);
-
-    const public_ids = deletedAsset.gallery?.image.map((img) => img.public_id);
-    if (public_ids) {
-      await deleteManyCloudFiles(public_ids);
-    }
 
     return { success: "Asset Deleted Successfully" };
   } catch (error) {

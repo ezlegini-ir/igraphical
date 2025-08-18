@@ -35,7 +35,7 @@ import { toast } from "sonner";
 
 export interface CampaignType extends Campaign {
   coupon: (Coupon & { payment: Payment[] }) | null;
-  CampaignMessages: CampaignMessages[];
+  campaignMessages: CampaignMessages[];
 }
 
 interface Props {

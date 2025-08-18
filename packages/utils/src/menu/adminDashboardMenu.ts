@@ -39,7 +39,6 @@ export const sideBarMenuItems = [
         subMenuItems: [
           { label: "new", href: "/assets/new" },
           { label: "List", href: "/assets/list" },
-          { label: "Categories", href: "/assets/categories" },
         ],
       },
       {

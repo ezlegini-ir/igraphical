@@ -35,7 +35,7 @@ const CampaignAnalytics = ({ campaign, isReady, conversionRate }: Props) => {
   const goalPercent = (sold / (campaign.sellGoal || 0)) * 100;
 
   const campaignCost =
-    campaign.CampaignMessages.reduce((acc, curr) => acc + curr.smsCost, 0) / 10;
+    campaign.campaignMessages.reduce((acc, curr) => acc + curr.smsCost, 0) / 10;
 
   useEffect(() => {
     const fetchDeliveredCount = async () => {

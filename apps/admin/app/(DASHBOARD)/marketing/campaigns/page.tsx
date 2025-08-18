@@ -1,6 +1,5 @@
 import CampaignForm from "@/components/forms/marketing/CampaignForm";
 import { CouponType, database } from "@igraph/database";
-import Filter from "@igraph/ui/components/Filter";
 import Search from "@igraph/ui/components/Search";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
@@ -24,7 +23,7 @@ interface Props {
 }
 
 const page = async ({ searchParams }: Props) => {
-  const { page, expired, search, type, usage } = await searchParams;
+  const { page } = await searchParams;
 
   //   const orderBy: Prisma.CouponOrderByWithRelationInput[] = [];
   //   if (usage) {
@@ -37,7 +36,7 @@ const page = async ({ searchParams }: Props) => {
 
   const campaigns = await database.campaign.findMany({
     include: {
-      CampaignMessages: true,
+      campaignMessages: true,
       coupon: {
         include: { payment: { where: { status: "SUCCESS" } } },
       },
@@ -55,34 +54,6 @@ const page = async ({ searchParams }: Props) => {
         <h3>{totalCampaigns} Campaigns</h3>
         <div className="flex flex-wrap gap-3 justify-between items-center">
           <Search placeholder="Search Codes..." />
-
-          <Filter
-            placeholder="All Dates"
-            name="expired"
-            options={[
-              { label: "Expired", value: "true" },
-              { label: "Not Expired", value: "false" },
-            ]}
-          />
-
-          <Filter
-            placeholder="All Types"
-            name="type"
-            options={[
-              { label: "Fixed on Card", value: "FIXED_ON_CART" },
-              { label: "Fixed on Course", value: "FIXED_ON_COURSE" },
-              { label: "Percent", value: "PERCENT" },
-            ]}
-          />
-
-          <Filter
-            placeholder="All Usage"
-            name="usage"
-            options={[
-              { label: "Most Used", value: "most" },
-              { label: "Lowest Used", value: "lowest" },
-            ]}
-          />
 
           <Dialog>
             <DialogTrigger asChild>
