@@ -39,6 +39,8 @@ const OtpForm = ({
   setLoginStep,
   isNewUser,
   inputFormValue: identifier,
+  onSuccess,
+  redirectTo,
 }: LoginFormsProps) => {
   // HOOKS
   const { loading, setLoading } = useLoading();
@@ -105,7 +107,11 @@ const OtpForm = ({
 
       if (auth.success) {
         toast.success(auth.success);
-        redirect(callbackUrl || "/panel");
+        if (onSuccess) onSuccess();
+
+        redirect(
+          callbackUrl ? callbackUrl : redirectTo ? redirectTo : "/panel"
+        );
       }
     }
   };

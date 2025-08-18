@@ -40,6 +40,8 @@ import { toast } from "sonner";
 const RegisterForm = ({
   setLoginStep,
   inputFormValue: identifier,
+  redirectTo,
+  onSuccess,
 }: LoginFormsProps) => {
   // HOOKS
   const { loading, setLoading } = useLoading();
@@ -89,7 +91,9 @@ const RegisterForm = ({
 
     if (auth.success) {
       toast.success(auth.success);
-      redirect(callbackUrl || "/panel");
+      if (onSuccess) onSuccess();
+
+      redirect(callbackUrl ? callbackUrl : redirectTo ? redirectTo : "/panel");
     }
   };
 

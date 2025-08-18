@@ -25,6 +25,7 @@ export const createAsset = async (data: AssetFormType) => {
     fileUrl,
     format,
     gallery,
+    fileSize,
   } = data;
 
   try {
@@ -42,6 +43,7 @@ export const createAsset = async (data: AssetFormType) => {
         description,
         status,
         fileUrl,
+        fileSize,
         format,
         categories: {
           create: categories.map((categoryId) => ({
@@ -136,6 +138,7 @@ export const updateAsset = async (data: AssetFormType, assetId: number) => {
     status,
     title,
     url,
+    fileSize,
   } = data;
 
   try {
@@ -161,6 +164,7 @@ export const updateAsset = async (data: AssetFormType, assetId: number) => {
         title,
         url: encodedUrl,
         fileUrl,
+        fileSize,
         format,
         categories: {
           set: categories.map((categoryId) => ({

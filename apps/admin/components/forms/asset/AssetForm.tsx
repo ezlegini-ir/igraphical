@@ -83,6 +83,7 @@ const AssetForm = ({ type, asset, categories }: Props) => {
       image: undefined,
       fileUrl: asset?.fileUrl || "",
       format: asset?.format || "",
+      fileSize: asset?.fileSize || 0,
     },
     mode: "onChange",
   });
@@ -315,6 +316,28 @@ const AssetForm = ({ type, asset, categories }: Props) => {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={"fileSize"}
+            render={({ field }) => (
+              <FormItem
+                className={`w-full ${isUpdateType && "pointer-events-none"}`}
+              >
+                <FormLabel>File Size (MB)</FormLabel>
+                <Input
+                  min={0}
+                  type="number"
+                  {...field}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === "" ? 0 : Number(value));
+                  }}
+                />
                 <FormMessage />
               </FormItem>
             )}

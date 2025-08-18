@@ -1,0 +1,31 @@
+import SimpleFooter from "@/components/SimpleFooter";
+import { bgPattern } from "@/public";
+import NotifBar from "@igraph/ui/components/NotifBar";
+import Image from "next/image";
+
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={`max-w-screen-xl mx-auto p-3 grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen`}
+    >
+      <div>
+        <NotifBar />
+      </div>
+      <main className="relative mt-20">
+        <Image
+          width={500}
+          height={500}
+          src={bgPattern}
+          alt=""
+          className="absolute -top-40 md:right-40 select-none pointer-events-none -z-10"
+        />
+        {children}
+      </main>
+      <SimpleFooter />
+    </div>
+  );
+}

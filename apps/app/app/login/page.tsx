@@ -10,6 +10,8 @@ export interface LoginFormsProps {
   inputFormValue?: string;
   setIsNewUser?: Dispatch<React.SetStateAction<boolean>>;
   isNewUser?: boolean;
+  redirectTo?: string;
+  onSuccess?: () => void;
 }
 
 const page = () => {

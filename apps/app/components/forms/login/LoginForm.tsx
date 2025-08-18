@@ -6,7 +6,12 @@ import OtpForm from "./OtpForm";
 import RegisterForm from "./RegisterForm";
 import RecaptchaWrapper from "@igraph/ui/components/RecaptchaWrapper";
 
-const LoginForm = () => {
+interface Props {
+  redirectTo?: string;
+  onSuccess?: () => void;
+}
+
+const LoginForm = ({ redirectTo, onSuccess }: Props) => {
   // HOOKS
   const [loginStep, setLoginStep] = useState<"INPUT" | "OTP" | "REGISTER">(
     "INPUT"
@@ -31,6 +36,8 @@ const LoginForm = () => {
             setLoginStep={setLoginStep}
             inputFormValue={inputFormValue}
             isNewUser={isNewUser}
+            onSuccess={onSuccess}
+            redirectTo={redirectTo}
           />
         )}
       </RecaptchaWrapper>
@@ -38,6 +45,8 @@ const LoginForm = () => {
         <RegisterForm
           setLoginStep={setLoginStep}
           inputFormValue={inputFormValue}
+          redirectTo={redirectTo}
+          onSuccess={onSuccess}
         />
       )}
     </>

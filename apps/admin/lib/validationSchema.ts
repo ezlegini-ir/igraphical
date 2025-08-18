@@ -96,6 +96,7 @@ export const assetFormSchema = z.object({
   url: z.string().min(1).trim(),
   description: z.string().min(1, requiredMessage),
   image,
+  fileSize: z.number().min(0),
   format: z.string().min(1),
   fileUrl: z.string().min(1).url(),
   categories: z.array(z.string()),
