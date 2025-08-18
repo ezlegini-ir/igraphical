@@ -152,3 +152,28 @@ export async function getCampaignOpensLink(
     return { data: 0, error: "Failed to fetch campaign opens" };
   }
 }
+
+//* GET PAGE VIEWS --------------------------------------------
+
+export async function getPageViews(path: string, startDate: Date) {
+  const [response] = await analyticsDataClient.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [
+      { startDate: format(startDate, "yyyy-MM-dd"), endDate: "today" },
+    ],
+    dimensions: [{ name: "pagePath" }],
+    metrics: [{ name: "screenPageViews" }],
+    dimensionFilter: {
+      filter: {
+        fieldName: "pagePath",
+        stringFilter: { matchType: "EXACT", value: path },
+      },
+    },
+  });
+
+  const rows = response.rows || [];
+  if (rows.length > 0) {
+    return parseInt(rows[0].metricValues![0].value!);
+  }
+  return 0;
+}

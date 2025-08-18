@@ -14,6 +14,7 @@ import {
 } from "@igraph/database";
 import Image from "next/image";
 import Link from "next/link";
+import { getPageViews } from "@/data/ga";
 
 export interface CategoriesType {
   category: PostCategory;
@@ -42,7 +43,9 @@ const PostsList = async ({ posts, totalPosts, pageSize }: Props) => {
   );
 };
 
-const renderRows = (post: PostType) => {
+const renderRows = async (post: PostType) => {
+  const postViews = await getPageViews(`/${post.url}`, post.createdAt);
+
   return (
     <TableRow key={post.id} className="odd:bg-slate-50">
       <TableCell>
@@ -82,7 +85,7 @@ const renderRows = (post: PostType) => {
               : "")}
       </TableCell>
       <TableCell className="text-center">
-        {(77389).toLocaleString("en-US")}
+        {postViews.toLocaleString("en-US")}
       </TableCell>
       <TableCell className="text-center hidden xl:table-cell">
         {formatMiladiDate(post.createdAt)}

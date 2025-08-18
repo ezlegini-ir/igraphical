@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: privateRoutes.map((route) => route + "/*"),
+        disallow: [...privateRoutes.map((route) => route + "/*"), "/assets/*"],
       },
     ],
     sitemap: `${url}/sitemap.xml`,

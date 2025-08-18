@@ -1,3 +1,4 @@
+import { getPageViews } from "@/data/ga";
 import { placeHolder } from "@/public";
 import { Asset, Image as ImageType } from "@igraph/database";
 import EditButton from "@igraph/ui/components/EditButton";
@@ -29,7 +30,12 @@ const AssetsList = async ({ assets, totalAssets, pageSize }: Props) => {
   );
 };
 
-const renderRows = (asset: AssetType) => {
+const renderRows = async (asset: AssetType) => {
+  const assetViews = await getPageViews(
+    `/assets/${asset.url}`,
+    asset.createdAt
+  );
+
   return (
     <TableRow key={asset.id} className="odd:bg-slate-50">
       <TableCell>
@@ -58,7 +64,7 @@ const renderRows = (asset: AssetType) => {
       </TableCell>
 
       <TableCell className="text-center">
-        {(77389).toLocaleString("en-US")}
+        {assetViews.toLocaleString("en-US")}
       </TableCell>
 
       <TableCell className="text-center">
