@@ -298,7 +298,6 @@ model Course {
   askTutor          AskTutor[]
   quickCart         QuickCart[]
   CartItem          CartItem[]
-  campaignId        Int?
 
   @@map("course")
 }

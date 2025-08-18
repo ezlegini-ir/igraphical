@@ -1,7 +1,7 @@
 "use server";
 
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import { subDays, format } from "date-fns";
+import { subDays, format, formatDate } from "date-fns";
 
 const analyticsDataClient = new BetaAnalyticsDataClient();
 const propertyId = process.env.GA_PROPERTY_ID;
@@ -115,26 +115,27 @@ export const getTopPages = async () => {
 //* GET CAMPAIGN OPENED LINK BY USERS --------------------------------------------
 
 export async function getCampaignOpensLink(
-  campaignUrl: string
-  // start: Date,
-  // end?: Date
+  campaignName: string,
+  start: Date,
+  end: Date
 ) {
   try {
     const [response] = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [
         {
-          startDate: "2025-01-01",
-          endDate: "2025-09-14",
+          startDate: formatDate(start, "yyyy-MM-dd"),
+          endDate: formatDate(end, "yyyy-MM-dd"),
         },
       ],
       dimensions: [{ name: "sessionCampaignName" }],
+      metrics: [{ name: "sessions" }],
       dimensionFilter: {
         filter: {
           fieldName: "sessionCampaignName",
           stringFilter: {
             matchType: "EXACT",
-            value: campaignUrl,
+            value: campaignName,
           },
         },
       },
@@ -145,7 +146,6 @@ export async function getCampaignOpensLink(
       10
     );
 
-    console.log(total);
     return { data: total };
   } catch (err) {
     console.error("Error fetching GA4 data:", err);

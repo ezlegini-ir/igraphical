@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateCampaignDeliveredCount } from "@/actions/campaign";
 import { CampaignType } from "./forms/marketing/CampaignForm";
+import { getCampaignOpensLink } from "@/data/ga";
 
 interface Props {
   campaign: CampaignType;
@@ -28,11 +29,12 @@ const CampaignAnalytics = ({ campaign, isReady, conversionRate }: Props) => {
     number | null
   >(campaign.messageDelivered);
   const [loadingDelivered, setLoadingDelivered] = useState(false);
+  const [opendedLink, setOpendedLink] = useState(0);
   const router = useRouter();
 
   const sold =
     campaign.coupon?.payment.reduce((acc, curr) => acc + curr.total, 0) ?? 0;
-  const goalPercent = (sold / (campaign.sellGoal || 0)) * 100;
+  const goalPercent = campaign.sellGoal ? (sold / campaign.sellGoal) * 100 : 0;
 
   const campaignCost =
     campaign.campaignMessages.reduce((acc, curr) => acc + curr.smsCost, 0) / 10;
@@ -52,6 +54,19 @@ const CampaignAnalytics = ({ campaign, isReady, conversionRate }: Props) => {
       fetchDeliveredCount();
     }
   }, [campaign.id, campaign.messageDelivered, campaign.createdAt, router]);
+
+  useEffect(() => {
+    const fetchOpendedLink = async () => {
+      const res = await getCampaignOpensLink(
+        campaign.url,
+        campaign.startAt,
+        campaign.endAt
+      );
+      setOpendedLink(res.data);
+    };
+
+    fetchOpendedLink();
+  }, [campaign.url]);
 
   const renderDeliveredValue = () => {
     if (loadingDelivered) {
@@ -88,7 +103,7 @@ const CampaignAnalytics = ({ campaign, isReady, conversionRate }: Props) => {
       value: campaign.messageSent.toLocaleString("en-US"),
     },
     { title: "Delivered Messages:", value: renderDeliveredValue() },
-    { title: "Link Opened:", value: 3 }, // TODO
+    { title: "Link Opened:", value: opendedLink },
   ];
 
   return (
