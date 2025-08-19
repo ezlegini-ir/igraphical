@@ -30,3 +30,7 @@ export const getSessionUser = async () => {
 
   return userId ? await getUserById(+userId) : null;
 };
+
+export const getUsersCount = async () => {
+  return await database.user.count();
+};

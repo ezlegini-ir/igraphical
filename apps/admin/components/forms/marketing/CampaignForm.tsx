@@ -3,11 +3,13 @@
 import { createCampaign } from "@/actions/campaign";
 import { deleteCoupon } from "@/actions/coupon";
 import SearchCoupons from "@/components/SearchCoupons";
+import { getUsersCount } from "@/data/user";
 import { campaignFormSchema, CampaignFormType } from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Campaign, CampaignMessages, Coupon, Payment } from "@igraph/database";
 import DeleteButton from "@igraph/ui/components/DeleteButton";
 import Loader from "@igraph/ui/components/Loader";
+import { Badge } from "@igraph/ui/components/ui/badge";
 import { Button } from "@igraph/ui/components/ui/button";
 import { Calendar } from "@igraph/ui/components/ui/calendar";
 import {
@@ -29,6 +31,7 @@ import { cn, useLoading } from "@igraph/utils";
 import { addDays, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -47,6 +50,15 @@ const CampaignForm = ({ type, coupon: campaign }: Props) => {
   // HOOKS
   const router = useRouter();
   const { loading, setLoading } = useLoading();
+  const [usersCount, setUsersCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUsersCount = async () => {
+      const count = await getUsersCount();
+      setUsersCount(count);
+    };
+    fetchUsersCount();
+  }, []);
 
   const isUpdateType = type === "UPDATE";
 
@@ -242,6 +254,10 @@ const CampaignForm = ({ type, coupon: campaign }: Props) => {
               </FormItem>
             )}
           />
+
+          <Badge variant={"blue"} className="p-3 w-full hover:bg-blue-50 ">
+            Send SMS to {usersCount} Numbers
+          </Badge>
 
           <Button
             disabled={!form.formState.isValid || loading}
