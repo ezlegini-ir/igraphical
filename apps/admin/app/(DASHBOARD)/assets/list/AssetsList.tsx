@@ -36,6 +36,11 @@ const renderRows = async (asset: AssetType) => {
     asset.createdAt
   );
 
+  const conversionRate =
+    assetViews === 0
+      ? 0
+      : Number(((asset.downloadCount / assetViews) * 100).toFixed(1));
+
   return (
     <TableRow key={asset.id} className="odd:bg-slate-50">
       <TableCell>
@@ -71,6 +76,12 @@ const renderRows = async (asset: AssetType) => {
         {asset.downloadCount.toLocaleString("en-US")}
       </TableCell>
 
+      <TableCell className="text-center">
+        <Badge variant={"blue"} className="p-2">
+          %{conversionRate}
+        </Badge>
+      </TableCell>
+
       <TableCell className="text-center hidden xl:table-cell">
         {formatMiladiDate(asset.createdAt)}
       </TableCell>
@@ -90,6 +101,7 @@ const columns = [
   { label: "Status", className: "text-center hidden xl:table-cell" },
   { label: "Views", className: "text-center" },
   { label: "Downloaded", className: "text-center" },
+  { label: "CR", className: "text-center" },
   { label: "Published At", className: "text-center hidden xl:table-cell" },
   {
     label: "Actions",
