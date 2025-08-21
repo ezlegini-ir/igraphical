@@ -54,9 +54,13 @@ export const sideBarMenuItems = [
       },
       {
         tabName: "Announcements",
-        tabHref: "/announcements",
+        tabHref: "/announcements/sliders",
         tabIcon: GalleryHorizontal,
-        subMenuItems: [],
+        subMenuItems: [
+          { label: "Sliders", href: "/announcements/sliders" },
+          { label: "Notif Bar", href: "/announcements/notifbar" },
+          { label: "Floating Banner", href: "/announcements/floating-banner" },
+        ],
       },
     ],
   },

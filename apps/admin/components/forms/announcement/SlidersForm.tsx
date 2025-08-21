@@ -171,61 +171,59 @@ const SlidersForm = ({ form, remove, fields, sliders }: Props) => {
                         )}
                       />
 
-                      <div>
-                        <FormField
-                          control={form.control}
-                          name={`images.${index}.image`}
-                          render={() => (
-                            <FormItem className="flex flex-col gap-2">
-                              <FormLabel htmlFor={`slider-${fields[index].id}`}>
-                                <div className="relative group">
-                                  <Image
-                                    alt="Preview"
-                                    src={
-                                      previews[index]?.url || sliderPlaceholder
-                                    }
-                                    width={500}
-                                    height={500}
-                                    className="w-full h-[150px] object-cover overflow-hidden rounded-sm cursor-pointer"
-                                  />
-                                  {previews[index] && (
-                                    <Button
-                                      disabled={imageRemoveLoading}
-                                      type="button"
-                                      onClick={() =>
-                                        handleImageRemove(
-                                          index,
-                                          previews[index].public_id
-                                        )
-                                      }
-                                      variant="destructive"
-                                      className="absolute top-0 left-0 m-1 hidden group-hover:flex"
-                                      size={"icon"}
-                                    >
-                                      {imageRemoveLoading ? (
-                                        <Loader />
-                                      ) : (
-                                        <Trash />
-                                      )}
-                                    </Button>
-                                  )}
-                                </div>
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  disabled={imageRemoveLoading}
-                                  type="file"
-                                  id={`slider-${fields[index].id}`}
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => handleFileChange(e, index)}
+                      <FormField
+                        control={form.control}
+                        name={`images.${index}.image`}
+                        render={() => (
+                          <FormItem className="flex flex-col gap-2">
+                            <FormLabel htmlFor={`slider-${fields[index].id}`}>
+                              <div className="relative group">
+                                <Image
+                                  alt="Preview"
+                                  src={
+                                    previews[index]?.url || sliderPlaceholder
+                                  }
+                                  width={500}
+                                  height={500}
+                                  className="w-full h-[150px] object-cover overflow-hidden rounded-sm cursor-pointer"
                                 />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                                {previews[index] && (
+                                  <Button
+                                    disabled={imageRemoveLoading}
+                                    type="button"
+                                    onClick={() =>
+                                      handleImageRemove(
+                                        index,
+                                        previews[index].public_id
+                                      )
+                                    }
+                                    variant="destructive"
+                                    className="absolute top-0 left-0 m-1 hidden group-hover:flex"
+                                    size={"icon"}
+                                  >
+                                    {imageRemoveLoading ? (
+                                      <Loader />
+                                    ) : (
+                                      <Trash />
+                                    )}
+                                  </Button>
+                                )}
+                              </div>
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={imageRemoveLoading}
+                                type="file"
+                                id={`slider-${fields[index].id}`}
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleFileChange(e, index)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
                       <FormField
                         control={form.control}

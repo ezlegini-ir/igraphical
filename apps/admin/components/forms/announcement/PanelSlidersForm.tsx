@@ -78,7 +78,7 @@ const MainSlidersForm = ({ sliders }: SlidersProps) => {
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex justify-between items-center">
-            <h3>Main Slider</h3>
+            <h3>Panel Slider</h3>
 
             <Button
               size={"sm"}

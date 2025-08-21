@@ -110,22 +110,24 @@ model Image {
   size      Int
   createdAt DateTime  @default(now())
 
-  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int?         @unique
-  admin     Admin?       @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  adminId   Int?         @unique
-  tutor     Tutor?       @relation(fields: [tutorId], references: [id], onDelete: Cascade)
-  tutorId   Int?         @unique
-  post      Post?        @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    Int?         @unique
-  course    Course?      @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  Int?         @unique
-  gallery   GalleryItem? @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  galleryId Int?
-  slider    Slider?      @relation(fields: [sliderId], references: [id], onDelete: Cascade)
-  sliderId  Int?         @unique
-  asset     Asset?       @relation(fields: [assetId], references: [id], onDelete: Cascade)
-  assetId   Int?         @unique
+  user             User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int?            @unique
+  admin            Admin?          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId          Int?            @unique
+  tutor            Tutor?          @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  tutorId          Int?            @unique
+  post             Post?           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId           Int?            @unique
+  course           Course?         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId         Int?            @unique
+  gallery          GalleryItem?    @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  galleryId        Int?
+  slider           Slider?         @relation(fields: [sliderId], references: [id], onDelete: Cascade)
+  sliderId         Int?            @unique
+  floatingBanner   FloatingBanner? @relation(fields: [floatingBannerId], references: [id], onDelete: Cascade)
+  floatingBannerId Int?            @unique
+  asset            Asset?          @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId          Int?            @unique
 
   @@map("image")
 }
@@ -448,6 +450,20 @@ model Notifbar {
   @@map("notifbar")
 }
 
+model FloatingBanner {
+  id        Int      @id @default(autoincrement())
+  active    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  image     Image?
+
+  couponId Int?
+  coupon   Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
+
+  imageId Int?
+}
+
 //! ENROLLMENTS ---------------------------------------------------------
 model Enrollment {
   id                  Int              @id @default(autoincrement())
@@ -593,21 +609,22 @@ enum SettlementStatus {
 
 //! MARKETING ---------------------------------------------------------
 model Coupon {
-  id            Int        @id @default(autoincrement())
-  code          String     @unique
-  amount        Float
-  type          CouponType
-  from          DateTime?
-  to            DateTime?
-  used          Int        @default(0)
-  summery       String?
-  limit         Int?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  payment       Payment[]
-  courseInclude Course[]   @relation("includescoupons")
-  courseExclude Course[]   @relation("excludescoupons")
-  Campaign      Campaign[]
+  id             Int              @id @default(autoincrement())
+  code           String           @unique
+  amount         Float
+  type           CouponType
+  from           DateTime?
+  to             DateTime?
+  used           Int              @default(0)
+  summery        String?
+  limit          Int?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  payment        Payment[]
+  courseInclude  Course[]         @relation("includescoupons")
+  courseExclude  Course[]         @relation("excludescoupons")
+  Campaign       Campaign[]
+  floatingBanner FloatingBanner[]
 
   @@map("coupon")
 }

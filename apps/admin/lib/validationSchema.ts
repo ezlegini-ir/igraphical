@@ -216,6 +216,14 @@ export const notifbarFormSchema = z.object({
   active: z.boolean(),
 });
 export type NotifbarFormType = z.infer<typeof notifbarFormSchema>;
+// --------------
+export const floatingBannerSchema = z.object({
+  image: z.instanceof(File).optional(),
+  active: z.boolean(),
+  couponId: z.string().optional(),
+  link: z.string().url().optional(),
+});
+export type FloatingBannerType = z.infer<typeof floatingBannerSchema>;
 
 //! PAYMENT
 export const paymentFormSchema = z.object({
