@@ -220,7 +220,7 @@ export type NotifbarFormType = z.infer<typeof notifbarFormSchema>;
 export const floatingBannerSchema = z.object({
   image: z.instanceof(File).optional(),
   active: z.boolean(),
-  couponId: z.string().optional(),
+  couponId: z.number().optional(),
   link: z.string().url().optional(),
 });
 export type FloatingBannerType = z.infer<typeof floatingBannerSchema>;

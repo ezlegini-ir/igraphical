@@ -11,6 +11,7 @@ export interface FileUploadOptions {
     | "post"
     | "asset"
     | "slider"
+    | "floatingBanners"
     | "certificate"
     | "ticket";
   width?: number;

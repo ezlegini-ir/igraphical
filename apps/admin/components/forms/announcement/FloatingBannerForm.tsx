@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  createFloatingBanner,
+  updateFloatingBanner,
+} from "@/actions/floatingBanner";
 import SearchCoupons from "@/components/SearchCoupons";
 import {
   floatingBannerSchema,
@@ -57,6 +61,7 @@ const FloatingBannerForm = ({ floatingBanner }: Props) => {
     defaultValues: {
       link: floatingBanner?.link || "",
       active: floatingBanner?.active || false,
+      couponId: floatingBanner?.coupon?.id || 0,
     },
   });
 
@@ -64,20 +69,20 @@ const FloatingBannerForm = ({ floatingBanner }: Props) => {
     setLoading(true);
     console.log(data);
 
-    // const res = notifBar
-    //   ? await updateNotifBar(data, notifBar.id)
-    //   : await createNotifBar(data);
+    const res = floatingBanner
+      ? await updateFloatingBanner(data)
+      : await createFloatingBanner(data);
 
-    // if (res.error) {
-    //   toast.warning(res.error);
-    //   setLoading(false);
-    //   return;
-    // }
+    if (res.error) {
+      toast.warning(res.error);
+      setLoading(false);
+      return;
+    }
 
-    // if (res.success) {
-    //   toast.success(res.success);
-    //   setLoading(false);
-    // }
+    if (res.success) {
+      toast.success(res.success);
+      setLoading(false);
+    }
 
     setLoading(false);
   };

@@ -139,6 +139,7 @@ enum ImageType {
   USER
   SLIDER
   DOWNLOADABLE_ASSET
+  FLOATING_BANNER
 
   COURSE_ASSET
   POST_ASSET
@@ -462,6 +463,8 @@ model FloatingBanner {
   coupon   Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
 
   imageId Int?
+
+  @@map("floatingbanner")
 }
 
 //! ENROLLMENTS ---------------------------------------------------------
