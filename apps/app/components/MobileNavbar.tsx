@@ -16,8 +16,6 @@ export default function MobileNavbar() {
   const pathName = usePathname();
   const hideMobileNavbar = pathName.startsWith("/courses/");
 
-  console.log(pathName);
-
   return (
     !hideMobileNavbar && (
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md md:hidden z-50">

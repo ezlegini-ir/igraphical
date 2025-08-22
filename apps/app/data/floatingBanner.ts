@@ -1,5 +1,7 @@
-import { unstable_cache } from "next/cache";
+"use server";
+
 import { database } from "@igraph/database";
+import { unstable_cache } from "next/cache";
 
 export const getFloatingBanner = unstable_cache(
   async () => {

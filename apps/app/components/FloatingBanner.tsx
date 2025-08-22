@@ -1,5 +1,6 @@
 "use client";
 
+import { getFloatingBanner } from "@/data/floatingBanner";
 import { placeHolder } from "@/public";
 import {
   Coupon,
@@ -18,16 +19,21 @@ interface FloatingBannerType extends MyFloatingBanner {
   coupon: Coupon | null;
 }
 
-interface Props {
-  floatingBanner: FloatingBannerType | null;
-}
-
-const FloatingBanner = ({ floatingBanner }: Props) => {
-  if (!floatingBanner) return;
-
+const FloatingBanner = () => {
   const [visible, setVisible] = useState(false);
+  const [floatingBanner, setFloatingBanner] =
+    useState<FloatingBannerType | null>(null);
+
+  console.log(floatingBanner);
 
   useEffect(() => {
+    const fetchFloatingBanner = async () => {
+      const res = await getFloatingBanner();
+      if (res) setFloatingBanner(res);
+    };
+
+    fetchFloatingBanner();
+
     const dismissedAt = localStorage.getItem("floatingBannerDismissedAt");
 
     if (!dismissedAt) {
@@ -51,14 +57,14 @@ const FloatingBanner = ({ floatingBanner }: Props) => {
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || !floatingBanner) return null;
 
   const image = (
     <Image
       src={floatingBanner.image?.url || placeHolder}
       alt="Floating Banner"
-      width={600}
-      height={400}
+      width={750}
+      height={420}
       className="w-[375px] h-[3/2] object-cover"
     />
   );

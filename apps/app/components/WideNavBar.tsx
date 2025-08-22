@@ -9,7 +9,7 @@ const WideNavBar = ({ user, isThereItemsInCart }: NavbarProps) => {
   return (
     <div className="flex justify-between items-center">
       <Link href={"/"}>
-        <IgraphLogo size={142} />
+        <IgraphLogo width={142} />
       </Link>
       <ul className="flex gap-14 text-gray-700">
         {menuItems.map((item, index) => (
