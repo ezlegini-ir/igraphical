@@ -6,6 +6,7 @@ import { unstable_cache } from "next/cache";
 export const getFloatingBanner = unstable_cache(
   async () => {
     return await database.floatingBanner.findFirst({
+      where: { active: true },
       include: {
         image: true,
         coupon: true,
@@ -13,5 +14,5 @@ export const getFloatingBanner = unstable_cache(
     });
   },
   ["floating-banner"],
-  { revalidate: 1800 }
+  { revalidate: 300 }
 );

@@ -5,7 +5,6 @@ import { subDays, format, formatDate } from "date-fns";
 
 const analyticsDataClient = new BetaAnalyticsDataClient();
 const propertyId = process.env.GA_PROPERTY_ID;
-const endDate = format(new Date(), "yyyy-MM-dd");
 
 //* GET VIEWS / SESSIONS --------------------------------------------
 
@@ -14,13 +13,13 @@ export const getGAViewsAndSessions = async () => {
     const [viewsResponse, sessionsResponse] = await Promise.all([
       analyticsDataClient.runReport({
         property: `properties/${propertyId}`,
-        dateRanges: [{ startDate: "90daysAgo", endDate }],
+        dateRanges: [{ startDate: "90daysAgo", endDate: "today" }],
         dimensions: [{ name: "date" }],
         metrics: [{ name: "screenPageViews" }],
       }),
       analyticsDataClient.runReport({
         property: `properties/${propertyId}`,
-        dateRanges: [{ startDate: "90daysAgo", endDate }],
+        dateRanges: [{ startDate: "90daysAgo", endDate: "today" }],
         dimensions: [{ name: "date" }],
         metrics: [{ name: "sessions" }],
       }),
