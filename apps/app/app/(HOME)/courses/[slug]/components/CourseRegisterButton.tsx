@@ -7,7 +7,13 @@ import Price from "@igraph/ui/components/Price";
 import { Badge } from "@igraph/ui/components/ui/badge";
 import { Button } from "@igraph/ui/components/ui/button";
 import { formatJalaliDate } from "@igraph/utils";
-import { Check, Plus, TvMinimalPlay, UserRoundPlus } from "lucide-react";
+import {
+  Check,
+  Plus,
+  ShoppingCart,
+  TvMinimalPlay,
+  UserRoundPlus,
+} from "lucide-react";
 import Link from "next/link";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -113,9 +119,16 @@ const CourseRegisterButton = ({
 
       {!isUserEnrolled && (
         <div className="space-y-3 pb-3">
-          {!isInCart && (
-            <div>
-              <Link href={`/quick-cart/${courseId}`}>
+          {isInCart ? (
+            <Link href="/cart">
+              <Badge variant="green" className="w-full p-2.5 justify-center">
+                <Check size={18} />
+                در سبد خرید (ادامه)
+              </Badge>
+            </Link>
+          ) : (
+            <div className="flex gap-3">
+              <Link className="w-full" href={`/quick-cart/${courseId}`}>
                 <Button
                   variant={isPresale ? "dark" : "default"}
                   className="w-full"
@@ -125,38 +138,28 @@ const CourseRegisterButton = ({
                 </Button>
               </Link>
 
-              {releaseDate && isPresale && (
-                <Badge variant={"blue"} className="w-full gap-1">
+              {isPresale && releaseDate && (
+                <Badge variant="blue" className="w-full gap-1">
                   <span>تاریخ انتشار:</span>
                   <span>{formatJalaliDate(releaseDate)}</span>
                 </Badge>
               )}
+
+              {!isFree && (
+                <Button
+                  className="aspect-square"
+                  size="icon"
+                  onClick={onAddToCart}
+                  variant="secondary"
+                >
+                  <div className="relative">
+                    <ShoppingCart className="scale-110" />
+                    <Plus className="absolute -top-2.5 -right-0.5 scale-[0.8]" />
+                  </div>
+                </Button>
+              )}
             </div>
           )}
-
-          {!isFree &&
-            (isInCart ? (
-              <div>
-                <Link href={"/cart"}>
-                  <Badge
-                    variant={"green"}
-                    className="w-full p-2.5 justify-center"
-                  >
-                    <Check size={18} />
-                    در سبد خرید (ادامه)
-                  </Badge>
-                </Link>
-              </div>
-            ) : (
-              <Button
-                onClick={onAddToCart}
-                variant={"secondary"}
-                className="w-full"
-              >
-                <Plus size={20} />
-                افزودن به سبد خرید
-              </Button>
-            ))}
         </div>
       )}
     </>
