@@ -134,7 +134,10 @@ export type ContactFormType = z.infer<typeof contactFormSchema>;
 //! COURSE RATING FORM
 export const courseReviewFormSchema = z.object({
   rating: z.number().min(1, { message: "لطفا برای این دوره امتیازی ثبت کنید" }),
-  review: z.string().min(1, { message: required }),
+  review: z
+    .string()
+    .min(50, { message: "لطفا یک نظر مفید و کمک کننده بنویسید!!" })
+    .trim(),
 });
 export type CourseReviewFormType = z.infer<typeof courseReviewFormSchema>;
 

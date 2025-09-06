@@ -6,11 +6,8 @@ import {
   CourseReviewFormType,
 } from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Star, TriangleAlert } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import Loader from "@igraph/ui/components/Loader";
+import Rating from "@igraph/ui/components/Rating";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
   Dialog,
@@ -26,8 +23,11 @@ import {
   FormItem,
   FormMessage,
 } from "@igraph/ui/components/ui/form";
-import Loader from "@igraph/ui/components/Loader";
-import Rating from "@igraph/ui/components/Rating";
+import { ArrowDown, Star, TriangleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 interface Props {
   userId: number;
   courseId: number;
@@ -66,6 +66,11 @@ const CourseRatingForm = ({ userId, courseId }: Props) => {
       router.refresh();
     }
   };
+
+  const reviewLength =
+    form.watch("review")?.length * 2 > 100
+      ? 100
+      : form.watch("review")?.length * 2;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -114,6 +119,30 @@ const CourseRatingForm = ({ userId, courseId }: Props) => {
                 </FormItem>
               )}
             />
+
+            {rating > 0 && (
+              <div>
+                <div className="flex justify-between text-xs">
+                  <span className="flex items-center">
+                    <ArrowDown size={18} className="text-green-500" />
+                    نظر خوب
+                  </span>
+                  <span className="flex items-center">
+                    نظر بد
+                    <ArrowDown size={18} className="text-primary" />
+                  </span>
+                </div>
+
+                <div className="relative h-2 w-full bg-secondary rounded-full overflow-hidden">
+                  <div
+                    style={{
+                      transform: `translateX(-${99 - (reviewLength || 0)}%)`,
+                    }}
+                    className={`${reviewLength >= 100 ? "bg-green-500" : "bg-primary"} flex-1 h-full rounded-full transition-all`}
+                  />
+                </div>
+              </div>
+            )}
 
             <Button
               disabled={!form.formState.isValid || form.formState.isSubmitting}

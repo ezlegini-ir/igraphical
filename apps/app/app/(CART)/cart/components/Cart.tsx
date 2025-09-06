@@ -10,10 +10,15 @@ interface Props {
   wallet: Wallet | null;
 }
 
-export type priceType = { price: number; originalPrice: number };
+export type priceType = {
+  courseId: number;
+  price: number;
+  originalPrice: number;
+};
 
 const Cart = ({ cart, wallet }: Props) => {
   const initialPrices = cart.cartItem.map((item) => ({
+    courseId: item.course.id,
     price: item.course.price,
     originalPrice: item.course.basePrice,
   }));

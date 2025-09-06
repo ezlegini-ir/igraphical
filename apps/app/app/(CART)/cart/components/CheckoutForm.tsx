@@ -1,8 +1,14 @@
 "use client";
 
 import { createPayment, PaymentDataType } from "@/actions/payment";
-import CashBackCard from "@igraph/ui/components/CashBackCard";
 import { CourseType } from "@/components/forms/QuickCartCheckoutForm";
+import { getCouponByCode } from "@/data/coupon";
+import { getSessionUser } from "@/data/user";
+import { discountFormSchema, DiscountFormType } from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Coupon, CouponType, Wallet } from "@igraph/database";
+import CashBackCard from "@igraph/ui/components/CashBackCard";
+import Loader from "@igraph/ui/components/Loader";
 import { Badge } from "@igraph/ui/components/ui/badge";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
@@ -12,16 +18,9 @@ import {
   FormItem,
 } from "@igraph/ui/components/ui/form";
 import { Input } from "@igraph/ui/components/ui/input";
-import Loader from "@igraph/ui/components/Loader";
 import { Separator } from "@igraph/ui/components/ui/separator";
 import { Switch } from "@igraph/ui/components/ui/switch";
-import { getCouponByCode } from "@/data/coupon";
-import { getSessionUser } from "@/data/user";
-import { useLoading } from "@igraph/utils";
-import { formatPriceBy3Digits } from "@igraph/utils";
-import { discountFormSchema, DiscountFormType } from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Coupon, CouponType, Wallet } from "@igraph/database";
+import { formatPriceBy3Digits, useLoading } from "@igraph/utils";
 import { X } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -139,16 +138,56 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
       switch (type) {
         case "PERCENT": {
           const discountFactor = existingCoupon.amount / 100;
-          const discountValue = initialCartTotal * discountFactor;
-          setCouponAmount(discountValue);
-          setPrices((prev) =>
-            prev.map((item) => ({
-              ...item,
-              price: item.price * (1 - discountFactor),
-            }))
-          );
+
+          if (
+            existingCoupon.courseExclude.length > 0 ||
+            existingCoupon.courseInclude.length > 0
+          ) {
+            if (existingCoupon.courseExclude.length > 0) {
+              const excludedCoursesIds = new Set(
+                existingCoupon.courseExclude.map((c) => c.id)
+              );
+              const coursesToBeReduced = courses
+                .map((c) => c.id)
+                .filter((id) => !excludedCoursesIds.has(id));
+              const toReduceSet = new Set(coursesToBeReduced);
+
+              // compute new prices first
+              const newPrices = prices.map((item) =>
+                toReduceSet.has(item.courseId)
+                  ? {
+                      ...item,
+                      price: item.originalPrice * (1 - discountFactor),
+                    }
+                  : item
+              );
+
+              const discountValue =
+                initialCartTotal -
+                newPrices.reduce((acc, curr) => acc + curr.price, 0);
+
+              // now update states separately
+              setPrices(newPrices);
+              setCouponAmount(discountValue);
+            }
+
+            if (existingCoupon.courseInclude.length > 0) {
+            }
+          } else {
+            const discountValue = initialCartTotal * discountFactor;
+            setCouponAmount(discountValue);
+
+            setPrices((prev) =>
+              prev.map((item) => ({
+                ...item,
+                price: item.price * (1 - discountFactor),
+              }))
+            );
+          }
+
           break;
         }
+
         case "FIXED_ON_CART": {
           const discountValue = existingCoupon.amount;
 
@@ -175,6 +214,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
           }
           break;
         }
+
         case "FIXED_ON_COURSE": {
           const discountFactor = existingCoupon.amount;
           setCouponAmount(Math.min(cartTotal, discountFactor * prices.length));
@@ -243,19 +283,31 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
 
       //* COURSE EXCLUDE CHECK
       if (existingCoupon.courseExclude.length > 0) {
-        const courseExcludeIds = existingCoupon.courseExclude.map((c) => c.id);
-        const coursesIds = courses.map((c) => c.id);
-        const isNotValid = coursesIds.some((id) =>
-          courseExcludeIds.includes(id)
-        );
+        const courseExcludeIds = existingCoupon.courseExclude
+          .map((c) => c.id)
+          .sort();
+        const coursesIds = courses.map((c) => c.id).sort();
+        const invalidAllCourses =
+          coursesIds.length === courseExcludeIds.length &&
+          coursesIds.every((val, idx) => val === courseExcludeIds[idx]);
 
-        if (isNotValid) {
-          toast.error("این کد تخفیف برای حداقل یکی از دوره ها مجاز نمی باشد.");
+        if (invalidAllCourses) {
+          toast.error("این کد تخفیف برای این دوره ها مجاز نمی باشد.");
           setApplyDiscountLoading(false);
           return;
         }
 
-        applyDiscountAmount(existingCoupon.type);
+        if (courses.length <= 1) {
+          const isNotValid = coursesIds[0] === courseExcludeIds[0];
+
+          if (isNotValid) {
+            toast.error("این کد تخفیف برای این دوره مجاز نمی باشد.");
+            setApplyDiscountLoading(false);
+            return;
+          }
+        } else {
+          applyDiscountAmount(existingCoupon.type);
+        }
       }
     } else {
       applyDiscountAmount(existingCoupon.type);
