@@ -23,6 +23,7 @@ import {
   FormItem,
   FormMessage,
 } from "@igraph/ui/components/ui/form";
+import { Textarea } from "@igraph/ui/components/ui/textarea";
 import { ArrowDown, ArrowUp, Star, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -106,13 +107,23 @@ const CourseRatingForm = ({ userId, courseId }: Props) => {
                 <FormItem>
                   <FormControl>
                     {rating && (
-                      <textarea
+                      <Textarea
                         {...field}
                         className="block w-full min-h-[100px] border rounded-md p-3 focus:border-blue-500 focus:ring-0.5 focus:ring-blue-500 focus:outline-none"
                         placeholder="نظر شما درباره این دوره..."
+                        value={field.value}
+                        onChange={(e) => {
+                          // Replace multiple consecutive spaces with a single space
+                          const valueWithSingleSpaces = e.target.value.replace(
+                            /\s{2,}/g,
+                            " "
+                          );
+                          field.onChange(valueWithSingleSpaces);
+                        }}
                       />
                     )}
                   </FormControl>
+
                   <FormMessage />
                 </FormItem>
               )}
