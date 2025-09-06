@@ -23,7 +23,7 @@ import {
   FormItem,
   FormMessage,
 } from "@igraph/ui/components/ui/form";
-import { ArrowDown, Star, TriangleAlert } from "lucide-react";
+import { ArrowDown, ArrowUp, Star, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -68,9 +68,7 @@ const CourseRatingForm = ({ userId, courseId }: Props) => {
   };
 
   const reviewLength =
-    form.watch("review")?.length * 2 > 100
-      ? 100
-      : form.watch("review")?.length * 2;
+    form.watch("review")?.length > 100 ? 100 : form.watch("review")?.length;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -122,14 +120,23 @@ const CourseRatingForm = ({ userId, courseId }: Props) => {
 
             {rating > 0 && (
               <div>
-                <div className="flex justify-between text-xs">
-                  <span className="flex items-center">
-                    <ArrowDown size={18} className="text-green-500" />
-                    نظر خوب
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span className="flex flex-col items-start font-semibold text-indigo-500">
+                    عالی
+                    <ArrowDown size={18} className="text-indigo-500 -mr-1" />
                   </span>
-                  <span className="flex items-center">
-                    نظر بد
-                    <ArrowDown size={18} className="text-primary" />
+
+                  <span className="flex flex-col items-center">
+                    خوب
+                    <ArrowDown size={18} className="text-muted-foreground" />
+                  </span>
+
+                  <span className="flex flex-col items-end">
+                    کوتاه
+                    <ArrowDown
+                      size={18}
+                      className="text-muted-foreground -ml-1"
+                    />
                   </span>
                 </div>
 
@@ -140,6 +147,13 @@ const CourseRatingForm = ({ userId, courseId }: Props) => {
                     }}
                     className={`${reviewLength >= 100 ? "bg-green-500" : "bg-primary"} flex-1 h-full rounded-full transition-all`}
                   />
+                </div>
+
+                <div className="w-fit mx-auto">
+                  <span className="flex flex-col text-xs items-center text-green-500">
+                    <ArrowUp size={18} className="text-green-500" />
+                    تایید
+                  </span>
                 </div>
               </div>
             )}
