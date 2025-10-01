@@ -1,17 +1,14 @@
-import { Badge } from "@igraph/ui/components/ui/badge";
-import { SidebarTrigger } from "@igraph/ui/components/ui/sidebar";
 import { getSessionAdmin } from "@/data/admin";
 import { getOnlineUsers } from "@/data/ga";
 import { database } from "@igraph/database";
+import { Badge } from "@igraph/ui/components/ui/badge";
+import { SidebarTrigger } from "@igraph/ui/components/ui/sidebar";
 import { Home, MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
 import AdminUserBar from "./AdminUserBar";
-import { redirect } from "next/navigation";
-import { loginPageRoute } from "@/middleware";
 
 const AdminDashboardHeader = async () => {
   const sessionUser = await getSessionAdmin();
-  if (!sessionUser) redirect(loginPageRoute);
   const onlineUsers = (await getOnlineUsers()).data;
 
   const pendingTicketsCount = await database.ticket.count({
@@ -70,7 +67,7 @@ const AdminDashboardHeader = async () => {
           </Link>
         </div>
 
-        <AdminUserBar user={sessionUser} />
+        <AdminUserBar user={sessionUser!} />
       </div>
     </div>
   );

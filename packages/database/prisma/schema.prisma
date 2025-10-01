@@ -576,6 +576,14 @@ model Payment {
   @@map("payment")
 }
 
+model Expense {
+  id        Int      @id @default(autoincrement())
+  expense   Float
+  from      DateTime
+  to        DateTime
+  createdAt DateTime @default(now())
+}
+
 enum PaymentMethod {
   ZARRIN_PAL
   INSTALLMENT
