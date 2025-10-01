@@ -549,8 +549,9 @@ enum TransactionType {
 }
 
 model Payment {
-  id                 Int           @id @default(autoincrement())
+  id                 Int            @id @default(autoincrement())
   total              Float
+  installmentProfit  Float?
   itemsTotal         Float
   discountAmount     Float?
   discountCode       String?
@@ -558,9 +559,9 @@ model Payment {
   transactionId      String?
   status             PaymentStatus
   paidAt             DateTime?
-  createdAt          DateTime      @default(now())
-  paymentMethod      PaymentMethod
-  walletUsed         Boolean       @default(false)
+  createdAt          DateTime       @default(now())
+  paymentMethod      PaymentMethod?
+  walletUsed         Boolean        @default(false)
   walletUsedAmount   Float?
 
   enrollment        Enrollment[]
@@ -577,7 +578,7 @@ model Payment {
 
 enum PaymentMethod {
   ZARRIN_PAL
-  MELLI
+  INSTALLMENT
   ADMIN
   NO_METHOD
 }

@@ -18,7 +18,7 @@ import { getCouponByCode } from "@/data/coupon";
 import { getSessionUser } from "@/data/user";
 import { useLoading } from "@igraph/utils";
 import { formatPriceBy3Digits } from "@igraph/utils";
-import { discountFormSchema, DiscountFormType } from "@/lib/validationSchema";
+import { paymentFormSchema, PaymentFormType } from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Coupon, CouponType, Course, Discount, Wallet } from "@igraph/database";
 import { X } from "lucide-react";
@@ -53,8 +53,8 @@ const QuickCartCheckoutForm = ({ course, wallet }: Props) => {
 
   // CONSTS ---------------------------
   const walletBalance = wallet?.balance || 0;
-  const form = useForm<DiscountFormType>({
-    resolver: zodResolver(discountFormSchema),
+  const form = useForm<PaymentFormType>({
+    resolver: zodResolver(paymentFormSchema),
     defaultValues: { code: "" },
   });
   const discountAmount = course.discount

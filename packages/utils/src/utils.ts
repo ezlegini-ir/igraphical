@@ -96,9 +96,9 @@ export function calculateSum(
 export function cashBackCalculator(price: number): number {
   if (!price) return 0;
 
-  // For every 100,000 Tomans, returns 10,000 Tomans
+  // For every 100,000 Tomans, returns 5,000 Tomans
   const x = Math.floor(price / 100_000);
-  return x < 0 ? 0 : x * 10_000;
+  return x < 0 ? 0 : x * 5_000;
 }
 
 //! --------------------------------------------------

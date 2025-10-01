@@ -46,8 +46,6 @@ export async function customUserExport({
     },
   });
 
-  console.log(enrollments);
-
   const usersIds = enrollments.map((u) => u.userId);
 
   const users = await database.user.findMany({

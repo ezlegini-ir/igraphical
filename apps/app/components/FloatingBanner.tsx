@@ -24,8 +24,6 @@ const FloatingBanner = () => {
   const [floatingBanner, setFloatingBanner] =
     useState<FloatingBannerType | null>(null);
 
-  console.log(floatingBanner);
-
   useEffect(() => {
     const fetchFloatingBanner = async () => {
       const res = await getFloatingBanner();

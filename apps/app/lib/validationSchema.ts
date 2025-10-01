@@ -9,6 +9,8 @@ export const ticketDepartment = [
   "SUGGEST",
 ] as const;
 
+export const paymentMethod = ["ZARRIN_PAL", "INSTALLMENT"] as const;
+
 //! User Forms
 export const loginFormSchema = z.object({
   phoneOrEmail: z
@@ -106,15 +108,9 @@ export const profileFormSchema = z.object({
 export type ProfileFormType = z.infer<typeof profileFormSchema>;
 
 //! CART FORM
-export const discountFormSchema = z.object({
-  code: z.string().min(1),
-});
-export type DiscountFormType = z.infer<typeof discountFormSchema>;
-
-// --------------
-
 export const paymentFormSchema = z.object({
-  cardNumber: z.string().min(1, { message: "شماره کارت الزامی می باشد" }),
+  code: z.string().min(1),
+  paymentMenotd: z.enum(paymentMethod).optional(),
 });
 export type PaymentFormType = z.infer<typeof paymentFormSchema>;
 

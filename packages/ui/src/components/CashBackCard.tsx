@@ -25,7 +25,7 @@ const CashBackCard = ({ price }: { price: number }) => {
         </TooltipTrigger>
         <TooltipContent className="bg-slate-500 text-background">
           <p>
-            به ازای هر 100 هزار تومان پرداخت = 10 هزار تومان برگشت به کیف پول
+            به ازای هر 100 هزار تومان پرداخت = 5 هزار تومان برگشت به کیف پول
           </p>
         </TooltipContent>
       </Tooltip>

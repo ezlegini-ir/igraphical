@@ -67,7 +67,6 @@ const FloatingBannerForm = ({ floatingBanner }: Props) => {
 
   const onSubmit = async (data: FloatingBannerType) => {
     setLoading(true);
-    console.log(data);
 
     const res = floatingBanner
       ? await updateFloatingBanner(data)

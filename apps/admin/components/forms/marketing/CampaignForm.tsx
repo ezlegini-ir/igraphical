@@ -81,8 +81,6 @@ const CampaignForm = ({ type, coupon: campaign }: Props) => {
   const onSubmit = async (data: CampaignFormType) => {
     setLoading(true);
 
-    console.log(data);
-
     const res = await createCampaign(data);
 
     if (res.error) {
