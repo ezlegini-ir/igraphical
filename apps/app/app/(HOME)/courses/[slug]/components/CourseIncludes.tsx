@@ -13,7 +13,7 @@ const CourseIncludes = ({ courseIncludes }: Props) => {
   return (
     <>
       <h3 className="font-semibold text-base">این دوره شامل:</h3>
-      <ul className=" text-sm text-slate-500 space-y-4">
+      <ul className=" text-sm text-slate-500 space-y-3">
         {courseIncludes.map((item, index) => (
           <li key={index} className="flex gap-3 items-center">
             <item.icon size={16} />

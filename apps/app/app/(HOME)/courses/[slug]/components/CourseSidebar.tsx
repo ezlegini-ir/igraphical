@@ -4,7 +4,7 @@ import { database } from "@igraph/database";
 import CashBackCard from "@igraph/ui/components/CashBackCard";
 import Price from "@igraph/ui/components/Price";
 import TizerVideo from "@igraph/ui/components/TizerVideo";
-import { Button } from "@igraph/ui/components/ui/button";
+import { Badge } from "@igraph/ui/components/ui/badge";
 import { Card, CardContent } from "@igraph/ui/components/ui/card";
 import { Separator } from "@igraph/ui/components/ui/separator";
 import { formatDuration } from "@igraph/utils";
@@ -17,12 +17,17 @@ import {
   Star,
   TvMinimalPlay,
 } from "lucide-react";
-import Link from "next/link";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { CourseType } from "./CourseContent";
 import CourseIncludes from "./CourseIncludes";
 import CourseRegisterButton from "./CourseRegisterButton";
 
+type courseIncludesType = {
+  label: string;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
+}[];
 interface Props {
   course: CourseType;
 }
@@ -64,6 +69,8 @@ const CourseSidebar = async ({ course }: Props) => {
         })
       );
 
+  const isFree = course.price === 0;
+
   return (
     <div className="order-first md:order-last md:sticky top-16 self-start">
       <Card className="p-1 pb-3">
@@ -74,30 +81,12 @@ const CourseSidebar = async ({ course }: Props) => {
             </div>
           )}
 
-          <div className="px-4 space-y-5">
+          <div className="px-4 space-y-4">
             <CourseIncludes
-              courseIncludes={
-                courseIncludes as {
-                  label: string;
-                  icon: ForwardRefExoticComponent<
-                    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-                  >;
-                }[]
-              }
+              courseIncludes={courseIncludes as courseIncludesType}
             />
 
             <Separator />
-
-            {isUserEnrolled && (
-              <div>
-                <Link href={`/classroom/${classroomId}`}>
-                  <Button variant={"lightBlue"} className="w-full">
-                    <TvMinimalPlay size={22} />
-                    ورود به کلاس درس
-                  </Button>
-                </Link>
-              </div>
-            )}
 
             {!isUserEnrolled && (
               <>
@@ -108,14 +97,16 @@ const CourseSidebar = async ({ course }: Props) => {
                     price={course.price}
                   />
 
-                  {/* <Badge
-                    variant={"gray"}
-                    className="text-center font-medium p-1 text-slate-500"
-                  >
-                    امکان خرید
-                    <br />
-                    اقساطی
-                  </Badge> */}
+                  {!isFree && (
+                    <Badge
+                      variant={"gray"}
+                      className="text-center text-[11px] font-medium p-1 text-muted-foreground"
+                    >
+                      امکان خرید
+                      <br />
+                      اقساطی
+                    </Badge>
+                  )}
                 </div>
                 <CashBackCard price={course.price} />
               </>

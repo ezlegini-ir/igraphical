@@ -564,11 +564,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
                           پرداخت نقدی
                         </div>
                       </SelectItem>
-                      <SelectItem
-                        disabled
-                        value="INSTALLMENT"
-                        className="py-2.5"
-                      >
+                      <SelectItem value="INSTALLMENT" className="py-2.5">
                         <div className="flex items-center gap-2">
                           <Image
                             alt="logo"

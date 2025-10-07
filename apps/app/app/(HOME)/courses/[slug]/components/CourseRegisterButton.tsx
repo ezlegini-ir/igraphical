@@ -12,6 +12,7 @@ import {
   Plus,
   ShoppingCart,
   TvMinimalPlay,
+  UserPlus,
   UserRoundPlus,
 } from "lucide-react";
 import Link from "next/link";
@@ -69,7 +70,7 @@ const CourseRegisterButton = ({
 
   return (
     <>
-      <div className="lg:hidden">
+      {/* <div className="lg:hidden">
         <div className="card fixed bottom-0 rounded-br-none  rounded-bl-none left-1/2 -translate-x-1/2 px-4 w-full">
           {!isUserEnrolled ? (
             <div className="flex justify-between items-center">
@@ -115,9 +116,9 @@ const CourseRegisterButton = ({
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
-      {!isUserEnrolled && (
+      {!isUserEnrolled ? (
         <div className="space-y-3 pb-3">
           {isInCart ? (
             <Link href="/cart">
@@ -128,16 +129,6 @@ const CourseRegisterButton = ({
             </Link>
           ) : (
             <div className="flex gap-3">
-              <Link className="w-full" href={`/quick-cart/${courseId}`}>
-                <Button
-                  variant={isPresale ? "dark" : "default"}
-                  className="w-full"
-                >
-                  <UserRoundPlus size={20} />
-                  {isPresale ? "پیش خرید دوره" : "ثبت نام سریع"}
-                </Button>
-              </Link>
-
               {isPresale && releaseDate && (
                 <Badge variant="blue" className="w-full gap-1">
                   <span>تاریخ انتشار:</span>
@@ -145,21 +136,21 @@ const CourseRegisterButton = ({
                 </Badge>
               )}
 
-              {!isFree && (
-                <Button
-                  className="aspect-square"
-                  size="icon"
-                  onClick={onAddToCart}
-                  variant="secondary"
-                >
-                  <div className="relative">
-                    <ShoppingCart className="scale-110" />
-                    <Plus className="absolute -top-2.5 -right-0.5 scale-[0.8]" />
-                  </div>
-                </Button>
-              )}
+              <Button className="w-full" onClick={onAddToCart}>
+                <UserPlus />
+                ثبت نام
+              </Button>
             </div>
           )}
+        </div>
+      ) : (
+        <div>
+          <Link href={`/classroom/${classroomId}`}>
+            <Button variant={"lightBlue"} className="w-full">
+              <TvMinimalPlay size={22} />
+              ورود به کلاس درس
+            </Button>
+          </Link>
         </div>
       )}
     </>

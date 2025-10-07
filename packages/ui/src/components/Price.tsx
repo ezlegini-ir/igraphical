@@ -1,5 +1,4 @@
 import { Discount } from "@igraph/database";
-import React from "react";
 import { Badge } from "@igraph/ui/components/ui/badge";
 
 interface Props {
@@ -21,7 +20,9 @@ const Price = ({ basePrice, price, discount }: Props) => {
               <span className="text-slate-400 text-xs mr-1">تومان</span>
             </div>
           ) : (
-            <Badge variant={"green"}>رایگان</Badge>
+            <Badge className="p-2" variant={"green"}>
+              رایگان
+            </Badge>
           )}
         </>
       ) : (
