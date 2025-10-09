@@ -35,7 +35,7 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
     options: {
       speed: {
         selected: 1,
-        options: [0.75, 1, 1.5, 2],
+        options: [0.75, 1, 1.25, 1.5, 1.75, 2],
       },
       controls: [
         "play-large",
