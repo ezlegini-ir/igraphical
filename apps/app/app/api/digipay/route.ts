@@ -3,22 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const providerId = (formData.get("providerId") as string) || "";
-    const trackingCode = (formData.get("trackingCode") as string) || "";
-    const status =
-      (formData.get("result") as "SUCCESS" | "FAILURE" | null) ?? null;
+    const providerId = formData.get("providerId") as string | null;
+    const trackingCode = formData.get("trackingCode") as string | null;
+    const status = formData.get("result") as "SUCCESS" | "FAILURE" | null;
 
-    const envBase = process.env.NEXT_PUBLIC_BASE_URL;
-    const host =
-      req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
-    // const proto = req.headers.get("x-forwarded-proto") || "https";
-    const fallbackBase = host ? `https://${host}` : undefined;
-
-    const base = envBase ?? fallbackBase ?? "https://igraphical.ir";
-
-    const redirectUrl = new URL("/checkout-result", base);
-    redirectUrl.searchParams.set("providerId", providerId);
-    redirectUrl.searchParams.set("trackingCode", trackingCode);
+    const redirectUrl = new URL("/checkout-result", req.url);
+    redirectUrl.searchParams.set("providerId", providerId || "");
+    redirectUrl.searchParams.set("trackingCode", trackingCode || "");
     redirectUrl.searchParams.set("Status", status === "SUCCESS" ? "OK" : "NOK");
     redirectUrl.searchParams.set("paymentMethod", "DIGIPAY");
 
