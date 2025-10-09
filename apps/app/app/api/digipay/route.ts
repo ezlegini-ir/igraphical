@@ -11,8 +11,8 @@ export async function POST(req: NextRequest) {
     const envBase = process.env.NEXT_PUBLIC_BASE_URL;
     const host =
       req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
-    const proto = req.headers.get("x-forwarded-proto") || "https";
-    const fallbackBase = host ? `${proto}://${host}` : undefined;
+    // const proto = req.headers.get("x-forwarded-proto") || "https";
+    const fallbackBase = host ? `https://${host}` : undefined;
 
     const base = envBase ?? fallbackBase ?? "https://igraphical.ir";
 

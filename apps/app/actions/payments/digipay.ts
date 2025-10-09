@@ -53,7 +53,7 @@ export async function InitiateDigipayPurchase(
           process.env.NODE_ENV === "production"
             ? process.env.NEXT_PUBLIC_BASE_URL
             : "http://localhost:3000"
-        }/api/digipay?paymentMethod=DIGIPAY`,
+        }/api/digipay`,
         basketDetailsDto: {
           items: courses.map((c) => ({
             sellerId: process.env.DIGIPAY_USERNAME,

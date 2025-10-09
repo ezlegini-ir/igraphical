@@ -362,7 +362,7 @@ export const verifyPayment = async (
       };
     } else {
       await database.payment.update({
-        where: { id: existingCart.paymentId! },
+        where: { id: +providerId },
         data: {
           status: "FAILED",
         },
