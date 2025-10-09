@@ -20,7 +20,7 @@ export const enrollmentStatus = [
 ] as const;
 export const paymentMethod = [
   "ZARRIN_PAL",
-  "INSTALLMENT",
+  "DIGIPAY",
   "ADMIN",
   "NO_METHOD",
 ] as const;

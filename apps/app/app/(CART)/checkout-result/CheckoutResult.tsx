@@ -1,11 +1,11 @@
 "use client";
 
 import { verifyPayment } from "@/actions/payment";
-import { verifyQuickPayment } from "@/actions/quickPayment";
-import { Button } from "@igraph/ui/components/ui/button";
-import { Separator } from "@igraph/ui/components/ui/separator";
 import useError from "@/hooks/useError";
 import useSuccess from "@/hooks/useSuccess";
+import { PaymentMethod } from "@igraph/database";
+import { Button } from "@igraph/ui/components/ui/button";
+import { Separator } from "@igraph/ui/components/ui/separator";
 import { CircleCheckBig, CircleX, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,10 +15,18 @@ type Status = "SUCCESS" | "FAIL" | "PENDING";
 interface Props {
   authority: string;
   status: "OK" | "NOK";
-  type: "QUICK" | "PAYMENT";
+  paymentMethod: PaymentMethod;
+  trackingCode: string;
+  providerId: string;
 }
 
-const CheckoutResult = ({ authority, status, type }: Props) => {
+const CheckoutResult = ({
+  authority,
+  status,
+  paymentMethod,
+  providerId,
+  trackingCode,
+}: Props) => {
   const [result, setResult] = useState<Status>("PENDING");
   const [refId, setRefId] = useState<number>();
   const { error, setError } = useError();
@@ -30,10 +38,13 @@ const CheckoutResult = ({ authority, status, type }: Props) => {
 
   useEffect(() => {
     const verifyCheckout = async () => {
-      const res =
-        type === "QUICK"
-          ? await verifyQuickPayment(authority, status)
-          : await verifyPayment(authority, status);
+      const res = await verifyPayment(
+        authority,
+        status,
+        paymentMethod,
+        trackingCode,
+        providerId
+      );
 
       if (res.error) {
         setResult("FAIL");

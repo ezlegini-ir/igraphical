@@ -1,10 +1,10 @@
 import { getEnrollmentByUserIdAndCourseId } from "@/data/enrollment";
 import { getSessionUser } from "@/data/user";
+import { installmentPayment } from "@/public";
 import { database } from "@igraph/database";
 import CashBackCard from "@igraph/ui/components/CashBackCard";
 import Price from "@igraph/ui/components/Price";
 import TizerVideo from "@igraph/ui/components/TizerVideo";
-import { Badge } from "@igraph/ui/components/ui/badge";
 import { Card, CardContent } from "@igraph/ui/components/ui/card";
 import { Separator } from "@igraph/ui/components/ui/separator";
 import { formatDuration } from "@igraph/utils";
@@ -17,6 +17,7 @@ import {
   Star,
   TvMinimalPlay,
 } from "lucide-react";
+import Image from "next/image";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { CourseType } from "./CourseContent";
 import CourseIncludes from "./CourseIncludes";
@@ -92,20 +93,19 @@ const CourseSidebar = async ({ course }: Props) => {
               <>
                 <div className="flex justify-between items-center">
                   <Price
+                    size="lg"
                     basePrice={course.basePrice}
                     discount={course.discount}
                     price={course.price}
                   />
 
                   {!isFree && (
-                    <Badge
-                      variant={"gray"}
-                      className="text-center text-[11px] font-medium p-1 text-muted-foreground"
-                    >
-                      امکان خرید
-                      <br />
-                      اقساطی
-                    </Badge>
+                    <Image
+                      alt=""
+                      src={installmentPayment}
+                      width={90}
+                      height={90}
+                    />
                   )}
                 </div>
                 <CashBackCard price={course.price} />
@@ -121,7 +121,6 @@ const CourseSidebar = async ({ course }: Props) => {
               discount={course.discount}
               price={course.price}
               courseId={course.id}
-              isFree={course.price === 0}
               isInCart={isInCart}
             />
           </div>

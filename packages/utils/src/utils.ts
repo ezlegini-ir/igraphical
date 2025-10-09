@@ -93,8 +93,11 @@ export function calculateSum(
 
 //! --------------------------------------------------
 
-export function cashBackCalculator(price: number): number {
-  if (!price) return 0;
+export function cashBackCalculator(
+  price: number,
+  dontApplyCashback?: boolean
+): number {
+  if (!price || dontApplyCashback) return 0;
 
   // For every 100,000 Tomans, returns 5,000 Tomans
   const x = Math.floor(price / 100_000);

@@ -65,6 +65,16 @@ const PaymentsList = ({ payments }: Props) => {
       </Badge>
     );
 
+    const paymentMethod = payment.paymentMethod;
+    const paymentMehodInFarsi =
+      paymentMethod === "DIGIPAY"
+        ? "اقساطی"
+        : paymentMethod === "ZARRIN_PAL"
+          ? "نقدی"
+          : paymentMethod === "ADMIN"
+            ? "مدیر سایت"
+            : "رایگان";
+
     return (
       <TableRow key={payment.id}>
         <TableCell>{payment.id}</TableCell>
@@ -72,6 +82,7 @@ const PaymentsList = ({ payments }: Props) => {
           {formatJalaliDate(payment.createdAt, { withTime: true })}
         </TableCell>
         <TableCell>{status}</TableCell>
+        <TableCell>{paymentMehodInFarsi}</TableCell>
         <TableCell>{payment.discountAmount?.toLocaleString("en-US")}</TableCell>
         <TableCell className="py-4">
           {payment.total.toLocaleString("en-US")}
@@ -126,6 +137,7 @@ const columns = [
   { label: "شناسه پرداخت", className: "text-right" },
   { label: "تاریخ  ایجاد", className: "text-right" },
   { label: "وضعیت", className: "text-right" },
+  { label: "روش پرداخت", className: "text-right" },
   { label: "تخفیف (تومان)", className: "text-right" },
   { label: "مبلغ (تومان)", className: "text-right" },
   { label: "دوره ها", className: "text-left" },

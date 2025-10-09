@@ -10,6 +10,7 @@ import {
   Enrollment,
   Image as ImageType,
   Payment,
+  PaymentMethod,
   User,
 } from "@igraph/database";
 import Link from "next/link";
@@ -59,6 +60,19 @@ const renderRows = (payment: PaymentType) => {
     </Badge>
   );
 
+  const renderPaymentMethod = (paymentMethod: PaymentMethod) => {
+    switch (paymentMethod) {
+      case "ADMIN":
+        return <span className="text-muted-foreground">Admin</span>;
+      case "DIGIPAY":
+        return <span className="text-blue-500">DigiPay</span>;
+      case "ZARRIN_PAL":
+        return <span className="text-orange-500">ZarrinPal</span>;
+      default:
+        return <span className="text-muted-foreground">--</span>;
+    }
+  };
+
   return (
     <TableRow key={payment.id} className="odd:bg-slate-50">
       <TableCell className="hidden xl:table-cell">{payment.id}</TableCell>
@@ -78,6 +92,10 @@ const renderRows = (payment: PaymentType) => {
       </TableCell>
 
       <TableCell className="text-center">{statuses}</TableCell>
+
+      <TableCell className="text-center">
+        {renderPaymentMethod(payment.paymentMethod!)}
+      </TableCell>
 
       <TableCell className="text-center text-gray-500 hidden xl:table-cell">
         {payment.discountCode || "-"}
@@ -115,6 +133,7 @@ const columns = [
     className: "text-center  xl:w-[300px] hidden xl:table-cell",
   },
   { label: "Status", className: "text-center" },
+  { label: "Method", className: "text-center" },
   {
     label: "Discount Code",
     className: "text-center w-[200px] hidden xl:table-cell",

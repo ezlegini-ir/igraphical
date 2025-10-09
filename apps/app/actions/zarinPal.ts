@@ -9,11 +9,10 @@ const zarinpal = new ZarinPal({
   accessToken: process.env.ZARRINPAL_ACCESS_TOKEN,
 });
 
-export async function InitiatePurchase(
+export async function InitiateZarrinPalPurchase(
   user: User,
   amount: number,
-  paymentId: number,
-  query: string = ""
+  paymentId: number
 ) {
   try {
     const response = (await zarinpal.payments.create({
@@ -22,7 +21,7 @@ export async function InitiatePurchase(
         process.env.NODE_ENV === "production"
           ? process.env.NEXT_PUBLIC_BASE_URL
           : "http://localhost:3000"
-      }/checkout-result${query}`,
+      }/checkout-result?paymentMethod=ZARRIN_PAL`,
       description: `Payment For User ${user.id} | Payment Id: ${paymentId}`,
       mobile: user.phone,
       email: user.email,
@@ -62,7 +61,7 @@ interface VerifyResponse {
   errors: any[];
 }
 
-export async function verifyPurchase(
+export async function verifyZarrinPalPurchase(
   authority: string,
   amount: number,
   status: "OK" | "NOK"

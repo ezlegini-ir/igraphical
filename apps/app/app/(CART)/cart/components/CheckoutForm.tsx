@@ -1,13 +1,19 @@
 "use client";
 
 import { createPayment, PaymentDataType } from "@/actions/payment";
-import { CourseType } from "@/components/forms/QuickCartCheckoutForm";
 import { getCouponByCode } from "@/data/coupon";
 import { getSessionUser } from "@/data/user";
 import { paymentFormSchema, PaymentFormType } from "@/lib/validationSchema";
 import { digipayLogo, zarrinpalLogo } from "@/public";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Coupon, CouponType, Wallet } from "@igraph/database";
+import {
+  Coupon,
+  CouponType,
+  Course,
+  Discount,
+  PaymentMethod,
+  Wallet,
+} from "@igraph/database";
 import CashBackCard from "@igraph/ui/components/CashBackCard";
 import Loader from "@igraph/ui/components/Loader";
 import { Badge } from "@igraph/ui/components/ui/badge";
@@ -17,33 +23,32 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
 } from "@igraph/ui/components/ui/form";
 import { Input } from "@igraph/ui/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@igraph/ui/components/ui/select";
-import { Separator } from "@igraph/ui/components/ui/separator";
 import { Switch } from "@igraph/ui/components/ui/switch";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@igraph/ui/components/ui/toggle-group";
 import { formatPriceBy3Digits, useLoading } from "@igraph/utils";
-import { ArrowLeft, X } from "lucide-react";
-import moment from "moment-jalaali";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { priceType } from "./Cart";
+import CheckoutInfo from "./CheckoutInfo";
 
 interface Props {
   courses: CourseType[];
   wallet: Wallet | null;
   prices: priceType[];
   setPrices: Dispatch<SetStateAction<priceType[]>>;
+}
+
+interface CourseType extends Course {
+  discount: Discount | null;
 }
 
 const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
@@ -53,28 +58,29 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
   const walletBalance = wallet?.balance || 0;
   const form = useForm<PaymentFormType>({
     resolver: zodResolver(paymentFormSchema),
-    defaultValues: { code: "" },
+    defaultValues: { code: "", paymentMethod: "ZARRIN_PAL" },
     mode: "onSubmit",
   });
   const discountAmount = baseTotal - total;
   const form_DiscountCode = form.watch("code");
-  const paymentMethod = form.getValues("paymentMenotd");
 
   // HOOKS ---------------------------
+  const [paymentMethod, setPaymentMethod] = useState(
+    form.watch("paymentMethod")
+  );
   const [initialCartTotal] = useState(total);
   const [cartTotal, setCartTotal] = useState(total);
   const [usedWalletAmount, setUsedWalletAmount] = useState(0);
-  const [installmentProfit, setInstallmentProfit] = useState(0);
-  const [paymentFormStage, setPaymentFormStage] = useState<
-    "DISCOUNT" | "PAYMENT_METHOD"
-  >("DISCOUNT");
+  const [installmentProfitAmount, setInstallmentProfit] = useState(0);
   const [useWallet, setUseWallet] = useState<boolean>(false);
   const [coupon, setCoupon] = useState<Coupon | undefined>(undefined);
   const [couponAmount, setCouponAmount] = useState(0);
   const { loading: applyDiscountLoading, setLoading: setApplyDiscountLoading } =
     useLoading();
   const { loading, setLoading } = useLoading();
-  const installmentPerMonth = formatPriceBy3Digits(cartTotal / 4);
+  const loanRete = 0;
+  const minimumValidLoanAmount = 1_000_000;
+  const isFree = cartTotal === 0;
 
   //! EFFECTS -----------------------------
   useEffect(() => {
@@ -85,18 +91,30 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
     }
   }, [prices]);
 
+  console.log(paymentMethod);
+
   useEffect(() => {
-    if (paymentMethod === "INSTALLMENT") {
-      const installmentProfit = cartTotal * 0.3;
+    console.log("first");
+    if (paymentMethod === "DIGIPAY") {
+      if (cartTotal <= minimumValidLoanAmount) {
+        form.setValue("paymentMethod", "ZARRIN_PAL");
+        setPaymentMethod("ZARRIN_PAL");
+        toast.warning(
+          `حداقل مبلغ سبد خرید برای استفاده از خرید اقساطی ${formatPriceBy3Digits(minimumValidLoanAmount)} تومان می باشد.`
+        );
+        return;
+      }
+
+      const installmentProfit = cartTotal * loanRete;
       setInstallmentProfit(installmentProfit);
       setCartTotal((pre) => pre + installmentProfit);
-      toast.info(
-        `مبلغ سبد خرید ${formatPriceBy3Digits(installmentProfit)} تومان افزایش یافت.`
-      );
+      // toast.info(
+      //   `مبلغ سبد خرید ${formatPriceBy3Digits(installmentProfit)} تومان افزایش یافت.`
+      // );
     }
 
     if (paymentMethod === "ZARRIN_PAL") {
-      setCartTotal((pre) => pre - installmentProfit);
+      setCartTotal((pre) => pre - installmentProfitAmount);
       setInstallmentProfit(0);
     }
   }, [paymentMethod]);
@@ -127,6 +145,19 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
       setCartTotal((prev) => prev + usedWalletAmount);
     }
   }, [useWallet, coupon]);
+
+  //! PAYMENT METHOD
+  const setPaymentMethodForm = (value: PaymentMethod) => {
+    if (value === "ZARRIN_PAL") {
+      setPaymentMethod("ZARRIN_PAL");
+      form.setValue("paymentMethod", "ZARRIN_PAL");
+    }
+
+    if (value === "DIGIPAY") {
+      setPaymentMethod("DIGIPAY");
+      form.setValue("paymentMethod", "DIGIPAY");
+    }
+  };
 
   //! APPLY DISCOUNT  ---------------------------
   const applyDiscount = async () => {
@@ -378,6 +409,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
       useWallet,
       useWalletAmount: useWallet ? usedWalletAmount : undefined,
       prices,
+      paymentMethod: paymentMethod ?? "NO_METHOD",
     };
 
     const res = await createPayment(data);
@@ -388,113 +420,58 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
       return;
     }
 
-    if (res.success && res.paymentUrl) {
+    if (res.success && (res.paymentUrl || res.redirectUrl)) {
+      const redirectTo = res.paymentUrl || res.redirectUrl;
+
       toast.success(res.success);
-      redirect(res.paymentUrl);
-      // router.push("/cart/payment-method?paymentId=1");
+      redirect(redirectTo!);
     }
   };
 
   const totalPrice = courses.reduce((acc, curr) => acc + curr.price, 0);
   return (
     <div className="space-y-5">
-      <div className="space-y-3">
-        <div className="flex text-nowrap items-center gap-2 text-sm font-medium">
-          <span>مجموع</span>
-          <div className="w-full">
-            <Separator />
-          </div>
-          <div>
-            {formatPriceBy3Digits(baseTotal)}
-            <span className="text-gray-500 text-xs mr-1">تومان</span>
-          </div>
-        </div>
+      <CheckoutInfo
+        baseTotal={baseTotal}
+        cartTotal={cartTotal}
+        couponAmount={couponAmount}
+        discountAmount={discountAmount}
+        totalPrice={totalPrice}
+        usedWalletAmount={usedWalletAmount}
+      />
 
-        {discountAmount > 0 && (
-          <div className="flex text-nowrap items-center gap-2 text-sm text-slate-400">
-            <span>تخفیف ثابت</span>
-            <div className="w-full">
-              <Separator />
-            </div>
-            <div>
-              {formatPriceBy3Digits(baseTotal - totalPrice)}-{" "}
-              <span className="text-xs">تومان</span>
-            </div>
-          </div>
-        )}
-
-        {couponAmount > 0 && (
-          <div className="flex text-nowrap items-center gap-2 text-sm text-slate-400">
-            <span>کسر کد تخفیف</span>
-            <div className="w-full">
-              <Separator />
-            </div>
-            <div>
-              {formatPriceBy3Digits(couponAmount)}-{" "}
-              <span className="text-xs">تومان</span>
-            </div>
-          </div>
-        )}
-
-        {usedWalletAmount > 0 && (
-          <div className="flex text-nowrap items-center gap-2 text-sm text-slate-400">
-            <span>کسر کیف پول</span>
-            <div className="w-full">
-              <Separator />
-            </div>
-            <div>
-              {formatPriceBy3Digits(usedWalletAmount)}-{" "}
-              <span className="text-xs">تومان</span>
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-1 text-primary pt-3 font-semibold">
-          <Separator className="bg-primary" />
-          <div className="flex text-nowrap items-center gap-2 text-sm">
-            <span>قابل پرداخت</span>
-            <div className="w-full"></div>
-            <div>
-              {formatPriceBy3Digits(cartTotal)}
-              <span className="text-xs mr-1">تومان</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {walletBalance > 0 &&
-        initialCartTotal !== 0 &&
-        paymentFormStage === "DISCOUNT" && (
-          <Badge
-            variant={useWallet ? "blue" : "gray"}
-            className={`flex justify-between items-center text-sm font-medium py-3 hover:bg-slate-50 
+      {walletBalance > 0 && (
+        <Badge
+          variant={useWallet ? "blue" : "gray"}
+          className={`flex justify-between items-center text-sm font-medium py-3 hover:bg-slate-50 
             ${
-              cartTotal === 0 &&
+              isFree &&
               coupon &&
               !usedWalletAmount &&
               "pointer-events-none opacity-50"
             }
             `}
-          >
-            <div className="flex flex-col gap-1">
-              <span>استفاده از کیف پول</span>
-              <span className="text-xs">
-                موجودی: {formatPriceBy3Digits(walletBalance)} تومان
-              </span>
-            </div>
+        >
+          <div className="flex flex-col gap-1">
+            <span>استفاده از کیف پول</span>
+            <span className="text-xs">
+              موجودی: {formatPriceBy3Digits(walletBalance)} تومان
+            </span>
+          </div>
 
-            <Switch
-              dir="ltr"
-              checked={useWallet}
-              onCheckedChange={(checked: boolean) => setUseWallet(checked)}
-            />
-          </Badge>
-        )}
+          <Switch
+            disabled={isFree}
+            dir="ltr"
+            checked={useWallet}
+            onCheckedChange={(checked: boolean) => setUseWallet(checked)}
+          />
+        </Badge>
+      )}
 
       {/* //! DISCOUNT BUTTON */}
       <Form {...form}>
         <form className="relative" onSubmit={form.handleSubmit(applyDiscount)}>
-          {initialCartTotal !== 0 && paymentFormStage === "DISCOUNT" && (
+          {
             <>
               <FormField
                 control={form.control}
@@ -503,7 +480,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        disabled={!!coupon}
+                        disabled={!!coupon || isFree}
                         className="relative pl-20 font-medium tracking-wide bg-background en-digits text-right"
                         placeholder="کد تخفیف"
                         {...field}
@@ -515,7 +492,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
               />
 
               <Button
-                disabled={applyDiscountLoading}
+                disabled={applyDiscountLoading || isFree}
                 className="absolute px-4 inset-y-0 h-7 left-1 my-auto text-black"
                 type="submit"
                 size={"sm"}
@@ -534,147 +511,60 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
                 )}
               </Button>
             </>
-          )}
-
-          {paymentFormStage === "PAYMENT_METHOD" && (
-            <FormField
-              control={form.control}
-              name="paymentMenotd"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    dir="rtl"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="روش پرداخت را انتخاب کنید" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="ZARRIN_PAL" className="py-2.5">
-                        <div className="flex items-center gap-2">
-                          <Image
-                            alt="logo"
-                            src={zarrinpalLogo}
-                            width={25}
-                            height={25}
-                          />
-                          پرداخت نقدی
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="INSTALLMENT" className="py-2.5">
-                        <div className="flex items-center gap-2">
-                          <Image
-                            alt="logo"
-                            src={digipayLogo}
-                            width={25}
-                            height={25}
-                          />
-                          پرداخت اقساطی دیجی‌پی (بزودی)
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          }
         </form>
       </Form>
 
-      {form.watch("paymentMenotd") === "INSTALLMENT" && (
-        <div className="bg-secondary p-5 rounded-lg">
-          <ul className="space-y-2 text-xs">
-            <li className="flex justify-between">
-              <span>اقساط</span>
-              <span>4 ماهه</span>
-            </li>
-            <li className="flex justify-between">
-              <span>سود وام</span>
-              <span>{formatPriceBy3Digits(installmentProfit)}</span>
-            </li>
-            <li className="flex justify-between">
-              <span>مبلغ تمام شده</span>
-              <span>{formatPriceBy3Digits(cartTotal)}</span>
-            </li>
+      <ToggleGroup
+        disabled={isFree}
+        onValueChange={setPaymentMethodForm}
+        defaultValue={isFree ? undefined : paymentMethod}
+        value={paymentMethod}
+        dir="rtl"
+        type="single"
+        variant={"outline"}
+      >
+        <ToggleGroupItem
+          className="w-full"
+          value="ZARRIN_PAL"
+          aria-label="Toggle bold"
+        >
+          <Image alt="logo" src={zarrinpalLogo} width={25} height={25} />
+          پرداخت نقدی
+        </ToggleGroupItem>
+        <ToggleGroupItem
+          className="w-full"
+          value="DIGIPAY"
+          aria-label="Toggle italic"
+        >
+          <Image alt="logo" src={digipayLogo} width={23} height={23} />
+          پرداخت اقساطی
+        </ToggleGroupItem>
+      </ToggleGroup>
 
-            <Separator />
-            <li className="flex justify-between">
-              <span>قسط اول - {installmentPerMonth}</span>
-              <span>هم‌اینک</span>
-            </li>
-            <li className="flex justify-between">
-              <span>قسط دوم - {installmentPerMonth}</span>
-              <span>
-                {moment()
-                  .add(1, "jMonth")
-                  .startOf("jMonth")
-                  .format("jYYYY/jMM/jDD")}
-              </span>
-            </li>
-            <li className="flex justify-between">
-              <span>قسط سوم - {installmentPerMonth}</span>
-              <span>
-                {moment()
-                  .add(2, "jMonth")
-                  .startOf("jMonth")
-                  .format("jYYYY/jMM/jDD")}
-              </span>
-            </li>
-            <li className="flex justify-between">
-              <span>قسط چهارم - {installmentPerMonth}</span>
-              <span>
-                {moment()
-                  .add(3, "jMonth")
-                  .startOf("jMonth")
-                  .format("jYYYY/jMM/jDD")}
-              </span>
-            </li>
-          </ul>
-        </div>
-      )}
+      <CashBackCard
+        price={cartTotal}
+        dontApplyCashback={form.getValues("paymentMethod") === "DIGIPAY"}
+      />
 
-      {paymentFormStage === "DISCOUNT" ? (
-        <div className="space-y-3">
-          <Button
-            disabled={loading}
-            className="w-full"
-            onClick={() => setPaymentFormStage("PAYMENT_METHOD")}
-          >
-            مرحله بعد
-            <ArrowLeft />
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          <Button
-            disabled={loading || !form.getValues("paymentMenotd")}
-            className="w-full"
-            onClick={onPayment}
-          >
-            <Loader loading={loading} />
-            {loading ? (
-              "در حال انتقال"
-            ) : cartTotal > 0 && paymentMethod === "ZARRIN_PAL" ? (
-              <span className="flex">
-                پرداخت {formatPriceBy3Digits(cartTotal)} تومان
-              </span>
-            ) : cartTotal > 0 && paymentMethod === "INSTALLMENT" ? (
-              <span className="flex">
-                پرداخت {formatPriceBy3Digits(cartTotal / 4)} تومان
-              </span>
-            ) : (
-              <span className="flex">تکمیل ثبت نام</span>
-            )}
-          </Button>
-        </div>
-      )}
-
-      <CashBackCard price={cartTotal} />
+      <Button
+        disabled={loading || !form.getValues("paymentMethod")}
+        className="w-full"
+        onClick={onPayment}
+      >
+        <Loader loading={loading} />
+        {loading ? (
+          "در حال انتقال"
+        ) : isFree ? (
+          "ثبت نام رایگان"
+        ) : paymentMethod === "ZARRIN_PAL" ? (
+          <span className="flex">
+            پرداخت {formatPriceBy3Digits(cartTotal)} تومان
+          </span>
+        ) : (
+          <span className="flex">انتقال به دیحی‌پی</span>
+        )}
+      </Button>
     </div>
   );
 };

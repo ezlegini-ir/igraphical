@@ -9,6 +9,10 @@ export async function middleware(req: NextRequest) {
   )?.value;
   const isLoggedIn = !!token;
 
+  if (nextUrl.pathname.startsWith("/api/digipay")) {
+    return NextResponse.next();
+  }
+
   const isPrivateRoute = privateRoutes.some((route) =>
     nextUrl.pathname.startsWith(route)
   );

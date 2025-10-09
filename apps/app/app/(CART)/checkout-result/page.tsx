@@ -1,17 +1,29 @@
 import { Metadata } from "next";
 import CheckoutResult from "./CheckoutResult";
+import { PaymentMethod } from "@igraph/database";
 interface Props {
   searchParams: Promise<{
     Authority: string;
     Status: "OK" | "NOK";
-    Type: "QUICK" | "PAYMENT";
+    paymentMethod: PaymentMethod;
+    trackingCode: string;
+    providerId: string;
   }>;
 }
 
 const page = async ({ searchParams }: Props) => {
-  const { Authority, Status, Type } = await searchParams;
+  const { Authority, Status, paymentMethod, providerId, trackingCode } =
+    await searchParams;
 
-  return <CheckoutResult authority={Authority} status={Status} type={Type} />;
+  return (
+    <CheckoutResult
+      authority={Authority}
+      status={Status}
+      paymentMethod={paymentMethod}
+      providerId={providerId}
+      trackingCode={trackingCode}
+    />
+  );
 };
 
 export default page;

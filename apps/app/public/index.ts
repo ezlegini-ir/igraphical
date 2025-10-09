@@ -27,6 +27,7 @@ export const userTall = "/user-tall.png";
 export const purse = "/purse.png";
 export const wallet = "/wallet.png";
 export const cart = "/cart.svg";
+export const installmentPayment = "/installment-payment.svg";
 export const digipayLogo = "/digipay-logo.png";
 export const zarrinpalLogo = "/zarrinpal-logo.png";
 

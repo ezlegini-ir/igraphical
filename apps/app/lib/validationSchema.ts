@@ -9,7 +9,7 @@ export const ticketDepartment = [
   "SUGGEST",
 ] as const;
 
-export const paymentMethod = ["ZARRIN_PAL", "INSTALLMENT"] as const;
+export const paymentMethod = ["ZARRIN_PAL", "DIGIPAY", "NO_METHOD"] as const;
 
 //! User Forms
 export const loginFormSchema = z.object({
@@ -110,7 +110,7 @@ export type ProfileFormType = z.infer<typeof profileFormSchema>;
 //! CART FORM
 export const paymentFormSchema = z.object({
   code: z.string().min(1),
-  paymentMenotd: z.enum(paymentMethod).optional(),
+  paymentMethod: z.enum(paymentMethod).optional(),
 });
 export type PaymentFormType = z.infer<typeof paymentFormSchema>;
 

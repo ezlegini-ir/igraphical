@@ -551,7 +551,6 @@ enum TransactionType {
 model Payment {
   id                 Int            @id @default(autoincrement())
   total              Float
-  installmentProfit  Float?
   itemsTotal         Float
   discountAmount     Float?
   discountCode       String?
@@ -586,7 +585,7 @@ model Expense {
 
 enum PaymentMethod {
   ZARRIN_PAL
-  INSTALLMENT
+  DIGIPAY
   ADMIN
   NO_METHOD
 }
@@ -856,7 +855,7 @@ model Cart {
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int        @unique
   payment   Payment?   @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  paymentId Int?
+  paymentId Int?       @unique
   cartItem  CartItem[]
 
   @@map("cart")

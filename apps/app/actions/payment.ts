@@ -1,15 +1,19 @@
 "use server";
 
 import { priceType } from "@/app/(CART)/cart/components/Cart";
-import { database, User, Wallet } from "@igraph/database";
+import { database, PaymentMethod, User, Wallet } from "@igraph/database";
 import {
   cashBackCalculator,
   sendSuccessPaymentEmail,
   sendSuccessPaymentEmailToAdmin,
   sendSuccessPaymentSms,
 } from "@igraph/utils";
-import { InitiatePurchase, verifyPurchase } from "./zarinPal";
+import { InitiateZarrinPalPurchase, verifyZarrinPalPurchase } from "./zarinPal";
 import { adminData } from "@/data/adminData";
+import {
+  InitiateDigipayPurchase,
+  verifyDigipayPurchase,
+} from "./payments/digipay";
 
 //* CREATE PAYMENT -------------------------------------------------------
 
@@ -24,6 +28,7 @@ export interface PaymentDataType {
   useWallet?: boolean;
   useWalletAmount?: number;
   prices: priceType[];
+  paymentMethod: PaymentMethod;
 }
 
 export const createPayment = async (data: PaymentDataType) => {
@@ -38,6 +43,7 @@ export const createPayment = async (data: PaymentDataType) => {
     useWallet,
     useWalletAmount,
     prices,
+    paymentMethod,
   } = data;
 
   try {
@@ -66,7 +72,7 @@ export const createPayment = async (data: PaymentDataType) => {
         userId: user.id,
         total: amount,
         itemsTotal,
-        paymentMethod: amount > 0 ? "ZARRIN_PAL" : "NO_METHOD",
+        paymentMethod: amount > 0 ? paymentMethod : "NO_METHOD",
         discountCode,
         discountCodeAmount,
         couponId: existingCoupon?.id,
@@ -105,12 +111,15 @@ export const createPayment = async (data: PaymentDataType) => {
 
     // PURCHASE
     if (amount > 0) {
-      const res = await InitiatePurchase(
-        user,
-        amount,
-        newPayment.id,
-        "?Type=PAYMENT"
-      );
+      const res =
+        paymentMethod === "ZARRIN_PAL"
+          ? await InitiateZarrinPalPurchase(user, amount, newPayment.id)
+          : await InitiateDigipayPurchase(
+              user,
+              amount,
+              newPayment.id,
+              existingCourses
+            );
 
       if (res?.success && res.data.authority && res.data.paymentUrl) {
         const updatedCart = await database.cart.update({
@@ -136,7 +145,9 @@ export const createPayment = async (data: PaymentDataType) => {
           });
         }
       } else {
-        return { error: "مشکلی در پرداخت رخ داد. دقایقی بعد مجددا تلاش کنید" };
+        return {
+          error: "درگاه پرداخت پاسخگو نیست. لطفا دقایقی بعد مجددا تلاش کنید",
+        };
       }
       return {
         success: "به صفحه پرداخت هدایت می شوید...",
@@ -210,7 +221,10 @@ export const createPayment = async (data: PaymentDataType) => {
 
 export const verifyPayment = async (
   authority: string,
-  status: "OK" | "NOK"
+  status: "OK" | "NOK",
+  paymentMethod: PaymentMethod,
+  trackingCode: string,
+  providerId: string
 ) => {
   try {
     const existingCart = await database.cart.findFirst({
@@ -219,11 +233,17 @@ export const verifyPayment = async (
 
     if (!existingCart) return { error: "کد مرجع معتبر نمی باشد" };
 
-    const res = await verifyPurchase(authority, existingCart.amount!, status);
+    const res =
+      paymentMethod === "ZARRIN_PAL"
+        ? await verifyZarrinPalPurchase(authority, existingCart.amount!, status)
+        : await verifyDigipayPurchase(trackingCode, providerId, status);
 
     if (res?.success && res?.data) {
       const deletedCart = await database.cart.delete({
-        where: { authority },
+        where:
+          paymentMethod === "ZARRIN_PAL"
+            ? { authority }
+            : { paymentId: +providerId },
         include: { payment: true, cartItem: { include: { course: true } } },
       });
 
@@ -234,7 +254,10 @@ export const verifyPayment = async (
         data: {
           status: "SUCCESS",
           paidAt: new Date(),
-          transactionId: res.data.ref_id.toString(),
+          transactionId:
+            paymentMethod === "ZARRIN_PAL"
+              ? res.data.ref_id.toString()
+              : trackingCode,
 
           enrollment: {
             create: deletedCart.cartItem.map((cartItem) => ({
@@ -253,7 +276,10 @@ export const verifyPayment = async (
       });
 
       //* CASHBACK
-      const cashbackAmount = cashBackCalculator(updatedPayment.total);
+      const cashbackAmount = cashBackCalculator(
+        updatedPayment.total,
+        updatedPayment.paymentMethod === "DIGIPAY"
+      );
       if (cashbackAmount > 0) {
         await database.wallet.upsert({
           where: { userId: updatedPayment.userId },
@@ -330,7 +356,10 @@ export const verifyPayment = async (
         updatedPayment.user.phone
       );
 
-      return { success: "پرداخت موفق!", refId: res.data.ref_id };
+      return {
+        success: "پرداخت موفق!",
+        refId: paymentMethod === "ZARRIN_PAL" ? res.data.ref_id : trackingCode,
+      };
     } else {
       await database.payment.update({
         where: { id: existingCart.paymentId! },
@@ -339,9 +368,10 @@ export const verifyPayment = async (
         },
       });
 
-      return { error: "پرداخت ناموفق" };
+      return { error: "پرداخت ناموفق!" };
     }
   } catch (error) {
+    console.error((error as Error).message);
     return { error: String(error) };
   }
 };

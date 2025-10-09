@@ -3,14 +3,14 @@
 import { addToCart } from "@/actions/cart";
 import { getSessionUser } from "@/data/user";
 import { Discount } from "@igraph/database";
+import Loader from "@igraph/ui/components/Loader";
 import Price from "@igraph/ui/components/Price";
 import { Badge } from "@igraph/ui/components/ui/badge";
 import { Button } from "@igraph/ui/components/ui/button";
-import { formatJalaliDate } from "@igraph/utils";
+import { formatJalaliDate, useLoading } from "@igraph/utils";
 import {
+  ArrowLeft,
   Check,
-  Plus,
-  ShoppingCart,
   TvMinimalPlay,
   UserPlus,
   UserRoundPlus,
@@ -21,7 +21,6 @@ import { toast } from "sonner";
 
 const CourseRegisterButton = ({
   courseId,
-  isFree,
   isInCart,
   basePrice,
   discount,
@@ -32,7 +31,6 @@ const CourseRegisterButton = ({
   releaseDate,
 }: {
   courseId: number;
-  isFree: boolean;
   isInCart: boolean;
   basePrice: number;
   price: number;
@@ -44,8 +42,10 @@ const CourseRegisterButton = ({
 }) => {
   const router = useRouter();
   const pathName = usePathname();
+  const { loading, setLoading } = useLoading();
 
   const onAddToCart = async () => {
+    setLoading(true);
     const user = await getSessionUser();
     if (!user) redirect(`/login?callbackUrl=${pathName}`);
 
@@ -53,6 +53,7 @@ const CourseRegisterButton = ({
 
     if (res.error) {
       toast.error(res.error);
+      setLoading(false);
       return;
     }
 
@@ -66,22 +67,26 @@ const CourseRegisterButton = ({
 
       router.refresh();
     }
+    setLoading(false);
   };
 
   return (
     <>
-      {/* <div className="lg:hidden">
+      <div className="lg:hidden">
         <div className="card fixed bottom-0 rounded-br-none  rounded-bl-none left-1/2 -translate-x-1/2 px-4 w-full">
           {!isUserEnrolled ? (
             <div className="flex justify-between items-center">
               <div className="flex gap-3">
                 {!isInCart ? (
-                  <Link href={`/quick-cart/${courseId}`}>
-                    <Button variant={isPresale ? "dark" : "default"}>
-                      <UserRoundPlus size={20} />
-                      {isPresale ? "پیش خرید" : "ثبت نام سریع"}
-                    </Button>
-                  </Link>
+                  <Button
+                    disabled={loading}
+                    onClick={onAddToCart}
+                    variant={isPresale ? "dark" : "default"}
+                  >
+                    <Loader loading={loading} />
+                    <UserRoundPlus size={20} />
+                    {isPresale ? "پیش خرید" : "ثبت نام"}
+                  </Button>
                 ) : (
                   <div>
                     <Link href={"/cart"}>
@@ -90,7 +95,7 @@ const CourseRegisterButton = ({
                         className="w-full p-2.5 justify-center"
                       >
                         <Check size={18} />
-                        در سبد خرید (ادامه)
+                        در سبد خرید - ادامه
                       </Badge>
                     </Link>
                   </div>
@@ -116,17 +121,27 @@ const CourseRegisterButton = ({
             </div>
           )}
         </div>
-      </div> */}
+      </div>
 
       {!isUserEnrolled ? (
         <div className="space-y-3 pb-3">
           {isInCart ? (
-            <Link href="/cart">
-              <Badge variant="green" className="w-full p-2.5 justify-center">
-                <Check size={18} />
-                در سبد خرید (ادامه)
+            <div className="flex gap-2">
+              <Badge
+                variant="green"
+                className="w-full p-2.5 gap-1 justify-center"
+              >
+                <Check size={17} />
+                در سبد خرید
               </Badge>
-            </Link>
+
+              <Link href="/cart">
+                <Button variant={"lightBlue"} type="button" className="gap-1">
+                  ادامه
+                  <ArrowLeft />
+                </Button>
+              </Link>
+            </div>
           ) : (
             <div className="flex gap-3">
               {isPresale && releaseDate && (
@@ -136,9 +151,14 @@ const CourseRegisterButton = ({
                 </Badge>
               )}
 
-              <Button className="w-full" onClick={onAddToCart}>
+              <Button
+                disabled={loading}
+                className="w-full"
+                onClick={onAddToCart}
+              >
+                <Loader loading={loading} />
                 <UserPlus />
-                ثبت نام
+                {isPresale ? "پیش خرید" : "ثبت نام"}
               </Button>
             </div>
           )}
