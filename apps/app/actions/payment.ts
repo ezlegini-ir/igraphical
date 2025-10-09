@@ -228,7 +228,10 @@ export const verifyPayment = async (
 ) => {
   try {
     const existingCart = await database.cart.findFirst({
-      where: { authority },
+      where:
+        paymentMethod === "ZARRIN_PAL"
+          ? { authority }
+          : { paymentId: +providerId },
     });
 
     if (!existingCart) return { error: "کد مرجع معتبر نمی باشد" };
@@ -362,7 +365,7 @@ export const verifyPayment = async (
       };
     } else {
       await database.payment.update({
-        where: { id: +providerId },
+        where: { id: existingCart.paymentId! },
         data: {
           status: "FAILED",
         },
