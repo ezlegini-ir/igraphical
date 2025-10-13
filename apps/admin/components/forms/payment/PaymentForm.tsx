@@ -92,34 +92,23 @@ const PaymentForm = ({ payment, type }: Props) => {
   });
 
   const onSubmit = async (data: EnrollmentFormType) => {
-    if (type === "NEW") {
-      const coursesWithPrices = data.courses.map((course, index) => ({
-        ...course,
-        price: prices?.[index]?.price ?? 0,
-        originalPrice: prices?.[index].originalPrice ?? 0,
-      }));
-      data.courses = coursesWithPrices;
+    const coursesWithPrices = data.courses.map((course, index) => ({
+      ...course,
+      price: prices?.[index]?.price ?? 0,
+      originalPrice: prices?.[index].originalPrice ?? 0,
+    }));
+    data.courses = coursesWithPrices;
 
-      const res = await createPayment(data);
+    const res =
+      type === "NEW"
+        ? await createPayment(data)
+        : await updatePayment(data, payment?.id!);
 
-      if (res.error) {
-        toast.error(res.error);
-        return;
-      }
-      if (res.success) {
-        toast.success(res.success);
+    if (res.success) {
+      toast.success(res.success);
+      if (type === "NEW") {
         router.push(`/enrollments/payments/${res.payment}`);
-      }
-    } else {
-      const res = await updatePayment(data, payment?.id!);
-
-      if (res.error) {
-        toast.error(res.error);
-        return;
-      }
-
-      if (res.success) {
-        toast.success(res.success);
+      } else {
         router.refresh();
       }
     }

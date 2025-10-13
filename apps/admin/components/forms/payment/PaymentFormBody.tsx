@@ -172,7 +172,7 @@ const PaymentFormBody = ({
                                 </span>
                                 <span className="text-gray-500 text-right">
                                   {formatPrice(
-                                    payment
+                                    payment?.enrollment.length
                                       ? payment.enrollment[index]
                                           .courseOriginalPrice
                                       : prices?.[index].originalPrice,
@@ -187,7 +187,7 @@ const PaymentFormBody = ({
                                 </span>
                                 <span className="text-gray-500 text-right text-primary">
                                   {formatPrice(
-                                    payment
+                                    payment?.enrollment.length
                                       ? payment.enrollment[index].price
                                       : prices?.[index].price,
                                     { showNumber: true }
@@ -236,7 +236,7 @@ const PaymentFormBody = ({
               </div>
             ))}
 
-            {!isUpdateType && (
+            {!payment?.enrollment.length && (
               <Button
                 type="button"
                 variant="secondary"

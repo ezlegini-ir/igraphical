@@ -79,7 +79,7 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
     useLoading();
   const { loading, setLoading } = useLoading();
   const loanRete = 0;
-  const minimumValidLoanAmount = 1_000_000;
+  const minimumValidLoanAmount = 650_000;
   const isFree = cartTotal === 0;
 
   //! EFFECTS -----------------------------

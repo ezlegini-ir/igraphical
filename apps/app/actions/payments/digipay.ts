@@ -47,12 +47,12 @@ export async function InitiateDigipayPurchase(
       "https://api.mydigipay.com/digipay/api/tickets/business?type=11",
       {
         cellNumber: user.phone,
-        amount: amount * 10,
+        amount: amount * 10, //convert to RIAL
         providerId: paymentId,
         callbackUrl: `${
           process.env.NODE_ENV === "production"
             ? process.env.NEXT_PUBLIC_BASE_URL
-            : "https://localhost:3000"
+            : "http://localhost:3000"
         }/api/digipay`,
         basketDetailsDto: {
           items: courses.map((c) => ({
