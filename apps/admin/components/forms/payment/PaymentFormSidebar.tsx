@@ -1,5 +1,6 @@
 "use client";
 
+import { EnrollmentFormType, paymentStatus } from "@/lib/validationSchema";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
   FormControl,
@@ -17,23 +18,20 @@ import {
   SelectValue,
 } from "@igraph/ui/components/ui/select";
 import { Separator } from "@igraph/ui/components/ui/separator";
-import { EnrollmentFormType, paymentStatus } from "@/lib/validationSchema";
 
 import { deletePayment } from "@/actions/payment";
+import { getCouponByCode } from "@/data/coupon";
+import { Coupon, CouponType, User, Wallet } from "@igraph/database";
 import DeleteButton from "@igraph/ui/components/DeleteButton";
 import Loader from "@igraph/ui/components/Loader";
 import { Badge } from "@igraph/ui/components/ui/badge";
-import { getCouponByCode } from "@/data/coupon";
-import { useLoading } from "@igraph/utils";
-import { formatPrice } from "@igraph/utils";
-import { Coupon, CouponType, User, Wallet } from "@igraph/database";
+import { Switch } from "@igraph/ui/components/ui/switch";
+import { cashBackCalculator, formatPrice, useLoading } from "@igraph/utils";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { CourseType, PaymentType } from "./PaymentForm";
-import { Switch } from "@igraph/ui/components/ui/switch";
-import { cashBackCalculator } from "@igraph/utils";
 
 export interface priceType {
   price: number;
@@ -71,7 +69,6 @@ const PaymentFormSidebar = ({
   const { setValue, watch } = form;
   const isUpdateType = type === "UPDATE";
   const form_Total = watch("payment.total");
-  const form_ItemsTotal = watch("payment.itemsTotal");
   const form_DiscountAmount = watch("payment.discountAmount");
   const form_CouponCode = watch("payment.discountCode");
   const form_CouponCodeAmount = watch("payment.discountCodeAmount");
@@ -223,7 +220,7 @@ const PaymentFormSidebar = ({
     if (existingCoupon.to) {
       const isExpired = existingCoupon.to < new Date();
       if (isExpired) {
-        toast.error("این کد تخفیف منقضی شده است.");
+        toast.error("Coupon Expired.");
         setApplyDiscountLoading(false);
         return;
       }
@@ -231,7 +228,7 @@ const PaymentFormSidebar = ({
     if (existingCoupon.from) {
       const isNotStarted = existingCoupon.from > new Date();
       if (isNotStarted) {
-        toast.error("زمان این کد تخفیف شروع نشده است.");
+        toast.error("Coupon Date is not yet began.");
         setApplyDiscountLoading(false);
         return;
       }
@@ -241,7 +238,7 @@ const PaymentFormSidebar = ({
     if (existingCoupon.limit) {
       const isReachedToLimit = existingCoupon.used === existingCoupon.limit;
       if (isReachedToLimit) {
-        toast.error("این کد تخفیف به سقف مجاز استفاده رسیده است");
+        toast.error("Coupon has reached its limit");
         setApplyDiscountLoading(false);
         return;
       }
@@ -259,7 +256,7 @@ const PaymentFormSidebar = ({
         const isValid = coursesIds?.some((id) => courseIncludeIds.includes(id));
 
         if (!isValid) {
-          toast.error("این کد تخفیف برای این دوره (ها) مجاز نمی باشد.");
+          toast.error("This Coupon is not valid for this course(s).");
           setApplyDiscountLoading(false);
           return;
         }
@@ -276,7 +273,9 @@ const PaymentFormSidebar = ({
         );
 
         if (isNotValid) {
-          toast.error("این کد تخفیف برای حداقل یکی از دوره ها مجاز نمی باشد.");
+          toast.error(
+            "This coupon is not valid for at least one of selected courses."
+          );
           setApplyDiscountLoading(false);
           return;
         }
@@ -288,7 +287,7 @@ const PaymentFormSidebar = ({
     }
 
     setApplyDiscountLoading(false);
-    toast.success("کد تخفیف با موفقیت اعمال شد.");
+    toast.success("Coupon Applied Successfully.");
   };
 
   //!REMOVE PAYMENT -------------------
@@ -357,10 +356,7 @@ const PaymentFormSidebar = ({
                   <FormLabel>Discount Code</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Input
-                        {...field}
-                        disabled={!!coupon || isUpdateType || !form_ItemsTotal}
-                      />
+                      <Input {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -368,12 +364,12 @@ const PaymentFormSidebar = ({
               )}
             />
 
-            {!isUpdateType && (
+            {
               <Button type="button" onClick={applyDiscount} variant={"outline"}>
                 <Loader loading={applyDiscountLoading} />
                 {coupon ? "Delete" : "Apply"}
               </Button>
-            )}
+            }
           </div>
         </div>
 
