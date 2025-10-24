@@ -37,16 +37,49 @@ export async function customUserExport({
   excludedCourses,
   includedCourses,
 }: ExportOptions): Promise<string> {
-  const enrollments = await database.enrollment.findMany({
-    where: {
-      courseId: {
-        in: includedCourses,
-        notIn: excludedCourses,
-      },
-    },
-  });
+  let enrollments: { userId: number }[] = [];
 
-  const usersIds = enrollments.map((u) => u.userId);
+  if (excludedCourses.length && includedCourses.length) {
+    enrollments = await database.enrollment.findMany({
+      where: {
+        courseId: {
+          in: includedCourses,
+          notIn: excludedCourses,
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+  } else if (includedCourses.length) {
+    enrollments = await database.enrollment.findMany({
+      where: {
+        courseId: {
+          in: includedCourses,
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+  } else if (excludedCourses.length) {
+    const users = await database.user.findMany({
+      where: {
+        enrollment: {
+          every: {
+            courseId: { notIn: excludedCourses },
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    enrollments = users.map((user) => ({ userId: user.id }));
+  }
+
+  const usersIds = enrollments.map((enrollment) => enrollment.userId);
 
   const users = await database.user.findMany({
     where: {
@@ -71,6 +104,5 @@ export async function customUserExport({
   users.forEach((user) => worksheet.addRow(user));
 
   const buffer = await workbook.xlsx.writeBuffer();
-
   return Buffer.from(buffer).toString("base64");
 }
