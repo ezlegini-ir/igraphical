@@ -571,6 +571,8 @@ model Payment {
   QuickCart         QuickCart[]
   Cart              Cart[]
   WalletTransaction WalletTransaction[]
+  campaignOnGoing   CampaignOnGoing?    @relation(fields: [campaignOnGoingId], references: [id])
+  campaignOnGoingId Int?
 
   @@map("payment")
 }
@@ -691,6 +693,18 @@ model CampaignMessages {
   campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
   @@map("campaignmessage")
+}
+
+model CampaignOnGoing {
+  id        Int      @id @default(autoincrement())
+  startAt   DateTime
+  endAt     DateTime
+  title     String
+  createdAt DateTime @default(now())
+
+  payment Payment[]
+
+  @@map("campaignongoing")
 }
 
 //! TICKET ---------------------------------------------------------

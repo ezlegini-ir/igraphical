@@ -283,6 +283,17 @@ export const campaignFormSchema = z.object({
 export type CampaignFormType = z.infer<typeof campaignFormSchema>;
 
 // -------------------------------------
+export const campaignOnGoingFormSchema = z.object({
+  title: z.string().min(1).trim(),
+  date: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
+  active: z.boolean(),
+});
+export type CampaignOnGoingFormType = z.infer<typeof campaignOnGoingFormSchema>;
+
+// -------------------------------------
 
 export const overallOffFormSchema = z.object({
   amount: z.number().min(0),

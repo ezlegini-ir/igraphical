@@ -32,6 +32,15 @@ export const createPayment = async (data: PaymentFormType) => {
         if (!existingCoupon) throw new Error("Invalid Coupon Code");
       }
 
+      const existingCampaign = await database.campaignOnGoing.findFirst({
+        where: {
+          startAt: { lte: enrolledAt },
+          endAt: { gte: enrolledAt },
+        },
+      });
+
+      console.log("----------------------------------------", existingCampaign);
+
       const newerPayment = await tx.payment.create({
         data: {
           total: payment.total,
@@ -46,6 +55,7 @@ export const createPayment = async (data: PaymentFormType) => {
           couponId: existingCoupon?.id,
           userId,
           paidAt: enrolledAt,
+          campaignOnGoingId: existingCampaign?.id,
         },
       });
 

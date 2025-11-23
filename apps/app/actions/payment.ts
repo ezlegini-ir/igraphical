@@ -66,6 +66,13 @@ export const createPayment = async (data: PaymentDataType) => {
     if (existingEnrollment)
       return { error: "شما قبلا در حداقل یکی از این دوره ها ثبت نام کرده اید" };
 
+    const existingCampaign = await database.campaignOnGoing.findFirst({
+      where: {
+        startAt: { lte: new Date() },
+        endAt: { gte: new Date() },
+      },
+    });
+
     const newPayment = await database.payment.create({
       data: {
         status: amount > 0 ? "PENDING" : "SUCCESS",
@@ -79,6 +86,7 @@ export const createPayment = async (data: PaymentDataType) => {
         discountAmount,
         walletUsed: useWallet,
         walletUsedAmount: useWalletAmount,
+        campaignOnGoingId: existingCampaign?.id,
 
         enrollment:
           amount === 0

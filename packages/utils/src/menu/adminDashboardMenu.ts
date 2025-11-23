@@ -85,6 +85,7 @@ export const sideBarMenuItems = [
         subMenuItems: [
           { label: "Coupons", href: "/marketing/coupons" },
           { label: "Campaigns", href: "/marketing/campaigns" },
+          { label: "Campaigns On Going", href: "/marketing/campaignsOnGoing" },
           { label: "Overall Off", href: "/marketing/overall-off" },
         ],
       },

@@ -19,10 +19,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.3.1",
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
-    "prettier": "^3.2.5",
-    "prisma": "6.6.0",
+    "prettier": "^3.5.3",
     "tsx": "4.19.1",
     "turbo": "^2.5.0"
   },
@@ -31,12 +28,12 @@
   },
   "name": "igraphical",
   "version": "0.1.0",
-  "dependencies": {
-    "@prisma/client": "6.6.0"
-  },
   "packageManager": "npm@11.3.0",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "prettier": "^3.5.3"
+  }
 }

@@ -39,6 +39,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { priceType } from "./Cart";
 import CheckoutInfo from "./CheckoutInfo";
+import { getCampaign } from "@/data/campaign";
 
 interface Props {
   courses: CourseType[];
@@ -161,6 +162,16 @@ const CheckoutForm = ({ courses, wallet, prices, setPrices }: Props) => {
 
   //! APPLY DISCOUNT  ---------------------------
   const applyDiscount = async () => {
+    // Check if a campaign is going on
+    const campaign = await getCampaign();
+
+    if (campaign) {
+      toast.warning(
+        ` به علت جاری بودن کمپین ${campaign.title} امکان استفاده از کد تخفیف در این بازه وجود ندارد.`
+      );
+      return;
+    }
+
     // REMOVE DISCOUNT CODE if already applied
     if (coupon) {
       setPrices((prev) =>
