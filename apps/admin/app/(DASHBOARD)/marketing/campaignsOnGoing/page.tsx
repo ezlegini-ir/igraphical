@@ -1,4 +1,4 @@
-import CampaignForm from "@/components/forms/marketing/CampaignForm";
+import CampaignOnGoingForm from "@/components/forms/marketing/CampaignOnGoingForm";
 import { database, Prisma } from "@igraph/database";
 import Search from "@igraph/ui/components/Search";
 import { Button } from "@igraph/ui/components/ui/button";
@@ -32,7 +32,7 @@ const page = async ({ searchParams }: Props) => {
 
   const campaigns = await database.campaignOnGoing.findMany({
     where,
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
     skip,
     take,
   });
@@ -78,7 +78,7 @@ const page = async ({ searchParams }: Props) => {
             <DialogContent>
               <DialogHeader className="space-y-6">
                 <DialogTitle>New Campaign</DialogTitle>
-                <CampaignForm type="NEW" />
+                <CampaignOnGoingForm type="NEW" />
               </DialogHeader>
             </DialogContent>
           </Dialog>

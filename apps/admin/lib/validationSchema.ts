@@ -289,7 +289,6 @@ export const campaignOnGoingFormSchema = z.object({
     from: z.date(),
     to: z.date(),
   }),
-  active: z.boolean(),
 });
 export type CampaignOnGoingFormType = z.infer<typeof campaignOnGoingFormSchema>;
 

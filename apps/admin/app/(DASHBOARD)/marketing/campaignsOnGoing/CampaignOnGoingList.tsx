@@ -1,7 +1,15 @@
+import CampaignOnGoingForm from "@/components/forms/marketing/CampaignOnGoingForm";
 import { CampaignOnGoing } from "@igraph/database";
+import EditButton from "@igraph/ui/components/EditButton";
 import Pagination from "@igraph/ui/components/Pagination";
 import Table from "@igraph/ui/components/Table";
-import TrashButton from "@igraph/ui/components/TrashButton";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@igraph/ui/components/ui/dialog";
 import { TableCell, TableRow } from "@igraph/ui/components/ui/table";
 import { formatPrice, globalPageSize } from "@igraph/utils";
 import { formatDate } from "date-fns";
@@ -41,8 +49,18 @@ const renderRows = (campaign: CampaignType) => {
         {formatPrice(campaign.totalSells)}
       </TableCell>
 
-      <TableCell className="text-center">
-        <TrashButton />
+      <TableCell className="flex justify-end">
+        <Dialog>
+          <DialogTrigger asChild>
+            <EditButton />
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader className="space-y-6">
+              <DialogTitle>New Campaign</DialogTitle>
+              <CampaignOnGoingForm campaign={campaign} type="UPDATE" />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </TableCell>
     </TableRow>
   );
@@ -53,6 +71,7 @@ const columns = [
   { label: "Start", className: "text-center" },
   { label: "End", className: "text-center" },
   { label: "Total Sells", className: "text-center" },
+  { label: "Action", className: "text-right" },
 ];
 
 export default CampaignOnGoingList;

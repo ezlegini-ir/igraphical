@@ -1,6 +1,9 @@
 "use server";
 
-import { CampaignFormType } from "@/lib/validationSchema";
+import {
+  CampaignFormType,
+  CampaignOnGoingFormType,
+} from "@/lib/validationSchema";
 import { database } from "@igraph/database";
 import { sendArraySms, statusChunk } from "@igraph/utils";
 
@@ -93,3 +96,52 @@ export async function updateCampaignDeliveredCount(campaignId: number) {
     deliveredCount,
   };
 }
+
+export const createOnGoingCampaign = async (data: CampaignOnGoingFormType) => {
+  // Implementation for creating an ongoing campaign
+  try {
+    await database.campaignOnGoing.create({
+      data: {
+        title: data.title,
+        startAt: data.date.from,
+        endAt: data.date.to,
+      },
+    });
+
+    return { success: "Ongoing Campaign created successfully" };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to create ongoing campaign" };
+  }
+};
+
+export const updateOnGoingCampaign = async (
+  data: CampaignOnGoingFormType,
+  campaignId: number
+) => {
+  // Implementation for updating an ongoing campaign
+  try {
+    await database.campaignOnGoing.update({
+      where: { id: campaignId },
+      data: {
+        title: data.title,
+        startAt: data.date.from,
+        endAt: data.date.to,
+      },
+    });
+    return { success: "Ongoing Campaign updated successfully" };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to update ongoing campaign" };
+  }
+};
+
+export const deleteCampaignOnGoing = async (campaignId: number) => {
+  try {
+    await database.campaignOnGoing.delete({ where: { id: campaignId } });
+    return { success: "Ongoing Campaign deleted successfully" };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to delete ongoing campaign" };
+  }
+};
