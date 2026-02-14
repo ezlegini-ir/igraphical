@@ -2,7 +2,7 @@ import ContactForm from "@/components/forms/ContactForm";
 import PageTitle from "@igraph/ui/components/PageTitle";
 import RecaptchaWrapper from "@igraph/ui/components/RecaptchaWrapper";
 import SocialsIcon from "@igraph/ui/components/SocialsIcon";
-import { Mail, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Metadata } from "next";
 
 const page = () => {
@@ -27,21 +27,21 @@ const page = () => {
 
           <SocialsIcon />
 
-          <div className="border rounded-sm p-3 text-sm text-gray-500 flex justify-between items-center">
+          {/* <div className="border rounded-sm p-3 text-sm text-gray-500 flex justify-between items-center">
             <h3 className="text-base font-medium flex gap-2 items-center">
               <Mail size={18} />
               ایمیل
             </h3>
 
             <a href="mailto:igraphical.ir@gmail.com">igraphical.ir@gmail.com</a>
-          </div>
+          </div> */}
           <div className="border rounded-sm p-3 text-sm text-gray-500 flex justify-between items-center">
             <h3 className="text-base font-medium flex gap-2 items-center">
               <Phone size={18} />
               شماره تماس
             </h3>
 
-            <a href="tel:09357452859">{"0935-745-2859"}</a>
+            <a href="tel:09962224177">{"0996-222-4177"}</a>
           </div>
         </div>
 
