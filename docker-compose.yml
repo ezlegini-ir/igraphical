@@ -80,8 +80,6 @@ services:
         condition: service_healthy
     networks:
       - app_network
-    volumes:
-      - db_backups:/app/backups
 
   admin:
     build:
@@ -111,7 +109,6 @@ services:
     networks:
       - app_network
     volumes:
-      - db_backups:/app/backups
       - /root/projects/igraphical/apps/admin/ga.json:/app/ga.json:ro # THIS IS FOR GOOGLE ANALYTICS
 
   app:
@@ -141,15 +138,12 @@ services:
         condition: service_healthy
     networks:
       - app_network
-    volumes:
-      - db_backups:/app/backups
 
 volumes:
   database:
   certs:
   vhost.d:
   html:
-  db_backups:
 
 networks:
   app_network:
