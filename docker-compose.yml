@@ -40,7 +40,7 @@ services:
     platform: linux/amd64
     restart: always
     environment:
-      DATABASE_URL: mysql://root:R@MIN3517r@m@localhost:3306/igraphical
+      DATABASE_URL: mysql://root@database:3306/igraphical
       MYSQL_DATABASE: igraphical
       MYSQL_ALLOW_EMPTY_PASSWORD: "1"
     volumes:

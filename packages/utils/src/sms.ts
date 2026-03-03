@@ -19,21 +19,25 @@ import { convertPersianDigitsToEnglish } from "./utils";
 const sender = process.env.KAVENEGAR_SENDER!;
 
 export const sendOtpSms = async (phone: string, userId?: number) => {
-  const { plainOtp } = await generateSmsOtp(phone, userId);
+  try {
+    const { plainOtp } = await generateSmsOtp(phone, userId);
 
-  const receptor = convertPersianDigitsToEnglish(phone);
+    const receptor = convertPersianDigitsToEnglish(phone);
 
-  kavenegar.VerifyLookup(
-    {
-      receptor,
-      token: plainOtp,
-      template: "igraphical",
-    },
-    function (response, status) {
-      // console.log(response)
-      // console.log(status)
-    }
-  );
+    kavenegar.VerifyLookup(
+      {
+        receptor,
+        token: plainOtp,
+        template: "igraphical",
+      },
+      function (response, status) {
+        console.log(response);
+        console.log(status);
+      },
+    );
+  } catch (error) {
+    console.error(error as Error);
+  }
 };
 
 //! SEND -----------------------------------------------------
@@ -52,7 +56,7 @@ export const sendSms = async (data: { message: string; phone: string }) => {
     function (response, status) {
       // console.log(response);
       // console.log(status);
-    }
+    },
   );
 };
 
@@ -81,7 +85,7 @@ function sendArrayChunk(receptors: string[], msg: string): Promise<Entry[]> {
         } else {
           reject(new Error(responseMessage || `Status ${status}`));
         }
-      }
+      },
     );
   });
 }
@@ -92,7 +96,7 @@ type SendArrayOptions = {
 };
 
 export async function sendArraySms(
-  options: SendArrayOptions
+  options: SendArrayOptions,
 ): Promise<Entry[]> {
   const numbers = (options.numbers || []).filter(Boolean);
   if (numbers.length === 0) return [];
@@ -121,7 +125,7 @@ export async function statusChunk(ids: number[]): Promise<any[]> {
         } else {
           reject(new Error(message || `Status API error ${status}`));
         }
-      }
+      },
     );
   });
 }
@@ -139,7 +143,7 @@ export const sendFinishCourseSms = async (firstName: string, phone: string) => {
 
 export const sendRegistrationCongratsSms = async (
   firstName: string,
-  phone: string
+  phone: string,
 ) => {
   sendSms({
     message: newJoinedStudentSmsText(firstName),
@@ -151,7 +155,7 @@ export const sendRegistrationCongratsSms = async (
 
 export const sendSuccessPaymentSms = async (
   firstName: string,
-  phone: string
+  phone: string,
 ) => {
   sendSms({
     message: successfullPaymentSmsText(firstName),
@@ -164,7 +168,7 @@ export const sendSuccessPaymentSms = async (
 export const sendPaidSettlmentSms = async (
   fullName: string,
   phone: string,
-  amount: number
+  amount: number,
 ) => {
   sendSms({
     message: paidSettlmentSmsText(fullName, amount),
