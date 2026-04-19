@@ -4,7 +4,6 @@ import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
 import { useLoading } from "@igraph/utils";
 import { Check, Download, File } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,9 +11,9 @@ import { toast } from "sonner";
 import { LessonType } from "./ClassroomContent";
 
 //! REPLACE AFTER WAR
-const Video = dynamic(() => import("@igraph/ui/components/Video"), {
-  ssr: false,
-});
+// const Video = dynamic(() => import("@igraph/ui/components/Video"), {
+//   ssr: false,
+// });
 
 interface Props {
   currentLesson: LessonType;
@@ -77,7 +76,8 @@ const ClassroomVideo = ({
       </div>
       <div className="space-y-3">
         {currentLesson?.type === "VIDEO" ? (
-          <Video key={currentLesson.url} src={currentLesson.url} />
+          // <Video key={currentLesson.url} src={currentLesson.url} />
+          <video src={currentLesson.url} key={currentLesson.url} />
         ) : currentLesson?.type === "ASSET" ? (
           <div>
             <Link
