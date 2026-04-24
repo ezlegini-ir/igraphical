@@ -1,6 +1,8 @@
 "use client";
 
 import { verifyLogin } from "@/actions/login/verify-login";
+import { LoginFormType, loginFormSchema } from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
 import {
@@ -13,11 +15,8 @@ import {
 } from "@igraph/ui/components/ui/form";
 import { Input } from "@igraph/ui/components/ui/input";
 import { useLoading } from "@igraph/utils";
-import { LoginFormType, loginFormSchema } from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 
 interface Props {
@@ -36,25 +35,23 @@ const InputForm = ({ setLoginStep, setIdentifier }: Props) => {
       password: "",
     },
   });
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  // const { executeRecaptcha } = useGoogleReCaptcha();
 
   const sendOtp = async (data: LoginFormType) => {
     setLoading(true);
 
-    if (!executeRecaptcha) {
-      if (!executeRecaptcha) {
-        toast.error("reCaptcha Not Loaded, Please Try Again...");
-        setLoading(false);
-        return;
-      }
-    }
-
-    const recaptchaToken = await executeRecaptcha("login_form");
+    //todo: bring back
+    // if (!executeRecaptcha) {
+    //   toast.error("reCaptcha Not Loaded, Please Try Again...");
+    //   setLoading(false);
+    //   return;
+    // }
+    // const recaptchaToken = await executeRecaptcha("login_form");
 
     const res = await verifyLogin(
       data.phoneOrEmail,
       data.password,
-      recaptchaToken
+      // recaptchaToken,
     );
 
     if (res?.error) {

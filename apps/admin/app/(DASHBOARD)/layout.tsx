@@ -4,15 +4,12 @@ import {
 } from "@igraph/ui/components/ui/sidebar";
 import DashboardSidebar from "../../components/sidebar/Dashboard-Sidebar";
 import DashboardHeader from "@/components/DashboardHeader";
-import { authenticateSession } from "@/lib/auth";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await authenticateSession();
-
   return (
     <div className="en-digits">
       <SidebarProvider>

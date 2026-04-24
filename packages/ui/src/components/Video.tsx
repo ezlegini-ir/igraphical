@@ -33,6 +33,8 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
       ],
     },
     options: {
+      blankVideo: undefined,
+      iconUrl: "/avatar.svg",
       speed: {
         selected: 1,
         options: [0.75, 1, 1.25, 1.5, 1.75, 2],
@@ -48,7 +50,7 @@ const Video: React.FC<VideoProps> = ({ src, poster }) => {
         "fullscreen",
       ],
       settings: ["quality", "speed"],
-      autoplay: false,
+      autoplay: true,
     },
   };
 

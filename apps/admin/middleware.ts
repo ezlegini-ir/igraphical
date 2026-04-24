@@ -10,15 +10,15 @@ export async function middleware(req: NextRequest) {
   const token = cookies.get(
     process.env.NODE_ENV === "development"
       ? "authjs.session-token"
-      : "__Secure-authjs.session-token"
+      : "__Secure-authjs.session-token",
   )?.value;
   const isLoggedIn = !!token;
 
   const isPrivateRoute = ["/"].some((route) =>
-    nextUrl.pathname.startsWith(route)
+    nextUrl.pathname.startsWith(route),
   );
   const isAuthRoute = ["/login"].some((route) =>
-    nextUrl.pathname.startsWith(route)
+    nextUrl.pathname.startsWith(route),
   );
 
   if (!isLoggedIn && isPrivateRoute && !isAuthRoute) {

@@ -9,11 +9,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LessonType } from "./ClassroomContent";
+import dynamic from "next/dynamic";
 
 //! REPLACE AFTER WAR
-// const Video = dynamic(() => import("@igraph/ui/components/Video"), {
-//   ssr: false,
-// });
+const Video = dynamic(() => import("@igraph/ui/components/Video"), {
+  ssr: false,
+});
 
 interface Props {
   currentLesson: LessonType;
@@ -77,7 +78,13 @@ const ClassroomVideo = ({
       <div className="space-y-3">
         {currentLesson?.type === "VIDEO" ? (
           // <Video key={currentLesson.url} src={currentLesson.url} />
-          <video src={currentLesson.url} key={currentLesson.url} />
+          <video
+            src={currentLesson.url}
+            key={currentLesson.url}
+            autoPlay
+            controls
+            className="rounded-sm"
+          />
         ) : currentLesson?.type === "ASSET" ? (
           <div>
             <Link
@@ -125,6 +132,12 @@ const ClassroomVideo = ({
                 "تکمیل و جلسه بعد"
               )}
             </Button>
+
+            {/* <a target="_blank" download="ss.mp4" href={currentLesson.url}>
+              <Button size={"icon"} variant={"outline"}>
+                <Download />
+              </Button>
+            </a> */}
           </div>
         </div>
       </div>
