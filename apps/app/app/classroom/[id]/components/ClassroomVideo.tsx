@@ -9,12 +9,11 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LessonType } from "./ClassroomContent";
-import dynamic from "next/dynamic";
 
 //! REPLACE AFTER WAR
-const Video = dynamic(() => import("@igraph/ui/components/Video"), {
-  ssr: false,
-});
+// const Video = dynamic(() => import("@igraph/ui/components/Video"), {
+//   ssr: false,
+// });
 
 interface Props {
   currentLesson: LessonType;
