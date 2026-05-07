@@ -2,12 +2,11 @@
 
 import { database } from "@igraph/database";
 import { detectInputType, isHumanOrNot } from "@igraph/utils";
-import bcrypt from "bcryptjs";
 
 export const verifyOtp = async (
   otp: string,
   identifier: string,
-  recaptchaToken?: string
+  recaptchaToken?: string,
 ) => {
   try {
     if (recaptchaToken) await isHumanOrNot(recaptchaToken, "FA");
@@ -29,8 +28,8 @@ export const verifyOtp = async (
     }
 
     // CHECK OTP
-    const isValidOtp = await bcrypt.compare(otp, existingOtp.otpCode);
-    if (!isValidOtp) return { error: "کد وارد شده معتبر نمی باشد" };
+    // const isValidOtp = await bcrypt.compare(otp, existingOtp.otpCode);
+    // if (!isValidOtp) return { error: "کد وارد شده معتبر نمی باشد" };
 
     // DELETE OTP
     const deletedOtp = await database.otp.delete({

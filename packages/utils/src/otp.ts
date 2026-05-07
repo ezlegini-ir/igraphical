@@ -1,7 +1,6 @@
 "use server";
 
 import { database } from "@igraph/database";
-import bcrypt from "bcryptjs";
 import { sendOtpSms } from "./sms";
 import { sendOtpEmail } from "./mail";
 import { detectInputType } from "@igraph/utils";
@@ -29,13 +28,13 @@ export const generateSmsOtp = async (identifier: string, userId?: number) => {
     });
 
   // HASH OTP
-  const hashedOTP = await bcrypt.hash(plainOtp, 10);
+  // const hashedOTP = await bcrypt.hash(plainOtp, 10);
 
   await database.otp.create({
     data: {
       expires,
       identifier,
-      otpCode: hashedOTP,
+      otpCode: plainOtp,
       type: "SMS",
       userId,
     },
@@ -62,13 +61,13 @@ export const generateEmailOtp = async (identifier: string, userId?: number) => {
     });
 
   // HASH OTP
-  const hashedOTP = await bcrypt.hash(plainOtp, 10);
+  // const hashedOTP = await bcrypt.hash(plainOtp, 10);
 
   await database.otp.create({
     data: {
       expires,
       identifier,
-      otpCode: hashedOTP,
+      otpCode: plainOtp,
       type: "EMAIL",
       userId,
     },

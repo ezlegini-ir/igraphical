@@ -31,12 +31,12 @@ export const sendOtpSms = async (phone: string, userId?: number) => {
         template: "igraphical",
       },
       function (response, status) {
-        console.log(response);
-        console.log(status);
+        // console.log(response);
+        // console.log(status);
       },
     );
   } catch (error) {
-    console.error(error as Error);
+    console.error("Error Sending SMS: " + error);
   }
 };
 

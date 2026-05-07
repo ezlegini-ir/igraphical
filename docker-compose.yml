@@ -125,7 +125,8 @@ services:
     container_name: app
     restart: always
     env_file:
-      - /root/envs/igraphical/app.env.local
+      - apps/app/.env.local
+      # - /root/envs/igraphical/app.env.local
     environment:
       VIRTUAL_PORT: 3000
       VIRTUAL_HOST: igraphical.ir

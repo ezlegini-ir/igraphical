@@ -34,7 +34,7 @@
   ENV DATABASE_URL=${DATABASE_URL}
   ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY
   ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-  ENV NEXT_PUBLIC_BASE_URL="http://igraphical.ir"
+  ENV NEXT_PUBLIC_BASE_URL="https://igraphical.ir"
   ENV AUTH_APP="app"
 
   RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
