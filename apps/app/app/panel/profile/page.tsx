@@ -1,12 +1,12 @@
 import React from "react";
 import UserProfileForm from "@/components/forms/profileForm";
-import { getSessionUser } from "@/data/user";
+// import { getSessionUser } from "@/data/user";
 import { Metadata } from "next";
 
 const page = async () => {
-  const user = await getSessionUser();
+  // const user = await getSessionUser();
 
-  return <UserProfileForm user={user!} />;
+  return <UserProfileForm />;
 };
 
 export default page;
