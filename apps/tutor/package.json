@@ -17,6 +17,7 @@
     "@igraph/ui": "*",
     "@igraph/utils": "*",
     "axios": "^1.8.4",
+    "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
@@ -37,8 +38,7 @@
     "tailwind-merge": "^3.1.0",
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.5",
-    "zod": "^3.24.2",
-    "next-auth": "^5.0.0-beta.25"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
