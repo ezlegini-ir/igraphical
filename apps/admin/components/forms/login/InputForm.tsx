@@ -16,6 +16,7 @@ import {
 import { Input } from "@igraph/ui/components/ui/input";
 import { useLoading } from "@igraph/utils";
 import { Dispatch, SetStateAction } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -35,23 +36,22 @@ const InputForm = ({ setLoginStep, setIdentifier }: Props) => {
       password: "",
     },
   });
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const sendOtp = async (data: LoginFormType) => {
     setLoading(true);
 
-    //todo: bring back
-    // if (!executeRecaptcha) {
-    //   toast.error("reCaptcha Not Loaded, Please Try Again...");
-    //   setLoading(false);
-    //   return;
-    // }
-    // const recaptchaToken = await executeRecaptcha("login_form");
+    if (!executeRecaptcha) {
+      toast.error("reCaptcha Not Loaded, Please Try Again...");
+      setLoading(false);
+      return;
+    }
+    const recaptchaToken = await executeRecaptcha("login_form");
 
     const res = await verifyLogin(
       data.phoneOrEmail,
       data.password,
-      // recaptchaToken,
+      recaptchaToken,
     );
 
     if (res?.error) {

@@ -3,13 +3,12 @@
 import { getOtpByIdentifier } from "@/data/otp";
 import { getAdminByIdentifier } from "@/data/admin";
 import { database } from "@igraph/database";
-import bcrypt from "bcrypt";
 import { isHumanOrNot } from "@igraph/utils";
 
 export const verifyOtp = async (
   otp: string,
   identifier: string,
-  recaptchaToken: string
+  recaptchaToken: string,
 ) => {
   try {
     await isHumanOrNot(recaptchaToken, "EN");
@@ -27,7 +26,7 @@ export const verifyOtp = async (
     }
 
     // CHECK OTP
-    const isValidOtp = await bcrypt.compare(otp, existingOtp.otpCode);
+    const isValidOtp = otp === existingOtp.otpCode;
     if (!isValidOtp) return { error: "Invalid Code" };
 
     // DELETE OTP
@@ -42,6 +41,7 @@ export const verifyOtp = async (
 
     return { success: "Seccuess", role: existingAdmin?.role };
   } catch (error) {
+    console.error(error);
     return { error: "Something Happended" };
   }
 };

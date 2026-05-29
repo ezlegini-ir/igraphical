@@ -57,6 +57,7 @@ services:
       context: .
       dockerfile: ./apps/tutor/Dockerfile
       extra_hosts:
+        - "package-mirror.liara.ir:185.208.181.186"
         - "mirror-linux.runflare.com:185.126.10.222"
         - "github.com:125.125.125.125"
         - "binaries.prisma.sh:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
@@ -88,6 +89,7 @@ services:
       context: .
       dockerfile: ./apps/admin/Dockerfile
       extra_hosts:
+        - "package-mirror.liara.ir:185.208.181.186"
         - "mirror-linux.runflare.com:185.126.10.222"
         - "github.com:125.125.125.125"
         - "binaries.prisma.sh:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.
@@ -120,6 +122,7 @@ services:
       context: .
       dockerfile: ./apps/app/Dockerfile
       extra_hosts:
+        - "package-mirror.liara.ir:185.208.181.186"
         - "mirror-linux.runflare.com:185.126.10.222"
         - "github.com:125.125.125.125"
         - "binaries.prisma.sh:125.125.125.125" # This is related to solve IRAN sanctions By Hostiran.

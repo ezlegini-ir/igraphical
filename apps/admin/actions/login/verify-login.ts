@@ -1,17 +1,17 @@
 "use server";
 
 import { getAdminByIdentifier } from "@/data/admin";
-import { sendOtp } from "@igraph/utils";
+import { isHumanOrNot, sendOtp } from "@igraph/utils";
 import bcrypt from "bcrypt";
 
 export const verifyLogin = async (
   identifier: string,
   password: string,
-  // recaptchaToken: string,
+  recaptchaToken: string,
 ) => {
   try {
     //todo: bring back:
-    // await isHumanOrNot(recaptchaToken, "EN");
+    await isHumanOrNot(recaptchaToken, "EN");
 
     const existingAdmin = await getAdminByIdentifier(identifier);
     if (!existingAdmin) return { error: "Invalid Credentials" };
