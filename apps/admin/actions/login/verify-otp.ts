@@ -3,15 +3,14 @@
 import { getOtpByIdentifier } from "@/data/otp";
 import { getAdminByIdentifier } from "@/data/admin";
 import { database } from "@igraph/database";
-import { isHumanOrNot } from "@igraph/utils";
 
 export const verifyOtp = async (
   otp: string,
   identifier: string,
-  recaptchaToken: string,
+  // recaptchaToken: string,
 ) => {
   try {
-    await isHumanOrNot(recaptchaToken, "EN");
+    // await isHumanOrNot(recaptchaToken, "EN");
 
     // OTP LOOK UP
     const existingOtp = await getOtpByIdentifier(identifier);

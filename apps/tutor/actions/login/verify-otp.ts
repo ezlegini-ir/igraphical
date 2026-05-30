@@ -1,17 +1,16 @@
 "use server";
 
-import { isHumanOrNot } from "@igraph/utils";
+import { getOtpByIdentifier } from "@/data/otp";
 import { database } from "@igraph/database";
 import bcrypt from "bcrypt";
-import { getOtpByIdentifier } from "@/data/otp";
 
 export const verifyOtp = async (
   otp: string,
   identifier: string,
-  recaptchaToken: string
+  // recaptchaToken: string,
 ) => {
   try {
-    await isHumanOrNot(recaptchaToken, "EN");
+    // await isHumanOrNot(recaptchaToken, "EN");
 
     const existingOtp = await getOtpByIdentifier(identifier);
 

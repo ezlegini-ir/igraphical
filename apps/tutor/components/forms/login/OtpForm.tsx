@@ -2,6 +2,8 @@
 
 import { authenticator } from "@/actions/login/authenticator";
 import { verifyOtp } from "@/actions/login/verify-otp";
+import { OtpType, otpFormSchema } from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import CountdownTimer from "@igraph/ui/components/CountDown";
 import Loader from "@igraph/ui/components/Loader";
 import { Button } from "@igraph/ui/components/ui/button";
@@ -18,14 +20,11 @@ import {
   InputOTPSlot,
 } from "@igraph/ui/components/ui/input-otp";
 import { useLoading } from "@igraph/utils";
-import { OtpType, otpFormSchema } from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { CircleCheckBig } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 interface Props {
   setLoginStep: Dispatch<SetStateAction<"INPUT" | "OTP">>;
@@ -43,20 +42,20 @@ const OtpForm = ({ setLoginStep, identifier }: Props) => {
       otp: "",
     },
   });
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  // const { executeRecaptcha } = useGoogleReCaptcha();
 
   const onVerifyOtp = async (data: OtpType) => {
     setLoading(true);
 
-    if (!executeRecaptcha) {
-      toast.error("ری‌کپچا لود نشده است. لطفا مجددا تلاش کنید");
-      setLoading(false);
-      return;
-    }
-    const recaptchaToken = await executeRecaptcha("contact_form");
+    // if (!executeRecaptcha) {
+    //   toast.error("ری‌کپچا لود نشده است. لطفا مجددا تلاش کنید");
+    //   setLoading(false);
+    //   return;
+    // }
+    // const recaptchaToken = await executeRecaptcha("contact_form");
 
     // VERIFY OTP
-    const res = await verifyOtp(data.otp, identifier, recaptchaToken);
+    const res = await verifyOtp(data.otp, identifier);
 
     if (res.error) {
       toast.error(res.error);
