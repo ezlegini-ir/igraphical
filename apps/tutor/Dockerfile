@@ -1,31 +1,34 @@
 # -----------------------------
 # !Base: Alpine + Turbo
 # -----------------------------
-    FROM node:20.18-alpine AS base
-    WORKDIR /repo
-    RUN apk add --no-cache libc6-compat openssl
-    RUN npm install -g turbo
-    
-    # -----------------------------
-    # !Builder: Copy everything + prune for "tutor"
-    # -----------------------------
-    FROM base AS builder
-    COPY . .
-    RUN npm install --legacy-peer-deps
-    RUN turbo prune tutor --docker
-    
-    # -----------------------------
-    # !Installer: install only pruned deps
-    # -----------------------------
-    FROM base AS installer
-    WORKDIR /repo
-    COPY --from=builder /repo/out/json/ ./
-    RUN npm install --legacy-peer-deps
-    
-    # -----------------------------
-    # !Builder again: copy full source + generate + build tutor
-    # -----------------------------
-    COPY --from=builder /repo/out/full/ ./
+  FROM node:20.18-alpine AS base
+  WORKDIR /repo
+  RUN apk update && apk add --no-cache libc6-compat openssl
+  RUN npm install -g turbo
+
+  # -----------------------------
+  #! Deps (install once)
+  # -----------------------------
+  FROM base AS deps
+  COPY package.json turbo.json ./
+  COPY packages/ ./packages/
+  COPY apps/tutor ./apps/tutor
+  RUN npm install --legacy-peer-deps
+  
+  # -----------------------------
+  # !Builder: Copy everything + prune for "tutor"
+  # -----------------------------
+  FROM deps AS builder
+  COPY . .
+  RUN turbo prune tutor --docker
+  
+  # -----------------------------
+  #! Installer (copy pruned files + use existing node_modules)
+  # -----------------------------
+  FROM deps AS installer
+  WORKDIR /repo
+  COPY --from=builder /repo/out/json/ ./
+  COPY --from=builder /repo/out/full/ ./
 
     # Arguments needed for build
     ARG RESEND_API_KEY

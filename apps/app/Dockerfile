@@ -7,24 +7,27 @@
   RUN npm install -g turbo
 
   # -----------------------------
+  #! Deps (install once)
+  # -----------------------------
+  FROM base AS deps
+  COPY package.json turbo.json ./
+  COPY packages/ ./packages/
+  COPY apps/app ./apps/app
+  RUN npm install --legacy-peer-deps
+  
+  # -----------------------------
   # !Builder: Copy everything + prune for "app"
   # -----------------------------
-  FROM base AS builder
+  FROM deps AS builder
   COPY . .
-  RUN npm install --legacy-peer-deps
   RUN turbo prune app --docker
   
   # -----------------------------
-  # !Installer: install only pruned deps
+  #! Installer (copy pruned files + use existing node_modules)
   # -----------------------------
-  FROM base AS installer
+  FROM deps AS installer
   WORKDIR /repo
   COPY --from=builder /repo/out/json/ ./
-  RUN npm install --legacy-peer-deps
-  
-  # -----------------------------
-  # !Builder again: copy full source + generate + build app
-  # -----------------------------
   COPY --from=builder /repo/out/full/ ./
 
   # these are some 
