@@ -3,24 +3,18 @@
 import { sendOtp } from "@/actions/login/otp";
 import { updateUserProfile } from "@/actions/user";
 import CardBox from "@/app/panel/components/CardBox";
+import { getUserByIdentifier } from "@/data/user";
+import { profileFormSchema, ProfileFormType } from "@/lib/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Image, User } from "@igraph/database";
+import Loader from "@igraph/ui/components/Loader";
+import { Badge } from "@igraph/ui/components/ui/badge";
+import { Button } from "@igraph/ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
 } from "@igraph/ui/components/ui/dialog";
-import { useImagePreview } from "@igraph/utils";
-import { useLoading } from "@igraph/utils";
-import { detectInputType } from "@igraph/utils";
-import { profileFormSchema, ProfileFormType } from "@/lib/validationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Image, User } from "@igraph/database";
-import { BadgeCheck } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { Badge } from "@igraph/ui/components/ui/badge";
-import { Button } from "@igraph/ui/components/ui/button";
 import {
   Form,
   FormControl,
@@ -30,10 +24,13 @@ import {
   FormMessage,
 } from "@igraph/ui/components/ui/form";
 import { Input } from "@igraph/ui/components/ui/input";
-import Loader from "@igraph/ui/components/Loader";
+import { detectInputType, useLoading } from "@igraph/utils";
+import { BadgeCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import ConfirmCredentialForm from "./ConfirmCredentialForm";
-import AvatarField from "./AvatarField";
-import { getUserByIdentifier } from "@/data/user";
 
 interface UserType extends User {
   image: Image | null;
@@ -51,7 +48,7 @@ const UserProfileForm = ({ user }: Props) => {
     useLoading();
   const { loading: sendEmailOtpLoading, setLoading: setSendEmailOtpLoading } =
     useLoading();
-  const { imagePreview, setImagePreview } = useImagePreview(user?.image?.url);
+  // const { imagePreview, setImagePreview } = useImagePreview(user?.image?.url);
   const [openOtpForm, setOpenOtpForm] = useState(false);
   const [identifier, setIdentifier] = useState("");
 
@@ -140,13 +137,16 @@ const UserProfileForm = ({ user }: Props) => {
 
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-          <AvatarField
+          {/* <AvatarField
             control={form.control}
             imagePreview={imagePreview}
             setImagePreview={setImagePreview}
             public_id={user?.image?.public_id}
             setValue={form.setValue}
-          />
+          /> */}
+          <div className="text-center text-xs">
+            آپلود تصویر پروفایل موقتا غیرفعال می باشد.
+          </div>
 
           <FormField
             control={form.control}
