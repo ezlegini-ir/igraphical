@@ -3,12 +3,7 @@
 # -----------------------------
   FROM node:20.18-alpine AS base
   WORKDIR /repo
-  RUN printf '%s\n' \
-  'http://mirror-linux.runflare.com/alpine/v3.21/main' \
-  'http://mirror-linux.runflare.com/alpine/v3.21/community' \
-  > /etc/apk/repositories && \
-  apk update && \
-  apk add --no-cache libc6-compat openssl
+  RUN apk update && apk add --no-cache libc6-compat openssl
   RUN npm install -g turbo
 
   # -----------------------------
@@ -50,11 +45,7 @@
   # -----------------------------
   FROM node:20.18-alpine AS runner
   WORKDIR /app
-  RUN printf '%s\n' \
-  'http://mirror-linux.runflare.com/alpine/v3.21/main' \
-  'http://mirror-linux.runflare.com/alpine/v3.21/community' \
-  > /etc/apk/repositories && \
-  apk update && apk add --no-cache nano curl mysql mysql-client
+  RUN apk update && apk add --no-cache nano curl mysql mysql-client
 
   # Create user and set permissions
   RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
